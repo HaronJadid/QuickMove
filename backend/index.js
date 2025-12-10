@@ -1,31 +1,38 @@
 require('dotenv').config();
 const express = require('express');
-const { Pool } = require('pg'); // Import the driver
 const cors = require('cors');
+const { Pool } = require('pg'); // Import the Postgres driver
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// 1. Create the Connection Pool
+// 1. Setup the Database Connection
 const pool = new Pool({
-    connectionString: process.env.DATABASE_URL, // It reads this from .env
+    connectionString: process.env.DATABASE_URL,
     ssl: {
-        rejectUnauthorized: false // Required for Neon
-    }
+        require: true, // Neon requires SSL
+    },
 });
 
 app.use(cors());
 app.use(express.json());
 
-// 2. Example Route: Get Data from Neon
-app.get('/users', async (req, res) => {
+// 2. Test Route: Check if DB is alive
+app.get('/db-test', async (req, res) => {
     try {
-        const result = await pool.query('SELECT * FROM users'); // SQL Query
-        res.json(result.rows);
+        const result = await pool.query('SELECT NOW()'); // Ask DB for current time
+        res.json({
+            message: "Database Connected Successfully!",
+            time: result.rows[0].now
+        });
     } catch (err) {
         console.error(err);
-        res.status(500).send('Server Error');
+        res.status(500).json({ error: "Database Connection Failed" });
     }
+});
+
+app.get('/', (req, res) => {
+    res.json({ message: "Backend is running!" });
 });
 
 app.listen(PORT, () => {
