@@ -6,6 +6,13 @@
     "start": "node index.js",
     "dev": "nodemon index.js"
   },
+  "scripts": {
+  "db:init": "sequelize db:migrate",
+  "db:migrate": "sequelize db:migrate",
+  "db:migrate:undo": "sequelize db:migrate:undo",
+  "db:seed": "sequelize db:seed:all"
+  },
+
   "keywords": [],
   "author": "",
   "license": "ISC",
@@ -14,7 +21,10 @@
     "cors": "^2.8.5",
     "dotenv": "^17.2.3",
     "express": "^5.2.1",
-    "pg": "^8.16.3"
+    "pg": "^8.16.3",
+    "pg-hstore": "^2.3.4",
+    "sequelize": "^6.37.7",
+    "sequelize-cli": "^6.6.3"
   },
   "devDependencies": {
     "nodemon": "^3.1.11"

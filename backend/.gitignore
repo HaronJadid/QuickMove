@@ -1,0 +1,5 @@
+# Dépendances Node (Très important pour ne pas commiter des milliers de fichiers)
+/node_modules
+
+# Fichiers de configuration sensibles (Contient mots de passe, clés secrètes)
+.env
