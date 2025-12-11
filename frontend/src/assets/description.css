@@ -1,0 +1,157 @@
+@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap');
+
+/* --- GENERAL SECTION STYLES --- */
+.timeline-section {
+  font-family: 'Cairo', sans-serif;
+  background-color: #fcfcfc; /* Matches the light background */
+  padding: 60px 20px;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Header */
+.section-header {
+  text-align: center;
+  margin-bottom: 60px;
+}
+
+.subtitle {
+  color: #27ae60; /* Greenish color for "How it works" */
+  font-weight: 700;
+  font-size: 0.9rem;
+  display: block;
+  margin-bottom: 10px;
+}
+
+.title {
+  font-size: 2.5rem;
+  font-weight: 800;
+  color: #222;
+  margin: 0 0 10px 0;
+}
+
+.description {
+  color: #888;
+  font-size: 1rem;
+}
+
+/* --- TIMELINE CONTAINER --- */
+.timeline-container {
+  position: relative;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+/* The Vertical Dashed Line */
+.center-line {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 2px;
+  height: 100%;
+  background-image: linear-gradient(to bottom, #ddd 60%, rgba(255,255,255,0) 0%);
+  background-position: left;
+  background-size: 2px 20px; /* Makes it dashed */
+  background-repeat: repeat-y;
+  z-index: 0;
+}
+
+/* --- TIMELINE ITEM (ROW) --- */
+.timeline-item {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 60px;
+  position: relative;
+  z-index: 1;
+}
+
+/* The Red Number Circle */
+.timeline-number {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 50px;
+  height: 50px;
+  background-color: #c41e3a; /* The deep red color */
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  font-weight: bold;
+  box-shadow: 0 0 0 6px #fff; /* White ring around the dot */
+}
+
+/* --- ALTERNATING SIDES LOGIC --- */
+
+/* Left Side Items (Visually Left) */
+/* Since RTL is on, 'row' puts first item on right. 
+   We want visuals to match image: Step 1 on Left. */
+.left-side {
+  flex-direction: row-reverse; 
+}
+
+/* Right Side Items (Visually Right) */
+.right-side {
+  flex-direction: row;
+}
+
+/* The Content Box */
+.timeline-content {
+  width: 25%; /* Leaves space for center */
+  background: white;
+  padding: 25px;
+  border-radius: 12px;
+  box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+  border: 1px solid #f0f0f0;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  text-align: right;
+  transition: transform 0.3s ease;
+}
+.left-side .timeline-content {
+  margin-left: 40px; 
+}
+.right-side .timeline-content {
+  margin-right: 40px; 
+}
+
+.timeline-content:hover {
+  transform: translateY(-5px);
+}
+
+/* Empty space to balance the flex row */
+.timeline-space {
+  width: 42%;
+}
+
+/* --- CARD CONTENT STYLING --- */
+.card-icon {
+  font-size: 1.8rem;
+  color: #c41e3a;
+  background-color: rgba(196, 30, 58, 0.05);
+  width: 50px;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10px;
+  flex-shrink: 0;
+}
+
+.text-content h3 {
+  margin: 0 0 8px 0;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #333;
+}
+
+.text-content p {
+  margin: 0;
+  font-size: 0.9rem;
+  color: #777;
+  line-height: 1.5;
+}

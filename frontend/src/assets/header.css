@@ -1,0 +1,98 @@
+
+a{
+    color: black;
+    cursor: pointer;
+}
+a:hover{
+    color:rgba(196, 30, 58, 1);
+}
+
+img{
+  width: 33px;
+  height: 33px;
+}
+
+
+/* HEADER CONTAINER */
+.header {
+  width: 100%;
+  height: 80px;
+  background-color: #ffffff;
+  
+  /* Flexbox Layout */
+  display: flex;
+  align-items: center; 
+  justify-content: space-between;
+  
+  /* Spacing */
+  padding: 0 30px; /* Reduced slightly to give more room */
+  box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+  box-sizing: border-box;
+}
+
+/* --- LEFT: LOGO FIX --- */
+.header-left {
+  flex: 1;
+  display: flex; /* Ensures the H4 container behaves */
+  align-items: center;
+}
+
+.websitelogo {
+  /* FIXES THE CUT-OFF TRUCK */
+  margin: 0; 
+  padding: 0;
+  line-height: 1; /* Tightens the text height */
+  
+  font-size: 1.2rem;
+  font-weight: 800;
+  color: #000;
+  
+  /* Keeps the truck and text on one line */
+  white-space: nowrap; 
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* --- CENTER: NAV FIX --- */
+.header-center {
+  flex: 2;
+  display: flex;
+  justify-content: center;
+  gap: 30px; /* Space between links */
+}
+
+.nav-item {
+  color: #555;
+  text-decoration: none;
+  font-size: 0.95rem;
+  font-weight: 500;
+  cursor: pointer;
+  
+  /* FIXES "Search Transport" WRAPPING */
+  white-space: nowrap; 
+  
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: color 0.2s;
+}
+
+.nav-item:hover {
+  color: #000;
+}
+
+/* --- RIGHT: LOGIN FIX --- */
+.header-right {
+  flex: 1;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+.login-btn {
+  font-weight: 700;
+  font-size: 0.95rem;
+  cursor: pointer;
+  white-space: nowrap; /* Keeps "Login | Sign up" together */
+}
