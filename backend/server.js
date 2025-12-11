@@ -44,29 +44,53 @@ async function initializeApp() {
 }
 
 
-// 2. Route de Test (Utilisation de Sequelize au lieu du Pool `pg`)
-app.get('/db-test', async (req, res) => {
+// server.js (Ajoutez cette route après vos middlewares)
+// Assurez-vous d'importer l'objet db: const db = require('./database/models');
+
+app.get('/api/users', async (req, res) => {
     try {
-        // Exécuter une requête simple via Sequelize
-        const [results, metadata] = await db.sequelize.query('SELECT NOW() AS currentTime'); 
+        // La méthode Sequelize 'findAll()' équivaut à 'SELECT * FROM users'
+        const users = await db.User.findAll({
+            // CORRECTION: Utilisez des colonnes valides
+            attributes: ['id', 'nom', 'prenom', 'email', 'imgUrl', 'numero'], 
+        });
+
+        if (users.length === 0) {
+             return res.status(200).json({ message: "La table 'users' est vide.", users: [] });
+        }
         
         res.json({
-            message: "Database Connected Successfully via Sequelize!",
-            time: results[0].currentTime
+            message: "Utilisateurs récupérés avec succès.",
+            count: users.length,
+            users: users
         });
     } catch (err) {
-        // Normalement, cette erreur ne devrait pas arriver si authenticate() a réussi.
-        res.status(500).json({ error: "Database Query Failed" });
+        // ... (gestion des erreurs)
     }
 });
+// server.js (Ajoutez cet endpoint temporaire)
 
-app.get('/', (req, res) => {
-    res.json({ message: "Backend is running!" });
+app.post('/api/users/seed-test', async (req, res) => {
+    try {
+        const [result, metadata] = await db.sequelize.query(
+            // Requête SQL brute pour insérer une ligne (sans utiliser le modèle)
+            `INSERT INTO users (nom, prenom, email, password, "createdAt", "updatedAt") 
+             VALUES ('Test', 'User', 'test@example.com', 'hashed_pass', NOW(), NOW())
+             ON CONFLICT (email) DO NOTHING;` 
+        );
+        res.json({ message: "Utilisateur de test inséré (s'il n'existait pas déjà)." });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: "Erreur lors de l'insertion de test." });
+    }
 });
 
 
 // Démarrer l'application en initialisant la base de données
-initializeApp();
+initializeApp()
+const authRoutes = require('./src/routes/authRoutes');
+app.use('/api/auth', authRoutes);
+
 
 // --- NOTE IMPORTANTE SUR LA CONFIGURATION DE NEON ---
 // Étant donné que Neon est utilisé, assurez-vous que votre fichier de configuration 
