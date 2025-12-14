@@ -23,11 +23,11 @@ module.exports = (sequelize) => {
 
       // 3. Livreur - Ville (N,N via LivreurVille)
       // Un Livreur peut exister (servir) dans plusieurs Villes
-      models.Livreur.belongsToMany(models.Ville, {
-          through: 'LivreurVille',
+        models.Livreur.belongsToMany(models.Ville, {
+          through: 'LivreurVilles',
           foreignKey: 'livreur_id',
           as: 'zonesService'
-      });
+        });
       
       // 4. Livreur - Evaluation (1,N)
       // Un Livreur reçoit plusieurs Évaluations
