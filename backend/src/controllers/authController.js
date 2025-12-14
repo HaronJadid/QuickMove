@@ -12,7 +12,7 @@ const SALT_ROUNDS = 10;
  */
 exports.registerUser = async (req, res) => {
     // 1. Récupération des données du corps de la requête
-    const { nom, prenom, email, password, imgUrl, numero } = req.body;
+    const { nom, prenom, email, password, imgUrl, numero, role } = req.body;
 
     // 2. Validation basique (à étendre)
     if (!email || !password || !nom || !prenom) {
@@ -26,9 +26,8 @@ exports.registerUser = async (req, res) => {
             return res.status(409).json({ message: "Cet email est déjà utilisé." });
         }
 
-        // --- HACHAGE DU MOT DE PASSE ---
-        // Le mot de passe clair (123456) est transformé en une chaîne de caractères sécurisée
-        const hashedPassword = await bcrypt.hash(password, SALT_ROUNDS);
+        // Note: password hashing is handled in the User model hooks; do not double-hash here.
+        const plainPassword = password;
 
         // --- TRANSACTION (Assurer l'atomicité) ---
         // On utilise une transaction pour s'assurer que si la création de Client échoue,
@@ -37,18 +36,16 @@ exports.registerUser = async (req, res) => {
         
         try {
             // 3. Création de l'entrée User dans la table 'users'
+            // The User model has hooks that hash the password and create the corresponding
+            // Client/Livreur profile based on the `role` field. We pass `role` here.
             const newUser = await db.User.create({
                 nom,
                 prenom,
                 email,
-                password: hashedPassword, // Stockage du mot de passe haché
+                password: plainPassword,
                 imgUrl,
                 numero,
-            }, { transaction });
-
-            // 4. Création de l'entrée Client (Spécialisation)
-            await db.Client.create({
-                id_client: newUser.id // Utilise l'ID du nouvel utilisateur comme PK/FK
+                role: role || 'client'
             }, { transaction });
 
             // 5. Commit de la transaction
@@ -57,9 +54,10 @@ exports.registerUser = async (req, res) => {
             // 6. Succès et réponse
             // NOTE: Nous n'incluons JAMAIS le mot de passe dans la réponse.
             return res.status(201).json({
-                message: "Inscription réussie. Compte utilisateur et client créés.",
+                message: "Inscription réussie.",
                 userId: newUser.id,
                 email: newUser.email,
+                role: newUser.role
             });
 
         } catch (error) {

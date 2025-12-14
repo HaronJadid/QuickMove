@@ -55,7 +55,7 @@ module.exports = (sequelize) => {
     },
     cin: {
       type: DataTypes.STRING,
-      allowNull: false,
+      allowNull: true,
       unique: true, // Le numéro de CIN doit être unique
     },
     about: {

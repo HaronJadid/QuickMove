@@ -11,8 +11,10 @@ app.use(cors());
 app.use(express.json());
 
 // Routes (all mounted under /api)
-const clientRoutes = require("./routes/clientRoute.js");
-app.use("/api/client", clientRoutes); // Les routes seront accessibles via /api/client/register
+const authRoutes = require('./src/routes/authRoutes');
+app.use('/api/auth', authRoutes);
+const clientRoutes = require('./src/routes/clientRoutes');
+app.use('/api/client', clientRoutes);
 const livreurRoutes = require('./src/routes/livreurRoutes');
 app.use("/api/livreur", livreurRoutes);
 const userRoutes = require('./src/routes/userRoutes');

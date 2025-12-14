@@ -3,6 +3,7 @@ const userController = require('../controllers/userController');
 
 const router = express.Router();
 
-router.post('/:id/make-driver', userController.makeDriver);
+// Get user by id
+router.get('/:id', userController.getUserById);
 
 module.exports = router;
