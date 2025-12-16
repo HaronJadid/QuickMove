@@ -1,5 +1,5 @@
 import React from 'react';
-import '../../../assets/SearchForm.css';
+import '../style/SearchForm.css';
 
 export default function SearchForm() {
   return (

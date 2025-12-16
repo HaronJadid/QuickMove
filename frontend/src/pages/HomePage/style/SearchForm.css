@@ -162,3 +162,52 @@
   color: rgba(107, 114, 128, 1);
 }
 
+
+
+/* =========================================
+   MOBILE RESPONSIVENESS (Add to bottom)
+   ========================================= */
+
+@media screen and (max-width: 768px) {
+
+  /* 1. Resize the Huge Titles */
+  .text2, .text3 {
+    font-size: 2rem;       /* Reduced from 50px to ~32px */
+    line-height: 1.2;      /* tighter spacing */
+    text-align: center;    /* Center the text for mobile */
+    display: block;        /* Ensures they stack properly */
+  }
+
+  /* 2. Adjust Text Container */
+  .text {
+    margin: 20px 15px;     /* Reduce margin from 40px */
+    text-align: center;    /* Center all text content */
+  }
+
+  /* 3. Fix the "minit" Element */
+  .minit {
+    display: block;        /* Stack it on its own line */
+    margin-left: 0;        /* Remove the 70px left margin */
+    margin-top: 10px;      /* Add a little top space */
+    text-align: center;
+  }
+
+  /* 4. Adjust Search Card */
+  .search-card-container {
+    padding: 20px;         /* Reduce internal padding */
+    margin: 20px auto;     /* Reduce outer margin */
+    width: 95%;            /* Prevent it from touching edges */
+    box-sizing: border-box;
+  }
+
+  /* 5. Force Form to 1 Column (Overrides the 600px rule if needed) */
+  .form-grid {
+    grid-template-columns: 1fr;
+    gap: 15px;
+  }
+
+  /* 6. General Spacing */
+  .sfc {
+    margin-bottom: 40px;   /* Reduce the large bottom gap */
+  }
+}

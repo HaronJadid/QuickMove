@@ -1,0 +1,213 @@
+
+a{
+    color: black;
+    cursor: pointer;
+}
+a:hover{
+    color:rgba(196, 30, 58, 1);
+}
+
+img{
+  width: 33px;
+  height: 33px;
+}
+.linktohome{
+  text-decoration: none;
+
+}
+
+
+/* HEADER CONTAINER */
+.header {
+  width: 100%;
+  height: 90px;
+  background-color: #ffffff;
+  
+  /* Flexbox Layout */
+  display: flex;
+  align-items: center; 
+  justify-content: space-between;
+  
+  /* Spacing */
+  padding: 0 30px; /* Reduced slightly to give more room */
+  box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+  box-sizing: border-box;
+}
+
+/* --- LEFT: LOGO FIX --- */
+.header-left {
+  flex: 1;
+  display: flex; /* Ensures the H4 container behaves */
+  align-items: center;
+}
+
+.websitelogo {
+  /* FIXES THE CUT-OFF TRUCK */
+  margin: 0; 
+  padding: 0;
+  line-height: 1; /* Tightens the text height */
+  
+  font-size: 1.2rem;
+  font-weight: 800;
+  color: #000;
+  
+  /* Keeps the truck and text on one line */
+  white-space: nowrap; 
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* --- CENTER: NAV FIX --- */
+.header-center {
+  flex: 2;
+  display: flex;
+  justify-content: center;
+  gap: 30px; /* Space between links */
+}
+
+.nav-item {
+  color: #555;
+  text-decoration: none;
+  font-size: 0.95rem;
+  font-weight: 500;
+  cursor: pointer;
+  
+  /* FIXES "Search Transport" WRAPPING */
+  white-space: nowrap; 
+  
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: color 0.2s;
+  position: relative;
+}
+
+
+.nav-item:hover {
+  color: #000;
+}
+
+.contactuselement{
+   position: relative;
+   display: flex;
+   align-items: center
+}
+
+.contactusComponent{
+  position: absolute;
+  top: 0;
+  left: 00; 
+  transform: translateX(20%);
+  margin-top: 10px;
+  z-index: 800;
+  min-width: 00px
+}
+
+/* --- RIGHT: LOGIN FIX --- */
+.header-right {
+  flex: 1;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+.login-btn {
+  font-weight: 700;
+  font-size: 0.95rem;
+  cursor: pointer;
+  white-space: nowrap; 
+  text-decoration: none;
+}
+
+.contactus{
+   font-family: 'Cairo', sans-serif;
+  background-color: #fff;
+  border: 1px solid #f0f0f0;
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03);
+  max-width: 400px; 
+  width: 100%;
+  margin: 10px;
+  transition: transform 0.2s ease;
+}
+
+
+
+
+/* =========================================
+   MOBILE RESPONSIVENESS (Add to bottom)
+   ========================================= */
+
+@media screen and (max-width: 768px) {
+  
+  /* 1. Reset Header Layout */
+  .header {
+    height: auto;         /* Remove fixed 80px height to let content fit */
+    flex-direction: column; /* Stack Logo, Nav, and Login vertically */
+    padding: 15px 10px;   /* Reduce side padding */
+    gap: 15px;            /* Add space between the stacked sections */
+  }
+
+  /* 2. Center all Header Sections */
+  .header-left, 
+  .header-center, 
+  .header-right {
+    flex: initial;        /* Reset flex ratios */
+    width: 100%;          /* Take up full width */
+    justify-content: center; /* Center align everything */
+  }
+
+  /* 3. Adjust Navigation Links */
+  .header-center {
+    flex-wrap: wrap;      /* Allow links to drop to a second line if needed */
+    gap: 15px;            /* Reduce gap from 30px to 15px to save space */
+  }
+
+  /* 4. Text Size Adjustments for small screens */
+  .nav-item {
+    font-size: 0.9rem;    /* Slightly smaller text */
+    white-space: normal;  /* Allow text to wrap if screen is very tiny */
+    text-align: center;
+  }
+
+  .websitelogo {
+    font-size: 1.1rem;
+  }
+  
+  /* 5. Adjust Contact Us Card */
+  .contactus {
+    margin: 10px auto;    /* Center the card horizontally */
+    width: 90%;           /* Ensure it doesn't touch the screen edges */
+    padding: 20px;        /* Slightly reduce padding */
+  }
+}
+
+.prf{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0px;
+   border: 2px solid #fff;
+  box-shadow: 0 1px 6px rgba(179, 177, 177, 0.1);
+  padding: 8px;
+  width: 70px;
+  cursor: pointer;
+  text-decoration: none;
+}
+.user-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%; /* Perfect circle */
+  object-fit: cover; /* Prevents image stretching */
+  border: 2px solid #fff; /* White ring */
+}
+
+.user-name {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: #333;
+  white-space: nowrap;
+  margin: 20px;
+}

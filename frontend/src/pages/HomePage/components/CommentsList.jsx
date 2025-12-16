@@ -1,5 +1,5 @@
 import CommentComponent from './CommentComponent.jsx'
-import '../../../assets/comment.css'
+import '../style/comment.css'
 
 export default function CommentsList(){
     return(

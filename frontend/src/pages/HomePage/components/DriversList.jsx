@@ -1,5 +1,5 @@
 import DriverComponent from "./DriverComponent";
-import '../../../assets/DriverComponent.css';
+import '../style/DriverComponent.css';
 
 
 export default function DriversList(){

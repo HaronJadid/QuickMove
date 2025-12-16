@@ -155,3 +155,63 @@
   color: #777;
   line-height: 1.5;
 }
+
+
+/* =========================================
+   MOBILE RESPONSIVENESS (Add to bottom)
+   ========================================= */
+
+@media screen and (max-width: 768px) {
+  
+  /* 1. Header Adjustments */
+  .title {
+    font-size: 1.8rem;
+    line-height: 1.2;
+  }
+  
+  .timeline-section {
+    padding: 40px 15px;
+  }
+
+  /* 2. Move the Center Line to the Left */
+  .center-line {
+    left: 20px;          /* Positions line 20px from left edge */
+    transform: none;     /* Removes the "center" transformation */
+  }
+
+  /* 3. Reset Flex Direction (No more Zig-Zag) */
+  .timeline-item, 
+  .left-side, 
+  .right-side {
+    flex-direction: row;      /* Force everything to flow normally */
+    justify-content: flex-start; /* Align content to start */
+  }
+
+  /* 4. Position the Number Circles on the new line */
+  .timeline-number {
+    left: 20px;          /* Match the line position */
+    transform: translateX(-50%); /* Keep the dot centered on the line */
+    width: 40px;         /* Slightly smaller dots */
+    height: 40px;
+    font-size: 1rem;
+  }
+
+  /* 5. Adjust the Content Cards */
+  .timeline-content {
+    width: 100%;                  /* Card takes full remaining width */
+    margin: 0 0 0 60px !important; /* Add left margin to clear the dots */
+    text-align: right;            /* Keep your text alignment preference */
+  }
+
+  /* 6. Hide the empty "Spacer" divs */
+  .timeline-space {
+    display: none;       /* We don't need empty space in a single column */
+  }
+  
+  /* 7. Adjust Card Internals */
+  .card-icon {
+    width: 40px;
+    height: 40px;
+    font-size: 1.4rem;
+  }
+}

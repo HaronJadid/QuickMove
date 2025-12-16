@@ -217,3 +217,47 @@
     font-weight: 900;
     
 }
+
+
+/* =========================================
+   MOBILE RESPONSIVENESS (Add to bottom)
+   ========================================= */
+
+@media screen and (max-width: 768px) {
+  
+  /* 1. Change Grid to Single Column */
+  .Driverslist {
+    grid-template-columns: 1fr; /* 1 card per row */
+    gap: 20px;                  /* Reduce space between cards */
+    margin: 15px;               /* Reduce outer margins */
+    padding: 0;
+  }
+
+  /* 2. Fix the Header Title */
+  .text {
+    font-size: 1.8rem;          /* Reduce from 40px to fit screen */
+    text-align: center;         /* Center the title */
+    display: block;
+    margin-bottom: 20px;
+  }
+
+  /* 3. Card Width Adjustments */
+  .driver-card {
+    max-width: 100%;            /* Let card fill the width of the phone */
+    margin: 0 auto;             /* Keep centered */
+  }
+
+  /* 4. Prevent Tags from being cut off */
+  .tags-row {
+    flex-wrap: wrap;            /* If there are many tags, move to next line */
+  }
+
+  /* 5. Slight Font Reductions */
+  .driver-name {
+    font-size: 1.25rem;
+  }
+  
+  .price-value {
+    font-size: 1.6rem;
+  }
+}

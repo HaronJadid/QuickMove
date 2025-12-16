@@ -133,3 +133,46 @@
      font-size: 1rem;
 
 }
+
+
+
+/* =========================================
+   MOBILE RESPONSIVENESS (Add to bottom)
+   ========================================= */
+
+@media screen and (max-width: 768px) {
+
+  /* 1. Change Grid to Single Column */
+  .list {
+    grid-template-columns: 1fr; /* Changes from 3 columns to 1 column */
+    gap: 30px;                  /* Reduces the huge 70px gap */
+    margin: 15px;               /* Reduces outer margin */
+    padding: 0;                 /* Removes extra padding to save space */
+    justify-items: center;      /* Keeps cards centered */
+  }
+
+  /* 2. Adjust Heading Size */
+  .text2 {
+    font-size: 1.8rem;          /* Reduces text from 2.5rem to fit mobile screens */
+    line-height: 1.2;
+  }
+
+  /* 3. Ensure Card fits screen */
+  .review-card {
+    width: 100%;                /* Takes full available width */
+    max-width: 100%;            /* Overrides the 400px limit if screen is smaller */
+    padding: 20px;              /* Slightly tighter internal padding */
+    box-sizing: border-box;     /* Prevents padding from breaking layout */
+  }
+
+  /* 4. Adjust Footer (User Info & Date) */
+  .review-footer {
+    flex-direction: column;     /* Stacks User info and Date vertically */
+    align-items: flex-start;    /* Aligns them to the start */
+    gap: 10px;                  /* Adds space between user and date */
+  }
+  
+  .review-date {
+    align-self: flex-end;       /* Pushes the date to the right (optional style choice) */
+  }
+}

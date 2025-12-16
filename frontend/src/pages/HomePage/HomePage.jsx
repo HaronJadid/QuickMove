@@ -1,19 +1,30 @@
 import { useState } from 'react'
+import { useRef } from 'react'
 
-import Header from '../../layout/Header'
+import Header from '../../layout/Header/Header'
 import SearchFormContainer from './components/SearchFormContainer'
 import DriversList from './components/DriversList'
 import Description from './components/Description'
 import CommentsList from './components/CommentsList'
 import Joinus from './components/JoinUsComponent'
-import Footer from '../../layout/Footer'
+import Footer from '../../layout/Footer/Footer'
+
+
 
 export default function HomePage() {
 
+  const searchform=useRef(null)
+
+  const scrollToSearchForm=()=>{
+    searchform.current.scrollIntoView({
+      behavior:'smooth'
+    })
+  }
+
   return (
     <>
-    <Header/>
-    <SearchFormContainer/>
+    <Header scrollToSearchForm={scrollToSearchForm} />
+    <SearchFormContainer ref={searchform} />
     <DriversList/>
     <Description/>
     <CommentsList/>
