@@ -1,5 +1,5 @@
 import React from 'react';
-import '../style/DriverComponent.css';
+import '../style/driversAvailable.css';
 
 
 export default function DriverComponent() {

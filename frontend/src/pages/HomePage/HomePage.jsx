@@ -7,7 +7,6 @@ import DriversList from './components/DriversList'
 import Description from './components/Description'
 import CommentsList from './components/CommentsList'
 import Joinus from './components/JoinUsComponent'
-import Footer from '../../layout/Footer/Footer'
 
 
 
@@ -29,7 +28,7 @@ export default function HomePage() {
     <Description/>
     <CommentsList/>
     <Joinus/>
-    <Footer/>
+    
     
     </>
   )

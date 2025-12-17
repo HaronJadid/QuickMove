@@ -22,6 +22,7 @@ export default function Header({scrollToSearchForm}) {
     useOnClickOutside(ref1,()=>{setisContactUsOpen(false)})
 
     const user=true
+  
 
     const mockdata={
         username:'bob',
@@ -48,13 +49,21 @@ export default function Header({scrollToSearchForm}) {
                   {isContactUsOpen &&  ( <div className='contactusComponent'> <Contactus  />   </div> )}
                    
                 </div>
+                <div>
+                {user && <Link to='/' className="nav-item">▥ Dashboard</Link>} 
+                </div>
 
             </nav>
+            
             <div className="header-right">
-                {user? (<Link to='/' className="prf">
-                    <img alt="Profile picture" className="user-avatar" src={mockdata.pic}></img>
-                    <span className="user-name">{mockdata.username}</span>
-                </Link> )
+                {user && <div className="not-bell">🔔︎</div>}
+                
+                {user? (
+                        <Link to='/clientprofile' className="prf">
+                            <img alt="Profile picture" className="user-avatar" src={mockdata.pic}></img>
+                            <span className="user-name">{mockdata.username}</span>
+                        </Link>
+                     )
                 :
                 (<Link to='/login' className="login-btn">Login | Sign up</Link>) }
             </div>

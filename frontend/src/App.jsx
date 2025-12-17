@@ -8,12 +8,21 @@ import Login from './features/Authentication/components/Login'
 import Driversignup from './features/Authentication/components/Driversignup'
 import Privateroute from './features/Authentication/components/Privateroute'
 import Resetpwd from './features/Authentication/components/Resetpwd.jsx'
-
+import Driverprofile from './pages/DriverProfile/Driverprofile.jsx'
+import Clientprofile from './pages/ClientProfile/Clientprofile.jsx'
+import Footer from './layout/Footer/Footer.jsx'
+import { useLocation } from "react-router-dom";
+import Header from './layout/Header/Header.jsx'
+import SearchResult from './pages/SearchResult/SearchResult.jsx'
 
 function App() {
+  const {pathname}=useLocation()
+
 
   return (
     <>
+      {pathname!== '/' && <Header />}
+      
       <Routes>
         <Route path='/' element={<HomePage/>} />
         <Route path='/aboutus' element={<Aboutus/>} />
@@ -21,14 +30,19 @@ function App() {
         <Route path='/driversignup' element={<Driversignup/>} />
         <Route path='/login' element={<Login/>} />
         <Route path='/resetpwd' element={<Resetpwd />}  />
+        <Route path='/searchresult' element={<SearchResult/>} />
 
 
-        <Route element={<Privateroute />}>
+        {/* <Route element={<Privateroute />}> */}
+          <Route path='/driverprofile' element={<Driverprofile />} />
+          <Route path='/clientprofile' element={<Clientprofile />} />
         
 
-        </Route>
-        <Route path='*' element={<div>Page not found !! </div>} />
+{/*         </Route>
+ */}        <Route path='*' element={<div>Page not found !! </div>} />
       </Routes>
+
+      <Footer/>
    
     
     </>

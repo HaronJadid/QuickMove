@@ -85,7 +85,10 @@ img{
 
 
 .nav-item:hover {
-  color: #000;
+  color: #c46363;
+}
+.nav-item:active {
+  color: #804141;
 }
 
 .contactuselement{
@@ -133,7 +136,18 @@ img{
   transition: transform 0.2s ease;
 }
 
+.not-bell{
+  font-size: 25px;
+  cursor: pointer;
+  border-radius: 80%;
+  margin-right: 25px;
 
+
+}
+.not-bell:hover{
+   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.06);
+}
+ 
 
 
 /* =========================================
