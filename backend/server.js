@@ -10,9 +10,18 @@ const PORT = process.env.PORT || 3000;
 app.use(cors());
 app.use(express.json());
 
-// Routes
-const clientRoutes = require("./routes/clientRoute.js");
-app.use("/client", clientRoutes); // Les routes seront accessibles via /client/register
+// Routes (all mounted under /api)
+const authRoutes = require('./src/routes/authRoutes');
+app.use('/api/auth', authRoutes);
+const clientRoutes = require('./src/routes/clientRoutes');
+app.use('/api/client', clientRoutes);
+const livreurRoutes = require('./src/routes/livreurRoutes');
+app.use("/api/livreur", livreurRoutes);
+const userRoutes = require('./src/routes/userRoutes');
+app.use('/api/user', userRoutes);
+const villeRoutes = require('./src/routes/villeRoutes');
+app.use('/api/ville', villeRoutes);
+
 
 // Démarrage du serveur et Connexion DB
 app.listen(PORT, async () => {

@@ -21,11 +21,11 @@ module.exports = (sequelize) => {
       });
 
       // 3. Demande - Client (N,N via ClientDemande) : Si 1 Client peut faire plusieurs demandes.
-      models.Demande.belongsToMany(models.Client, {
-          through: 'ClientDemande',
+        models.Demande.belongsToMany(models.Client, {
+          through: 'ClientDemandes',
           foreignKey: 'demande_id',
           as: 'clients'
-      });
+        });
 
       // 4. Demande - Livreur (N,N via LivreurDemande) : Si N Livreur(s) peuvent gérer N Demandes.
       models.Demande.belongsToMany(models.Livreur, {
