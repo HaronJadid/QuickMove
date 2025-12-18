@@ -7,8 +7,8 @@ const db = require('../../database/models');
 exports.createBooking = async (req, res) => {
   const userId = req.params.id;
   const {
-    ville_depart_id,
-    ville_arrivee_id,
+    ville_depart,
+    ville_arrivee,
     prix,
     comment,
     dateDepartExacte,
@@ -16,7 +16,7 @@ exports.createBooking = async (req, res) => {
     vehicule_id
   } = req.body;
 
-  if (!ville_depart_id || !ville_arrivee_id || prix == null) {
+  if (!ville_depart || !ville_arrivee || prix == null) {
     return res.status(400).json({ message: "Champs requis: 'ville_depart_id', 'ville_arrivee_id', 'prix'." });
   }
 
