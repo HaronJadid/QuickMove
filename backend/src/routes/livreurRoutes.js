@@ -10,6 +10,10 @@ router.get('/', livreurController.findLivreursByCity);
 router.get('/all', livreurController.getAllLivreurs);
 router.get('/:id/evaluations', livreurController.getEvaluationsByLivreur);
 
+// Demands management for driver
+router.get('/:id/demands', livreurController.getDemandsByDriver);
+router.put('/:id/demands/:demandeId/status', livreurController.updateDemandStatus);
+
 // router.get('/:id', livreurController.getLivreurDetails); // Future route
 
 module.exports = router;

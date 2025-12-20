@@ -19,8 +19,12 @@ const livreurRoutes = require('./src/routes/livreurRoutes');
 app.use("/api/livreur", livreurRoutes);
 const userRoutes = require('./src/routes/userRoutes');
 app.use('/api/user', userRoutes);
+
 const villeRoutes = require('./src/routes/villeRoutes');
 app.use('/api/ville', villeRoutes);
+
+const vehiculeRoutes = require('./src/routes/vehiculeRoutes');
+app.use('/api/vehicule', vehiculeRoutes);
 
 
 // Démarrage du serveur et Connexion DB
