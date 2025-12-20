@@ -9,11 +9,11 @@ module.exports = (sequelize) => {
      */
     static associate(models) {
       // 1. Ville - Livreur (N,N via LivreurVille)
-      models.Ville.belongsToMany(models.Livreur, {
-          through: 'LivreurVille',
+        models.Ville.belongsToMany(models.Livreur, {
+          through: 'LivreurVilles',
           foreignKey: 'ville_id',
           as: 'livreursDesservant'
-      });
+        });
       
       // 2. Ville - Demande (Deux relations 1,N pour Départ et Arrivée)
       

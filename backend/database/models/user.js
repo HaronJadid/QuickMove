@@ -1,5 +1,6 @@
 // backend/database/models/user.js
 'use strict';
+const bcrypt = require('bcryptjs');
 const { Model, DataTypes } = require('sequelize');
 
 module.exports = (sequelize) => {
@@ -56,11 +57,58 @@ module.exports = (sequelize) => {
     numero: {
       type: DataTypes.STRING,
     },
+    role: {
+      type: DataTypes.ENUM('client', 'driver'),
+      allowNull: false,
+      defaultValue: 'client'
+    },
   }, {
     sequelize,
     modelName: 'User',
     tableName: 'users', // Nom de la table dans la base de données
     timestamps: true, // Ajoute createdAt et updatedAt
+    defaultScope: {
+      attributes: { exclude: ['password'] }
+    },
+    hooks: {
+      // Hash password before create/update
+      beforeCreate: async (user, options) => {
+        if (user.password) {
+          const salt = await bcrypt.genSalt(10);
+          user.password = await bcrypt.hash(user.password, salt);
+        }
+      },
+      beforeUpdate: async (user, options) => {
+        if (user.changed('password')) {
+          const salt = await bcrypt.genSalt(10);
+          user.password = await bcrypt.hash(user.password, salt);
+        }
+      },
+      // Après création d'un User, créer automatiquement le profil correspondant
+      afterCreate: async (user, options) => {
+        const models = sequelize.models;
+        try {
+          // Use the same transaction if provided so FK constraints succeed
+          const txOptions = options && options.transaction ? { transaction: options.transaction } : {};
+
+          if (user.role === 'driver') {
+            const exists = await models.Livreur.findByPk(user.id, txOptions);
+            if (!exists) {
+              await models.Livreur.create({ id_livreur: user.id }, txOptions);
+            }
+          } else if (user.role === 'client') {
+            const exists = await models.Client.findByPk(user.id, txOptions);
+            if (!exists) {
+              await models.Client.create({ id_client: user.id }, txOptions);
+            }
+          }
+        } catch (err) {
+          // Log error clearly so it's visible during registration failures
+          console.error('User afterCreate hook error (could rollback transaction):', err);
+          throw err; // rethrow so outer transaction can rollback
+        }
+      }
+    }
   });
 
   return User;
