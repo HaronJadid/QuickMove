@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
 import '../style/auth.css';
 import { Link } from 'react-router-dom';
+import axios from 'axios';
+import { useLocation } from "react-router-dom";
+
+
 
 export default function ResetPassword() {
-  const [email,setEmail]=useState('')
-  const emailInput=(event)=>{
-    setEmail(event.target.value)
-  }
+  
 
   const [pwd, setPwd] = useState('');
   const [confirmpwd, setConfirmpwd] = useState('');
@@ -18,9 +19,16 @@ export default function ResetPassword() {
   }
   const [error, setError] = useState('');
 
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+  const token = queryParams.get("token");
 
   const handleSubmit =async (e) => {
     e.preventDefault(); 
+     if (!token) {
+      setMessage("Token missing !");
+      return;
+    }
 
     if (!pwd || !confirmpwd) {
       setError('المرجو ملء جميع الخانات');
@@ -34,7 +42,7 @@ export default function ResetPassword() {
 
     setError('');
     try{
-        const res=await axios.post('http://localhost:3000/auth',{email,pwd})
+        const res=await axios.post('http://localhost:3000/api/auth/reset-password',{token,newPassword:pwd})
 
         if(res.status==200){
             alert('تم تغيير كلمة المرور بنجاح! ✅');
@@ -57,16 +65,13 @@ export default function ResetPassword() {
       
       <div className="auth-card">
         
-        <h2 className="brand-logo">🚚 MoveMorocco</h2>
+        <Link to='/' className="brand-logo">🚚 MoveMorocco</Link>
         <h3 className="auth-title">تغيير كلمة المرور</h3>
 
         <div className="form-content fade-in">
           <form onSubmit={handleSubmit}>
 
-             <div className="input-group">
-              <label>البريد الإلكتروني</label>
-              <input type="email" placeholder="example@mail.com" className="auth-input" value={email} onChange={emailInput} />
-            </div>
+            
             
             <div className="input-group">
               <label>كلمة المرور الجديدة</label>

@@ -14,6 +14,7 @@ import Footer from './layout/Footer/Footer.jsx'
 import { useLocation } from "react-router-dom";
 import Header from './layout/Header/Header.jsx'
 import SearchResult from './pages/SearchResult/SearchResult.jsx'
+import Sendlink from './features/Authentication/components/Sendlink.jsx'
 
 function App() {
   const {pathname}=useLocation()
@@ -21,7 +22,7 @@ function App() {
 
   return (
     <>
-      {pathname!== '/' && <Header />}
+      {pathname!== '/' && pathname!== '/signup' && pathname!== '/driversignup' && pathname!== '/login' && pathname!== '/resetpwd' && pathname!== '/sendlink' && <Header />}
       
       <Routes>
         <Route path='/' element={<HomePage/>} />
@@ -30,6 +31,7 @@ function App() {
         <Route path='/driversignup' element={<Driversignup/>} />
         <Route path='/login' element={<Login/>} />
         <Route path='/resetpwd' element={<Resetpwd />}  />
+        <Route path='/sendlink' element={<Sendlink />}  />
         <Route path='/searchresult' element={<SearchResult/>} />
 
 

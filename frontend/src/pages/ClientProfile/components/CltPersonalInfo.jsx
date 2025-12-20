@@ -1,27 +1,38 @@
 import React, { use } from 'react';
 import { useState } from 'react';
 import '../style/CltPersonalInfo.css';
+import { useEffect } from 'react';
+import axios from 'axios';
 
 export default function DrPersonalInfo() {
   
     let [email,setEmail]=useState('')
-    let [pwd,setPwd]=useState('')
-    let [username,setUsername]=useState('')
+    let [prenom,setPrenom]=useState('')
+    let [nom,setNom]=useState('')
     let [tel,setTel]=useState(null)
 
     let [edit,setEdit]=useState(false)
 
-    const save =()=>{
+    const save =async()=>{
       setEdit(false)
+     /*   const id=localStorage.getItem('userdata.id')
+      const res=await axios.get('http://localhost:3000/api/user/:id')
+     */
     }
 
+    useEffect(async()=>{
+      const id=localStorage.getItem('userdata.id')
+      const res=await axios.get('http://localhost:3000/api/user/:id')
 
+    }
+      ,[])
   const user = {
-    fullName: "clientname",
-    email: "Test@gmail.com",
-    phone: "+212 601-232323",
+    prenom: res.prenom,
+    nom:res.nom,
+    email: res.email,
+    phone:res.tel,
     role: "حساب عميل", 
-    avatar: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?fit=crop&w=150&q=80"
+    avatar: res.imgUrl
   };
 
   return (
@@ -37,9 +48,14 @@ export default function DrPersonalInfo() {
         <div className="profile-form">
           
           <div className="input-group">
-            <label>الاسم الكامل</label>
-           { (!edit)? ( <div className="read-only-input">{user.fullName}</div>):
-            (<input type="text" placeholder="الاسم والنسب" className="read-only-input" value={username} onChange={(event)=>setUsername(event.target.value)} />)}
+            <label>الاسم </label>
+           { (!edit)? ( <div className="read-only-input">{user.prenom}</div>):
+            (<input type="text" placeholder="الاسم " className="read-only-input" value={prenom} onChange={(event)=>setPrenom(event.target.value)} />)}
+          </div>
+           <div className="input-group">
+            <label> النسب</label>
+           { (!edit)? ( <div className="read-only-input">{user.nom}</div>):
+            (<input type="text" placeholder=" النسب" className="read-only-input" value={nom} onChange={(event)=>setNom(event.target.value)} />)}
           </div>
 
           <div className="input-group">

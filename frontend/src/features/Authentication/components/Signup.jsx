@@ -2,7 +2,8 @@ import { useState } from "react";
 import '../style/auth.css';
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
-
+import useAuth from './Authprovider'
+import axios from "axios";
 
 
 
@@ -13,8 +14,10 @@ export default function Signup() {
 
   let [email,setEmail]=useState('')
   let [pwd,setPwd]=useState('')
-  let [username,setUsername]=useState('')
+  let [prenom,setPrenom]=useState('')
+  let [nom,setNom]=useState('')
   let [tel,setTel]=useState(null)
+  let [file, setFile] = useState(null);
 
 
   let [error,setError]=useState(false)
@@ -26,12 +29,23 @@ export default function Signup() {
   const pwdInput=(event)=>{
     setPwd(event.target.value)
   }
-  const usernameInput=(event)=>{
-    setUsername(event.target.value)
+  const prenomInput=(event)=>{
+    setPrenom(event.target.value)
+  }
+   const nomInput=(event)=>{
+    setNom(event.target.value)
   }
   const telInput=(event)=>{
     setTel(event.target.value)
   }
+  const fileInput = (e) => {
+  setFile(e.target.files[0]); 
+  };
+  
+
+
+
+
 
 
   const trysignup=async()=>{
@@ -42,13 +56,27 @@ export default function Signup() {
           return
         }
         setError(false)
-        const res=await axios.post('http://localhost:3000/auth',{username,tel,email,pwd})
-  
-        if(res.status==200){
+
+        const formData = new FormData();
+        formData.append("imgUrl", file);
+        formData.append("nom", nom);
+        formData.append("prenom", prenom);
+        formData.append("email", email);
+        formData.append("password", pwd);
+        formData.append("numero", tel);
+        formData.append("role", 'client');
+
+        const res=await axios.post("/api/auth/register", formData, {
+          headers: {
+            "Content-Type": "multipart/form-data"
+          }
+        });
+
+        if(res.status==201){
           const userdata=res.data
           const {login}=useAuth()
           login(userdata)
-          navigate('/')
+          navigate('/clientprofile')
   
   
           return
@@ -79,8 +107,12 @@ export default function Signup() {
         <div className="form-content fade-in">
           <form onSubmit={(e) => { e.preventDefault();  }}>
             <div className="input-group">
-              <label>الاسم الكامل</label>
-              <input type="text" placeholder="الاسم والنسب" className="auth-input" value={username} onChange={usernameInput} />
+              <label>الاسم</label>
+              <input type="text" placeholder="الاسم " className="auth-input" value={prenom} onChange={prenomInput} />
+            </div>
+             <div className="input-group">
+              <label>النسب</label>
+              <input type="text" placeholder="النسب" className="auth-input" value={nom} onChange={nomInput} />
             </div>
 
             <div className="input-group">
@@ -98,6 +130,10 @@ export default function Signup() {
               <input type="password"  placeholder="••••••••" className="auth-input" value={pwd} onChange={pwdInput} pattern="(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}"
                 title="كلمة المرور يجب أن تحتوي على 8 أحرف على الأقل، حرف كبير، حرف صغير، رقم، ورمز خاص"
                 />
+            </div>
+            <div className="input-group">
+              <label> ادخل صورة ملفك الشخصي</label>
+              <input type="file" className="auth-input"  accept="image/*" onChange={fileInput} />
             </div>
 
             <button className="auth-btn" onClick={trysignup}>إنشاء حساب</button>

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import '../style/auth.css'; 
 import { Link, useNavigate } from 'react-router-dom';
 import useAuth from './Authprovider'
-
+import axios from 'axios';
 
 export default function Login() {
 
@@ -31,14 +31,19 @@ export default function Login() {
         return
       }
       setError(false)
-      const res=await axios.post('http://localhost:3000/auth',{email,pwd})
+      const res=await axios.post('http://localhost:3000/api/auth/login',{email,password:pwd})
 
       if(res.status==200){
 
         const userdata=res.data
         const {login}=useAuth()
         login(userdata)
-        navigate('/')
+        if(userdata.role=='client'){
+           navigate('/clientprofile')
+        }else{
+           navigate('/driverprofile')
+        }
+       
 
 
         return
@@ -80,7 +85,7 @@ export default function Login() {
             </div>
 
             <div className="forgot-password">
-              <Link to='/resetpwd'>نسيت كلمة المرور؟</Link>
+              <Link to='/sendlink'>نسيت كلمة المرور؟</Link>
             </div>
 
             <button className="auth-btn" onClick={trylogin}>تسجيل الدخول</button>

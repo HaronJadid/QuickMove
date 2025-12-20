@@ -1,11 +1,11 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { useRef } from "react";
-
+import axios from "axios";
 import SearchFormContainer from "../../pages/HomePage/components/SearchFormContainer";
 import Contactus from "./headerComponents/Contactus";
 import useAuth from '../../features/Authentication/components/Authprovider'
-
+import { useEffect } from "react";
 
 import { useOnClickOutside } from "../../useOnClickOutside";
 
@@ -18,18 +18,28 @@ export default function Header({scrollToSearchForm}) {
 
     let [isContactUsOpen,setisContactUsOpen]=useState(false)
     const ref1=useRef()
-
+    const userinfo=null
     useOnClickOutside(ref1,()=>{setisContactUsOpen(false)})
 
-    const user=true
+
+    const user=localStorage.getItem()
+     useEffect(async()=>{
+        if(user){
+         const id=localStorage.getItem('userdata.id')
+         const res=await axios.get('http://localhost:3000/api/user/:id')
+         userinfo={
+            username:res.prenom+ ' '+res.nom ,
+            pic:res.imgUrl
+
+         }
+
+        }
+      
+    }
+      )
   
 
-    const mockdata={
-        username:'bob',
-        pic:'https://th.bing.com/th?q=Beautiful+Bouquet+of+Flowers&w=120&h=120&c=1&rs=1&qlt=70&o=7&cb=1&dpr=1.3&pid=InlineBlock&rm=3&ucfimg=1&mkt=en-XA&cc=MA&setlang=en&adlt=strict&t=1&mw=247'
-    }
-
-
+   
     return (
         <div className="header">
             <div className="header-left">
@@ -60,8 +70,8 @@ export default function Header({scrollToSearchForm}) {
                 
                 {user? (
                         <Link to='/clientprofile' className="prf">
-                            <img alt="Profile picture" className="user-avatar" src={mockdata.pic}></img>
-                            <span className="user-name">{mockdata.username}</span>
+                            <img alt="Profile picture" className="user-avatar" src={userinfo.pic || '../../../public/alt_img.webp'}></img>
+                            <span className="user-name">{userinfo.username}</span>
                         </Link>
                      )
                 :

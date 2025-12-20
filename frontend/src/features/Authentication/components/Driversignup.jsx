@@ -2,7 +2,8 @@ import { useState } from "react";
 import '../style/auth.css';
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
-
+import useAuth from './Authprovider'
+import axios from "axios";
 
 
 
@@ -12,8 +13,10 @@ export default function Driversignup() {
 
   let [email,setEmail]=useState('')
   let [pwd,setPwd]=useState('')
-  let [username,setUsername]=useState('')
+  let [prenom,setPrenom]=useState('')
+  let [nom,setNom]=useState('')
   let [tel,setTel]=useState(null)
+  let [file, setFile] = useState(null);
 
 
   let [error,setError]=useState(false)
@@ -25,12 +28,18 @@ export default function Driversignup() {
   const pwdInput=(event)=>{
     setPwd(event.target.value)
   }
-  const usernameInput=(event)=>{
-    setUsername(event.target.value)
+ const prenomInput=(event)=>{
+    setPrenom(event.target.value)
+  }
+   const nomInput=(event)=>{
+    setNom(event.target.value)
   }
   const telInput=(event)=>{
     setTel(event.target.value)
   }
+  const fileInput = (e) => {
+  setFile(e.target.files[0]); 
+  };
 
 
   const trysignup=async()=>{
@@ -41,13 +50,28 @@ export default function Driversignup() {
           return
         }
         setError(false)
-        const res=await axios.post('http://localhost:3000/auth',{username,tel,email,pwd})
+
+        const formData = new FormData();
+        formData.append("imgUrl", file);
+        formData.append("nom", nom);
+        formData.append("prenom", prenom);
+        formData.append("email", email);
+        formData.append("password", pwd);
+        formData.append("numero", tel);
+        formData.append("role", 'driver');
+
+        const res=await axios.post("/api/auth/register", formData, {
+          headers: {
+            "Content-Type": "multipart/form-data"
+          }
+        });
+
   
-        if(res.status==200){
+        if(res.status==201){
           const userdata=res.data
           const {login}=useAuth()
           login(userdata)
-          navigate('/')
+          navigate('/driverprofile')
   
   
           return
@@ -78,9 +102,14 @@ export default function Driversignup() {
 
         <div className="form-content fade-in">
           <form onSubmit={(e) => { e.preventDefault();  }}>
-            <div className="input-group">
-              <label>الاسم الكامل</label>
-              <input type="text" placeholder="الاسم والنسب" className="auth-input" value={username} onChange={usernameInput} />
+           
+             <div className="input-group">
+              <label>الاسم</label>
+              <input type="text" placeholder="الاسم " className="auth-input" value={prenom} onChange={prenomInput} />
+            </div>
+             <div className="input-group">
+              <label>النسب</label>
+              <input type="text" placeholder="النسب" className="auth-input" value={nom} onChange={nomInput} />
             </div>
 
             <div className="input-group">
@@ -96,8 +125,8 @@ export default function Driversignup() {
             <div className="input-group">
               <label>كلمة المرور</label>
               <input type="password" placeholder="••••••••" value={pwd} onChange={pwdInput} className="auth-input"  pattern="(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}"
-  title="كلمة المرور يجب أن تحتوي على 8 أحرف على الأقل، حرف كبير، حرف صغير، رقم، ورمز خاص"
-  />
+                title="كلمة المرور يجب أن تحتوي على 8 أحرف على الأقل، حرف كبير، حرف صغير، رقم، ورمز خاص"
+                />
             </div>
 
             <button className="auth-btn">إنشاء حساب</button>
