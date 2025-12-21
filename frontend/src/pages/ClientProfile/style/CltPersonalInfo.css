@@ -108,3 +108,30 @@
     width: 90%; /* On small phones, let it be 90% */
   }
 }
+
+.logout{
+   background-color: #a1303b; /* Red */
+  color: white;
+  margin: 30px;
+  margin-right: 100px;
+  border: none;
+  padding: 12px 30px;
+  border-radius: 8px;
+  font-weight: 700;
+  font-size: 1rem;
+  cursor: pointer;
+  font-family: 'Cairo', sans-serif;
+  transition: background 0.2s;
+
+}
+.logout:hover{
+  background-color: #d13c4b;
+
+}
+.logout-ctn{
+   flex: 1;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+
+}

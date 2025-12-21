@@ -4,6 +4,8 @@ const db = require('../../database/models');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
+
+
 // Définissez le nombre de tours de hachage (salt rounds)
 const SALT_ROUNDS = 10;
 
@@ -12,12 +14,13 @@ const SALT_ROUNDS = 10;
  */
 exports.registerUser = async (req, res) => {
     // 1. Récupération des données du corps de la requête
-    const { nom, prenom, email, password, imgUrl, numero, role } = req.body;
+    const { nom, prenom, email, password, numero, role } = req.body;
 
     // 2. Validation basique (à étendre)
     if (!email || !password || !nom || !prenom) {
         return res.status(400).json({ message: "Veuillez fournir nom, prénom, email et mot de passe." });
     }
+    const file = req.file;
 
     try {
         // --- VÉRIFICATION DE L'EXISTENCE ---
@@ -33,6 +36,12 @@ exports.registerUser = async (req, res) => {
         // On utilise une transaction pour s'assurer que si la création de Client échoue,
         // la création de User est annulée.
         const transaction = await db.sequelize.transaction();
+
+        // 6️⃣ Build image URL (if file exists)
+        const imgUrl = file
+        ? `/uploads/avatars/${file.filename}`
+        : null;
+        
 
         try {
             // 3. Création de l'entrée User dans la table 'users'
@@ -50,14 +59,18 @@ exports.registerUser = async (req, res) => {
 
             // 5. Commit de la transaction
             await transaction.commit();
+                console.log('calleddd')
 
             // 6. Succès et réponse
             // NOTE: Nous n'incluons JAMAIS le mot de passe dans la réponse.
             return res.status(201).json({
                 message: "Inscription réussie.",
                 userId: newUser.id,
+                nom:newUser.nom,
+                prenom:newUser.prenom,
                 email: newUser.email,
-                role: newUser.role
+                role: newUser.role,
+                imgUrl:newUser.imgUrl
             });
 
         } catch (error) {
@@ -128,6 +141,9 @@ exports.login = async (req, res) => {
             message: "Connexion réussie.",
             userId: user.id,
             role: user.role,
+            imgUrl:user.imgUrl,
+            nom:user.nom,
+            prenom:user.prenom,
             clientId: user.role === 'client' ? roleId : null,
             driverId: (user.role === 'driver' || user.role === 'livreur') ? roleId : null,
             accessToken,

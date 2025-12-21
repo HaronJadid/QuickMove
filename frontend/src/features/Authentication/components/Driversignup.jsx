@@ -43,13 +43,14 @@ export default function Driversignup() {
 
 
   const trysignup=async()=>{
+    setError(false)
       try{
         if(!email || !pwd ||!username || !tel){
           setError(true)
           setErrmsg(' الرجاء ملء جميع الحقول !')
           return
         }
-        setError(false)
+        
 
         const formData = new FormData();
         formData.append("imgUrl", file);

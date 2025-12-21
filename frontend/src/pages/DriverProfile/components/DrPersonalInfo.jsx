@@ -7,33 +7,58 @@ import { useEffect } from 'react';
 export default function DrPersonalInfo() {
   
     let [email,setEmail]=useState('')
-    let [pwd,setPwd]=useState('')
-    let [username,setUsername]=useState('')
-    let [tel,setTel]=useState(null)
+    let [prenom,setPrenom]=useState('')
+    let [nom,setNom]=useState('')
+    let [tel,setTel]=useState('')
 
     let [edit,setEdit]=useState(false)
 
+    const [user,setUser]=useState(null)
+
+    const userRetrieved=localStorage.getItem('user')
+    const userParsed=JSON.parse(userRetrieved)
+    const id=userParsed.userId
+
      const save =async()=>{
       setEdit(false)
-     /*   const id=localStorage.getItem('userdata.id')
+     /*   
       const res=await axios.get('http://localhost:3000/api/user/:id')
      */
     }
 
-    useEffect(async()=>{
-      const id=localStorage.getItem('userdata.id')
-      const res=await axios.get('http://localhost:3000/api/user/:id')
+    useEffect(()=>{
+      const getinfo=async()=>{
+        try{
+        const res=await axios.get(`http://localhost:3000/api/user/${id}`)
 
+       const fetchedData = {
+        prenom: res.prenom,
+        nom:res.nom,
+        email: res.email,
+        phone:res.tel,
+        role: "حساب سائق", 
+        avatar: res.imgUrl || '../../../../public/alt_img.webp'
+        }   
+        setUser(fetchedData)
+        setPrenom(fetchedData.prenom);
+        setNom(fetchedData.nom);
+        setEmail(fetchedData.email);
+        setTel(fetchedData.phone);
+
+           }catch(err){
+            console.log('err:',err)
+           }
+     
+
+     
+      }
+      getinfo()
+      
+     
     }
+    
       ,[])
-    const user = {
-      prenom: res.prenom,
-      nom:res.nom,
-      email: res.email,
-      phone:res.tel,
-      role: "حساب سائق", 
-      avatar: res.imgUrl || '../../../../public/alt_img.webp'
-    };
+    
 
    
 
@@ -43,7 +68,7 @@ export default function DrPersonalInfo() {
       <div className="profile-card">
         
         <div className="profile-header">
-          <img src={user.avatar} alt="Profile" className="profile-avatar" />
+          <img src={user.avatar || '../../../../public/alt_img.webp'} alt="Profile" className="profile-avatar" />
           <div className="role-badge">{user.role}</div>
         </div>
 

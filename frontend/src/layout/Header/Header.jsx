@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { useRef } from "react";
-import axios from "axios";
 import SearchFormContainer from "../../pages/HomePage/components/SearchFormContainer";
 import Contactus from "./headerComponents/Contactus";
 import useAuth from '../../features/Authentication/components/Authprovider'
@@ -18,22 +17,26 @@ export default function Header({scrollToSearchForm}) {
 
     let [isContactUsOpen,setisContactUsOpen]=useState(false)
     const ref1=useRef()
-    const userinfo=null
+    let userinfo={}
     useOnClickOutside(ref1,()=>{setisContactUsOpen(false)})
 
 
-    const user=localStorage.getItem()
-     useEffect(async()=>{
-        if(user){
-         const id=localStorage.getItem('userdata.id')
-         const res=await axios.get('http://localhost:3000/api/user/:id')
-         userinfo={
-            username:res.prenom+ ' '+res.nom ,
-            pic:res.imgUrl
+    const user=localStorage.getItem('user')
+     useEffect(()=>{
+        const getinfo=()=>{
+            if(user){
+                const id=user.userId
+                userinfo={
+                username:user.prenom+ ' '+user.nom ,
+                pic:user.imgUrl
 
-         }
+                }
+
+            }
 
         }
+        getinfo()
+       
       
     }
       )

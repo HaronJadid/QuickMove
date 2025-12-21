@@ -2,7 +2,7 @@ import { useState } from "react";
 import '../style/auth.css';
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
-import useAuth from './Authprovider'
+import {useAuth} from './Authprovider'
 import axios from "axios";
 
 
@@ -11,12 +11,13 @@ export default function Signup() {
 
   
   const navigate=useNavigate()
+  const {login}=useAuth()
 
   let [email,setEmail]=useState('')
   let [pwd,setPwd]=useState('')
   let [prenom,setPrenom]=useState('')
   let [nom,setNom]=useState('')
-  let [tel,setTel]=useState(null)
+  let [tel,setTel]=useState('')
   let [file, setFile] = useState(null);
 
 
@@ -49,16 +50,22 @@ export default function Signup() {
 
 
   const trysignup=async()=>{
+    setError(false)
       try{
-        if(!email || !pwd ||!username || !tel){
+        if(!email || !pwd ||!prenom || !nom || !tel){
           setError(true)
           setErrmsg(' الرجاء ملء جميع الحقول !')
           return
         }
-        setError(false)
+        
+        
 
         const formData = new FormData();
-        formData.append("imgUrl", file);
+
+         if (file) {
+        formData.append("avatar", file);
+        }
+
         formData.append("nom", nom);
         formData.append("prenom", prenom);
         formData.append("email", email);
@@ -66,15 +73,13 @@ export default function Signup() {
         formData.append("numero", tel);
         formData.append("role", 'client');
 
-        const res=await axios.post("/api/auth/register", formData, {
-          headers: {
-            "Content-Type": "multipart/form-data"
-          }
-        });
+        const res=await axios.post("http://localhost:3000/api/auth/register", formData);
 
         if(res.status==201){
+            console.log('client was created')
+
           const userdata=res.data
-          const {login}=useAuth()
+          
           login(userdata)
           navigate('/clientprofile')
   
@@ -86,7 +91,7 @@ export default function Signup() {
   
       }catch(err){
         setError(true)
-        setErrmsg(err.response?.data|| ' !! Error logging in ')
+        setErrmsg(err.response?.data.message|| ' !! Error logging in ')
         console.log('Error logging in !!',err)
       }
   

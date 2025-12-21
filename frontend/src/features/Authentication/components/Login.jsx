@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
 import '../style/auth.css'; 
 import { Link, useNavigate } from 'react-router-dom';
-import useAuth from './Authprovider'
+import {useAuth} from './Authprovider'
 import axios from 'axios';
 
 export default function Login() {
 
   const navigate=useNavigate()
+  const {login}=useAuth()
 
   let [email,setEmail]=useState('')
   let [pwd,setPwd]=useState('')
@@ -36,7 +37,7 @@ export default function Login() {
       if(res.status==200){
 
         const userdata=res.data
-        const {login}=useAuth()
+        
         login(userdata)
         if(userdata.role=='client'){
            navigate('/clientprofile')
@@ -53,7 +54,7 @@ export default function Login() {
 
     }catch(err){
       setError(true)
-      setErrmsg(err.response?.data|| 'Error logging in !!')
+      setErrmsg(err.response?.data|| '!! Error logging in ')
       console.log(' !! Error logging in ',err)
     }
 
