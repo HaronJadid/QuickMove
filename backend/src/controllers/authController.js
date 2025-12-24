@@ -139,111 +139,111 @@ exports.login = async (req, res) => {
         return res.status(500).json({ message: "Erreur serveur.", details: error.message });
     }
 };
+/**dont work with it because before i need to test it */
+// // Configuration Nodemailer (Pour le développement, on utilise souvent un service factice comme Ethereal ou simplement le logging console si pas de SMTP)
+// const nodemailer = require('nodemailer');
 
-// Configuration Nodemailer (Pour le développement, on utilise souvent un service factice comme Ethereal ou simplement le logging console si pas de SMTP)
-const nodemailer = require('nodemailer');
+// // Setup transporter (A REMPLACER par vos vrais identifiants SMTP en production)
+// const transporter = nodemailer.createTransport({
+//     host: process.env.SMTP_HOST || 'smtp.ethereal.email',
+//     port: process.env.SMTP_PORT || 587,
+//     secure: false,
+//     auth: {
+//         user: process.env.SMTP_USER || 'ethereal_user',
+//         pass: process.env.SMTP_PASS || 'ethereal_pass'
+//     }
+// });
 
-// Setup transporter (A REMPLACER par vos vrais identifiants SMTP en production)
-const transporter = nodemailer.createTransport({
-    host: process.env.SMTP_HOST || 'smtp.ethereal.email',
-    port: process.env.SMTP_PORT || 587,
-    secure: false,
-    auth: {
-        user: process.env.SMTP_USER || 'ethereal_user',
-        pass: process.env.SMTP_PASS || 'ethereal_pass'
-    }
-});
+// /**
+//  * Forgot Password: Vérifie l'email et envoie un lien de réinitialisation
+//  * POST /api/auth/forgot-password
+//  */
+// exports.forgotPassword = async (req, res) => {
+//     const { email } = req.body;
 
-/**
- * Forgot Password: Vérifie l'email et envoie un lien de réinitialisation
- * POST /api/auth/forgot-password
- */
-exports.forgotPassword = async (req, res) => {
-    const { email } = req.body;
+//     if (!email) {
+//         return res.status(400).json({ message: "Veuillez fournir votre email." });
+//     }
 
-    if (!email) {
-        return res.status(400).json({ message: "Veuillez fournir votre email." });
-    }
+//     try {
+//         const user = await db.User.findOne({ where: { email } });
+//         if (!user) {
+//             return res.status(404).json({ message: "Aucun utilisateur trouvé avec cet email." });
+//         }
 
-    try {
-        const user = await db.User.findOne({ where: { email } });
-        if (!user) {
-            return res.status(404).json({ message: "Aucun utilisateur trouvé avec cet email." });
-        }
+//         // Générer un token de réinitialisation (valide 15 minutes)
+//         // On utilise un secret différent ou concaténé avec le hash du pwd pour plus de sécurité (optionnel mais recommandé)
+//         // Ici simple JWT pour la démo
+//         const resetToken = jwt.sign(
+//             { id: user.id },
+//             process.env.JWT_RESET_SECRET || 'secret_reset_key',
+//             { expiresIn: '15m' }
+//         );
 
-        // Générer un token de réinitialisation (valide 15 minutes)
-        // On utilise un secret différent ou concaténé avec le hash du pwd pour plus de sécurité (optionnel mais recommandé)
-        // Ici simple JWT pour la démo
-        const resetToken = jwt.sign(
-            { id: user.id },
-            process.env.JWT_RESET_SECRET || 'secret_reset_key',
-            { expiresIn: '15m' }
-        );
+//         // Lien de réinitialisation (Frontend URL en réalité, mais pour l'API on renvoie le lien)
+//         // Supposons que le frontend tourne sur localhost:3000 ou que c'est une route API directe
+//         const resetLink = `http://localhost:3000/reset-password?token=${resetToken}`;
 
-        // Lien de réinitialisation (Frontend URL en réalité, mais pour l'API on renvoie le lien)
-        // Supposons que le frontend tourne sur localhost:3000 ou que c'est une route API directe
-        const resetLink = `http://localhost:3000/reset-password?token=${resetToken}`;
+//         // Envoyer l'email
+//         const mailOptions = {
+//             from: '"QuickMove Support" <no-reply@quickmove.com>',
+//             to: email,
+//             subject: 'Réinitialisation de votre mot de passe',
+//             text: `Bonjour ${user.prenom},\n\nVous avez demandé la réinitialisation de votre mot de passe. Cliquez sur le lien suivant :\n\n${resetLink}\n\nCe lien expire dans 15 minutes.\n\nSi vous n'avez pas demandé cela, ignorez cet email.`
+//         };
 
-        // Envoyer l'email
-        const mailOptions = {
-            from: '"QuickMove Support" <no-reply@quickmove.com>',
-            to: email,
-            subject: 'Réinitialisation de votre mot de passe',
-            text: `Bonjour ${user.prenom},\n\nVous avez demandé la réinitialisation de votre mot de passe. Cliquez sur le lien suivant :\n\n${resetLink}\n\nCe lien expire dans 15 minutes.\n\nSi vous n'avez pas demandé cela, ignorez cet email.`
-        };
+//         // NOTE: En dev, si pas de SMTP configuré, ceci peut échouer. On loggue le lien pour tester.
+//         console.log(`[DEV MODE] Password Reset Link for ${email}: ${resetLink}`);
 
-        // NOTE: En dev, si pas de SMTP configuré, ceci peut échouer. On loggue le lien pour tester.
-        console.log(`[DEV MODE] Password Reset Link for ${email}: ${resetLink}`);
+//         // Tentative d'envoi réel (peut être commenté si pas d'internet/SMTP)
+//         // await transporter.sendMail(mailOptions); 
 
-        // Tentative d'envoi réel (peut être commenté si pas d'internet/SMTP)
-        // await transporter.sendMail(mailOptions); 
+//         return res.status(200).json({
+//             message: "Si l'email existe, un lien de réinitialisation a été envoyé.",
+//             // Pour le débuggage/démo, on renvoie le lien (A RETIRER EN PROD)
+//             debugLink: resetLink
+//         });
 
-        return res.status(200).json({
-            message: "Si l'email existe, un lien de réinitialisation a été envoyé.",
-            // Pour le débuggage/démo, on renvoie le lien (A RETIRER EN PROD)
-            debugLink: resetLink
-        });
+//     } catch (error) {
+//         console.error("Erreur forgotPassword:", error);
+//         return res.status(500).json({ message: "Erreur serveur.", details: error.message });
+//     }
+// };
 
-    } catch (error) {
-        console.error("Erreur forgotPassword:", error);
-        return res.status(500).json({ message: "Erreur serveur.", details: error.message });
-    }
-};
+// /**
+//  * Reset Password: Met à jour le mot de passe avec le token
+//  * POST /api/auth/reset-password
+//  */
+// exports.resetPassword = async (req, res) => {
+//     const { token, newPassword } = req.body;
 
-/**
- * Reset Password: Met à jour le mot de passe avec le token
- * POST /api/auth/reset-password
- */
-exports.resetPassword = async (req, res) => {
-    const { token, newPassword } = req.body;
+//     if (!token || !newPassword) {
+//         return res.status(400).json({ message: "Token et nouveau mot de passe requis." });
+//     }
 
-    if (!token || !newPassword) {
-        return res.status(400).json({ message: "Token et nouveau mot de passe requis." });
-    }
+//     try {
+//         // Vérifier le token
+//         const decoded = jwt.verify(token, process.env.JWT_RESET_SECRET || 'secret_reset_key');
 
-    try {
-        // Vérifier le token
-        const decoded = jwt.verify(token, process.env.JWT_RESET_SECRET || 'secret_reset_key');
+//         const user = await db.User.findByPk(decoded.id);
+//         if (!user) {
+//             return res.status(404).json({ message: "Utilisateur introuvable." });
+//         }
 
-        const user = await db.User.findByPk(decoded.id);
-        if (!user) {
-            return res.status(404).json({ message: "Utilisateur introuvable." });
-        }
+//         // Hasher le nouveau mot de passe (IMPORTANT: le hook beforeUpdate le fera si on utilise user.save/update et changed('password'))
+//         // Mais ici, on peut assigner directement et laisser le hook faire, ou hasher manuellement.
+//         // Le hook `beforeUpdate` dans user.js gère le hashage si password est changé.
 
-        // Hasher le nouveau mot de passe (IMPORTANT: le hook beforeUpdate le fera si on utilise user.save/update et changed('password'))
-        // Mais ici, on peut assigner directement et laisser le hook faire, ou hasher manuellement.
-        // Le hook `beforeUpdate` dans user.js gère le hashage si password est changé.
+//         user.password = newPassword;
+//         await user.save(); // Déclenche beforeUpdate
 
-        user.password = newPassword;
-        await user.save(); // Déclenche beforeUpdate
+//         return res.status(200).json({ message: "Mot de passe mis à jour avec succès. Vous pouvez vous connecter." });
 
-        return res.status(200).json({ message: "Mot de passe mis à jour avec succès. Vous pouvez vous connecter." });
-
-    } catch (error) {
-        console.error("Erreur resetPassword:", error);
-        if (error.name === 'TokenExpiredError') {
-            return res.status(400).json({ message: "Le lien a expiré." });
-        }
-        return res.status(400).json({ message: "Lien invalide ou expiré.", details: error.message });
-    }
-};
+//     } catch (error) {
+//         console.error("Erreur resetPassword:", error);
+//         if (error.name === 'TokenExpiredError') {
+//             return res.status(400).json({ message: "Le lien a expiré." });
+//         }
+//         return res.status(400).json({ message: "Lien invalide ou expiré.", details: error.message });
+//     }
+// };
