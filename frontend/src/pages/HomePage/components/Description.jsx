@@ -1,5 +1,5 @@
 import React from 'react';
-import '../../../assets/description.css';
+import '../style/description.css';
 
 export default function Description() {
   

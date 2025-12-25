@@ -8,12 +8,13 @@ const { Op } = require('sequelize'); // Importe l'opérateur Sequelize pour les 
  * * NOTE : La ville est passée dans les paramètres de requête (ex: ?ville=Casablanca).
  */
 exports.findLivreursByCity = async (req, res) => {
+    console.log('callled  1')
     // 1. Récupération du paramètre de la ville (ville de départ)
     const cityName = req.query.ville; // Récupère 'ville' depuis l'URL: /api/livreurs?ville=Casablanca
-
+    console.log(cityName)
     if (!cityName) {
-        return res.status(400).json({ 
-            message: "Le paramètre 'ville' est obligatoire pour la recherche." 
+        return res.status(400).json({
+            message: "Le paramètre 'ville' est obligatoire pour la recherche."
         });
     }
 
@@ -25,13 +26,14 @@ exports.findLivreursByCity = async (req, res) => {
                 nom: { [Op.iLike]: `%${cityName.trim()}%` }
             }
         });
+        console.log(' ville:',ville)
 
         if (!ville) {
-            return res.status(404).json({ 
-                message: `Aucune ville trouvée correspondant à '${cityName}'.` 
+            return res.status(404).json({
+                message: `Aucune ville trouvée correspondant à '${cityName}'.`
             });
         }
-        
+
         const villeId = ville.id_ville;
 
         // 3. Récupération des Livreurs liés à cet ID de Ville
@@ -60,13 +62,14 @@ exports.findLivreursByCity = async (req, res) => {
             // Attributs exposés du Livreur
             attributes: ['id_livreur', 'cin', 'about']
         });
-        
+
         if (livreurs.length === 0) {
-            return res.status(200).json({ 
+            return res.status(200).json({
                 message: `Aucun livreur disponible dans la ville de ${cityName}.`,
                 livreurs: []
             });
         }
+        console.log('livreurs',livreurs)
 
         // 4. Formatage pour une réponse plus claire
         const formatted = livreurs.map(l => {
@@ -81,6 +84,7 @@ exports.findLivreursByCity = async (req, res) => {
                 id: v.id_ville || null,
                 nom: v.nom || null
             }));
+            console.log('callled  2')
 
             return {
                 id: l.id_livreur,
@@ -106,7 +110,7 @@ exports.findLivreursByCity = async (req, res) => {
 
     } catch (error) {
         console.error("Erreur de recherche des livreurs:", error);
-        return res.status(500).json({ 
+        return res.status(500).json({
             message: "Erreur serveur lors de la recherche des livreurs.",
             details: error.message
         });
@@ -228,6 +232,120 @@ exports.getEvaluationsByLivreur = async (req, res) => {
         });
     } catch (error) {
         console.error('Erreur getEvaluationsByLivreur:', error);
+        return res.status(500).json({ message: 'Erreur serveur.', details: error.message });
+    }
+};
+
+/**
+ * Get all demands (trips) assigned to a driver
+ * GET /api/livreur/:id/demands
+ */
+exports.getDemandsByDriver = async (req, res) => {
+    const livreurId = req.params.id;
+
+    try {
+        const livreur = await db.Livreur.findByPk(livreurId);
+        if (!livreur) return res.status(404).json({ message: `Livreur id=${livreurId} introuvable.` });
+
+        // Fetch demands via Vehicule association (Vehicule -> Livreur)
+        const demands = await db.Demande.findAll({
+            include: [
+                {
+                    model: db.Vehicule,
+                    as: 'VehiculeUtilise',
+                    where: { livreur_id: livreurId },
+                    attributes: ['id_vehicule', 'nom', 'imgUrl']
+                },
+                {
+                    model: db.Client,
+                    as: 'clients', // Many-to-Many via ClientDemandes
+                    include: [{ model: db.User, attributes: ['nom', 'prenom', 'imgUrl', 'email', 'numero'] }],
+                    through: { attributes: [] }
+                },
+                { model: db.Ville, as: 'VilleDepart', attributes: ['id_ville', 'nom'] },
+                { model: db.Ville, as: 'VilleArrivee', attributes: ['id_ville', 'nom'] }
+            ],
+            order: [['createdAt', 'DESC']]
+        });
+
+        const formatted = demands.map(d => ({
+            id: d.id,
+            status: d.status,
+            prix: d.prix,
+            comment: d.comment,
+            dateDepartExacte: d.dateDepartExacte,
+            dateArriveeExacte: d.dateArriveeExacte,
+            villeDepart: d.VilleDepart ? d.VilleDepart.nom : null,
+            villeArrivee: d.VilleArrivee ? d.VilleArrivee.nom : null,
+            client: d.clients && d.clients.length > 0 && d.clients[0].User ? {
+                id: d.clients[0].id_client,
+                nom: d.clients[0].User.nom,
+                prenom: d.clients[0].User.prenom,
+                email: d.clients[0].User.email,
+                numero: d.clients[0].User.numero, // Using correct column
+                imgUrl: d.clients[0].User.imgUrl
+            } : null,
+            vehicule: d.VehiculeUtilise ? {
+                id: d.VehiculeUtilise.id_vehicule,
+                nom: d.VehiculeUtilise.nom
+            } : null,
+            createdAt: d.createdAt
+        }));
+
+        return res.status(200).json({
+            message: `Demandes pour le livreur id=${livreurId}`,
+            count: formatted.length,
+            demands: formatted
+        });
+
+    } catch (error) {
+        console.error('Erreur getDemandsByDriver:', error);
+        return res.status(500).json({ message: 'Erreur serveur.', details: error.message });
+    }
+};
+
+/**
+ * Update the status of a demand (e.g., CONFIRMED, COMPLETED)
+ * PUT /api/livreur/:id/demands/:demandeId/status
+ * Body: { status }
+ */
+exports.updateDemandStatus = async (req, res) => {
+    const livreurId = req.params.id;
+    const demandeId = req.params.demandeId;
+    const { status } = req.body;
+
+    const validStatuses = ['PENDING', 'CONFIRMED', 'COMPLETED'];
+    if (!validStatuses.includes(status)) {
+        return res.status(400).json({ message: `Statut invalide. Valeurs permises: ${validStatuses.join(', ')}` });
+    }
+
+    try {
+        // Find the demand and verify it belongs to this driver (via Vehicule)
+        const demande = await db.Demande.findOne({
+            where: { id: demandeId },
+            include: [{
+                model: db.Vehicule,
+                as: 'VehiculeUtilise',
+                where: { livreur_id: livreurId }
+            }]
+        });
+
+        if (!demande) {
+            return res.status(404).json({ message: "Demande introuvable ou ne concerne pas ce livreur." });
+        }
+
+        // Update status
+        demande.status = status;
+        await demande.save();
+
+        return res.status(200).json({
+            message: `Statut de la demande ${demandeId} mis à jour.`,
+            status: demande.status,
+            demande
+        });
+
+    } catch (error) {
+        console.error('Erreur updateDemandStatus:', error);
         return res.status(500).json({ message: 'Erreur serveur.', details: error.message });
     }
 };

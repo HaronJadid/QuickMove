@@ -1,0 +1,119 @@
+@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap');
+
+.dashboard-section {
+  font-family: 'Cairo', sans-serif;
+  /* The Red/Pink Gradient Background */
+  background: linear-gradient(135deg, #d64c5e 0%, #c41e3a 100%);
+  padding: 40px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* --- STATS GRID --- */
+.stats-grid {
+  display: flex;
+  gap: 20px;
+  justify-content: space-between;
+  flex-wrap: wrap; /* Allows wrapping on mobile */
+  margin-bottom: 30px;
+}
+
+.stat-card {
+  background-color: white;
+  border-radius: 12px;
+  padding: 20px 25px;
+  flex: 1; /* Makes all cards same width */
+  min-width: 180px; /* Prevents them from getting too small */
+  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.stat-label {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #333;
+  margin-bottom: 5px;
+  display: block;
+}
+
+.stat-value {
+  font-size: 1.8rem;
+  font-weight: 800;
+  margin: 0;
+  line-height: 1.2;
+}
+
+/* Text Colors */
+.text-red { color: #ff4757; }
+.text-black { color: #000000; }
+.text-green { color: #2ed573; }
+.text-blue { color: #1e90ff; }
+
+/* --- TABS CONTAINER --- */
+.tabs-wrapper {
+  display: flex;
+  justify-content: flex-start; /* Aligns tabs to left */
+}
+
+.tabs-container {
+  background-color: rgba(255, 255, 255, 0.35); /* Semi-transparent grey/white */
+  backdrop-filter: blur(5px);
+  padding: 6px;
+  border-radius: 50px; /* Pill shape */
+  display: inline-flex;
+  gap: 5px;
+  margin-left: 40px;
+}
+
+.tab-item {
+  background: transparent;
+  border: none;
+  padding: 10px 25px;
+  border-radius: 30px;
+  font-family: 'Cairo', sans-serif;
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: #222;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+/* Active State (White Bubble) */
+.tab-item.active {
+  background-color: rgb(234, 202, 202);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.tab-item:hover:not(.active) {
+  background-color: rgba(255,255,255,0.2);
+}
+
+/* --- MOBILE RESPONSIVENESS --- */
+@media screen and (max-width: 768px) {
+  .dashboard-section {
+    padding: 20px;
+  }
+  
+  .stats-grid {
+    gap: 15px;
+  }
+
+  /* Make cards 2 per row on mobile */
+  .stat-card {
+    min-width: 45%; 
+  }
+  
+  .tabs-container {
+    width: 100%;
+    justify-content: space-between;
+    overflow-x: auto; /* Allow scroll if screen is too small */
+  }
+  
+  .tab-item {
+    padding: 10px 15px;
+    font-size: 0.8rem;
+    white-space: nowrap;
+  }
+}

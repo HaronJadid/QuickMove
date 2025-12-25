@@ -15,9 +15,10 @@ exports.getUserById = async (req, res) => {
       ]
     });
 
-    if (!user) return res.status(404).json({ message: `Utilisateur avec l'ID ${userId} non trouvé.` });
 
-    return res.status(200).json({ message: 'Utilisateur récupéré avec succès.', user });
+    if (!user) return res.status(404).json({ message: `Utilisateur avec l'ID ${userId} non trouvé.` });
+    const userInfo=user.dataValues
+    return res.status(200).json({ message: 'Utilisateur récupéré avec succès.', userInfo });
   } catch (error) {
     console.error('Erreur de récupération de l utilisateur:', error);
     return res.status(500).json({ message: 'Erreur serveur.', details: error.message });

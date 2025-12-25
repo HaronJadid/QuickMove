@@ -1,5 +1,5 @@
 import React from 'react';
-import '../../../assets/comment.css'
+import '../style/comment.css'
 
 export default function ReviewCard({ 
   name = "سارة بنعلي", 

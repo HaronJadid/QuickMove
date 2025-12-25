@@ -1,5 +1,6 @@
 import React from 'react';
-import '../../../assets/joinus.css';
+import '../style/joinus.css';
+import { Link } from 'react-router-dom';
 
 export default function Joinus() {
   return (
@@ -20,12 +21,12 @@ export default function Joinus() {
         </p>
 
         <div className="cta-buttons">
-          <button className="btn-outline">
+          <Link to='/aboutus' className="btn-outline">
             <span>ⓘ</span> اعرف المزيد
-          </button>
-          <button className="btn-green">
+          </Link>
+          <Link to='/driversignup' className="btn-green">
             <span>👤+</span> سجل كسائق
-          </button>
+          </Link>
         </div>
 
         <div className="cta-features-grid">

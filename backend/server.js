@@ -19,14 +19,21 @@ const livreurRoutes = require('./src/routes/livreurRoutes');
 app.use("/api/livreur", livreurRoutes);
 const userRoutes = require('./src/routes/userRoutes');
 app.use('/api/user', userRoutes);
+
 const villeRoutes = require('./src/routes/villeRoutes');
 app.use('/api/ville', villeRoutes);
+
+const vehiculeRoutes = require('./src/routes/vehiculeRoutes');
+app.use('/api/vehicule', vehiculeRoutes);
+
+const profileRoutes = require('./src/routes/profileRoutes');
+app.use('/api/profile', profileRoutes);
 
 
 // Démarrage du serveur et Connexion DB
 app.listen(PORT, async () => {
     console.log(`Le serveur tourne sur le port ${PORT}!`);
-    
+
     // try {
     //     await sequelize.authenticate();
     //     console.log('Connecté à Neon via Sequelize !');
