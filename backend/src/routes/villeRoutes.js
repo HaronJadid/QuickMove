@@ -8,7 +8,8 @@ const router = express.Router();
 router.post('/', villeController.createVille);
 
 // Associate a ville to a livreur
-router.post('/:villeId/assign/:livreurId', villeController.assignVilleToLivreur);
+// Associate a ville to a livreur (Body: { villeNom, livreurId })
+router.post('/assign-livreur', villeController.assignVilleToLivreur);
 
 // Get all villes
 router.get('/', villeController.getAllVilles);

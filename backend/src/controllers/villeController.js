@@ -28,14 +28,25 @@ exports.createVille = async (req, res) => {
 
 /**
  * Associate an existing Ville with a Livreur
- * POST /ville/:villeId/assign/:livreurId
+ * POST /api/ville/assign-livreur
+ * body: { villeNom, livreurId }
  */
 exports.assignVilleToLivreur = async (req, res) => {
-  const { villeId, livreurId } = req.params;
+  const { villeNom, livreurId } = req.body;
+
+  if (!villeNom || !livreurId) {
+    return res.status(400).json({ message: "Les champs 'villeNom' et 'livreurId' sont requis." });
+  }
 
   try {
-    const ville = await db.Ville.findByPk(villeId);
-    if (!ville) return res.status(404).json({ message: `Ville id=${villeId} introuvable.` });
+    // Find ville by name (case insensitive)
+    const ville = await db.Ville.findOne({
+      where: {
+        nom: { [db.Sequelize.Op.iLike]: villeNom.trim() }
+      }
+    });
+
+    if (!ville) return res.status(404).json({ message: `Ville '${villeNom}' introuvable.` });
 
     const livreur = await db.Livreur.findByPk(livreurId);
     if (!livreur) return res.status(404).json({ message: `Livreur id=${livreurId} introuvable.` });
@@ -43,14 +54,18 @@ exports.assignVilleToLivreur = async (req, res) => {
     // Use the association helper defined by alias `zonesService` on Livreur
     if (typeof livreur.hasZonesService === 'function') {
       const already = await livreur.hasZonesService(ville);
-      if (already) return res.status(409).json({ message: 'Association déjà existante.' });
+      if (already) return res.status(409).json({ message: 'Ce livreur couvre déjà cette ville.' });
+
       await livreur.addZonesService(ville);
-      return res.status(200).json({ message: 'Ville associée au livreur.' });
+      return res.status(200).json({
+        message: `La ville ${ville.nom} a été ajoutée aux zones de service du livreur.`,
+        ville: ville
+      });
     }
 
     // Fallback: create entry in join table manually
-    await db.sequelize.models.LivreurVilles.create({ livreur_id: livreurId, ville_id: villeId });
-    return res.status(200).json({ message: 'Ville associée au livreur (fallback).' });
+    await db.sequelize.models.LivreurVilles.create({ livreur_id: livreurId, ville_id: ville.id_ville });
+    return res.status(200).json({ message: `Ville ${ville.nom} associée au livreur (fallback).` });
 
   } catch (error) {
     console.error('Erreur association ville-livreur:', error);
