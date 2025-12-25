@@ -5,6 +5,7 @@ import {useAuth} from './Authprovider'
 import axios from 'axios';
 
 export default function Login() {
+ 
 
   const navigate=useNavigate()
   const {login}=useAuth()
@@ -23,7 +24,8 @@ export default function Login() {
   }
 
 
-  const trylogin=async()=>{
+  const trylogin=async(e)=>{
+     e.preventDefault();
     try{
   
       if(!email || !pwd){
@@ -72,7 +74,7 @@ export default function Login() {
         <h3 className="auth-title">تسجيل الدخول</h3>
 
         <div className="form-content fade-in">
-          <form onSubmit={(e) => { e.preventDefault();  }}>
+          <form onSubmit={trylogin}>
             <div className="input-group">
               <label>البريد الإلكتروني</label>
               <input type="email" placeholder="example@mail.com" className="auth-input" value={email} onChange={emailInput} />
@@ -89,7 +91,7 @@ export default function Login() {
               <Link to='/sendlink'>نسيت كلمة المرور؟</Link>
             </div>
 
-            <button className="auth-btn" onClick={trylogin}>تسجيل الدخول</button>
+            <button className="auth-btn" >تسجيل الدخول</button>
           </form>
           {error && (<div className='errmessage'>{errmsg}</div>)}
 

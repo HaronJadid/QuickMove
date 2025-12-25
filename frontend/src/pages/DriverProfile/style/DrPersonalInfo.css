@@ -111,7 +111,7 @@
 
 
 .logout{
-   background-color: #a1303b; /* Red */
+   background-color: #e8e5e5; /* Red */
   color: white;
   margin: 30px;
   margin-right: 100px;
@@ -126,7 +126,7 @@
 
 }
 .logout:hover{
-  background-color: #d13c4b;
+  background-color: #e3c2c5;
 
 }
 .logout-ctn{
@@ -135,4 +135,41 @@
   justify-content: flex-end;
   align-items: center;
 
+}
+
+.tabs-wrapper {
+  display: flex;
+  justify-content: flex-start; /* Aligns tabs to left */
+}
+
+.tabs-container {
+  background-color: rgba(255, 255, 255, 0.35); /* Semi-transparent grey/white */
+  backdrop-filter: blur(5px);
+  padding: 6px;
+  border-radius: 50px; /* Pill shape */
+  display: inline-flex;
+  gap: 5px;
+}
+
+.tab-item {
+  background: transparent;
+  border: none;
+  padding: 10px 25px;
+  border-radius: 30px;
+  font-family: 'Cairo', sans-serif;
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: #222;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+/* Active State (White Bubble) */
+.tab-item.active {
+  background-color: white;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.tab-item:hover:not(.active) {
+  background-color: rgba(255,255,255,0.2);
 }

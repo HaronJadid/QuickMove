@@ -57,8 +57,11 @@ export default function DrPersonalInfo() {
      
     }
     
-      ,[])
+      ,[id])
     
+        if (!user) {
+      return <div style={{textAlign: 'center', marginTop: '50px'}}>... جاري التحميل</div>;
+    }
 
    
 

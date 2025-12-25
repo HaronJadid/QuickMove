@@ -52,7 +52,7 @@ export default function Header({scrollToSearchForm}) {
                 </h4>            </div>
 
             <nav className="header-center">
-                <Link className="nav-item" onClick={scrollToSearchForm}>🔍︎ Search Transport</Link>
+                <Link to='/' className="nav-item" onClick={scrollToSearchForm}>🔍︎ Search Transport</Link>
                 <Link to='/aboutus' className="nav-item">
                     <i className="icon">👤</i> About us
                 </Link>

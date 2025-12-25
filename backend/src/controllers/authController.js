@@ -41,7 +41,7 @@ exports.registerUser = async (req, res) => {
         const imgUrl = file
         ? `/uploads/avatars/${file.filename}`
         : null;
-        
+
 
         try {
             // 3. Création de l'entrée User dans la table 'users'
@@ -59,7 +59,6 @@ exports.registerUser = async (req, res) => {
 
             // 5. Commit de la transaction
             await transaction.commit();
-                console.log('calleddd')
 
             // 6. Succès et réponse
             // NOTE: Nous n'incluons JAMAIS le mot de passe dans la réponse.

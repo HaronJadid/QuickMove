@@ -9,7 +9,6 @@ import axios from "axios";
 
 export default function Signup() {
 
-  
   const navigate=useNavigate()
   const {login}=useAuth()
 
@@ -43,13 +42,14 @@ export default function Signup() {
   setFile(e.target.files[0]); 
   };
   
+  let [isdriver,setIsdriver]=useState(false)
 
 
 
 
 
-
-  const trysignup=async()=>{
+  const trysignup=async(e)=>{
+     e.preventDefault();
     setError(false)
       try{
         if(!email || !pwd ||!prenom || !nom || !tel){
@@ -71,16 +71,19 @@ export default function Signup() {
         formData.append("email", email);
         formData.append("password", pwd);
         formData.append("numero", tel);
-        formData.append("role", 'client');
+        let role=isdriver?'driver':'client'
+        formData.append("role", role);
 
-        const res=await axios.post("http://localhost:3000/api/auth/register", formData);
+        const res=await axios.post(`http://localhost:3000/api/auth/register`, formData);
 
         if(res.status==201){
-            console.log('client was created')
+            console.log(`${role} was created`)
 
           const userdata=res.data
           
           login(userdata)
+          isdriver?
+          navigate('/driverprofile'):
           navigate('/clientprofile')
   
   
@@ -107,10 +110,14 @@ export default function Signup() {
       <div className="auth-card">
 
         <Link to='/' className="brand-logo">🚚 MoveMorocco</Link>
-        <h3 className="auth-title">إنشاء حساب جديد</h3>
+        { (!isdriver)?
+          <h3 className="auth-title">إنشاء حساب جديد</h3>
+        :
+        <h3 className="auth-title"> سجل الآن كسائق وابدأ باستقبال الطلبات</h3>
+}
 
         <div className="form-content fade-in">
-          <form onSubmit={(e) => { e.preventDefault();  }}>
+          <form onSubmit={trysignup}>
             <div className="input-group">
               <label>الاسم</label>
               <input type="text" placeholder="الاسم " className="auth-input" value={prenom} onChange={prenomInput} />
@@ -141,17 +148,26 @@ export default function Signup() {
               <input type="file" className="auth-input"  accept="image/*" onChange={fileInput} />
             </div>
 
-            <button className="auth-btn" onClick={trysignup}>إنشاء حساب</button>
+            <button className="auth-btn" >إنشاء حساب</button>
           </form>
           {error && (<div className='errmessage'>{errmsg}</div>)}
 
-          <div className="auth-footer">
-            <span>هل تريد التسجيل كسائق ؟ </span>
-            <Link to='/driversignup'  className="link-btn">
-              انقر هنا
+         { (isdriver)? ( <div className="auth-footer">
+            <span>لديك حساب بالفعل؟ </span>
+            <Link to='/login'  className="link-btn">
+              تسجيل الدخول
             </Link>
              
-          </div>
+           </div>)
+           :
+            (<div className="auth-footer">
+            <span>هل تريد التسجيل كسائق ؟ </span>
+            <button onClick={()=>setIsdriver(true)}  className="link-btn">
+              انقر هنا
+            </button>
+             
+            </div>)
+          }
         </div>
         
       </div>

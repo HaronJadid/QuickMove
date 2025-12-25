@@ -22,7 +22,7 @@ import React,{forwardRef} from "react";
             </div>
         </div>
 
-        <SearchForm/>
+        <SearchForm  />
         <div align='center'>
             <div className="minit">سائقون معتمدون</div>
             <div className="minit">تقييمات موثوقة</div>

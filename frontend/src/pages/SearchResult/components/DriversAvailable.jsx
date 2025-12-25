@@ -1,8 +1,43 @@
 import React from 'react';
 import '../style/driversAvailable.css';
+import { useEffect } from 'react';
+import { useSearchparams } from './SearchparamsContext';
+import axios from 'axios';
+import { useState } from 'react';
 
 
 export default function DriverComponent() {
+  let {ville_depart}=useSearchparams()
+  let [livreurs,setLivreurs]=useState(null)
+  console.log('called1',ville_depart)
+  useEffect(()=>{
+    const fetchLivreurs=async()=>{
+       try{
+      const res=await axios.get(`http://localhost:3000/api/livreur?ville=${ville_depart}`)
+      const resList=res.data
+      setLivreurs(resList)
+      console.log(res)
+      console.log(livreurs)
+
+    }catch(err){
+      console.log('Error fetching results',err)
+
+    }
+
+
+    }
+    fetchLivreurs()
+   
+  }
+,[])
+    
+
+
+
+
+    if (!livreurs) {
+      return <div style={{textAlign: 'center', marginTop: '50px'}}>... جاري التحميل</div>;
+    }
   return (
     <div className="driver-card" dir="rtl">
       
