@@ -1,12 +1,12 @@
 // server.js (Version adaptée à Sequelize et Neon)
 
-require('dotenv').config({ path: './database/.env', silent: true });
+require('dotenv').config({ path: './.env', silent: true });
 const express = require('express');
 const cors = require('cors');
 
 // Importation de l'objet de base de données Sequelize (qui inclut la connexion et les modèles)
 // Assurez-vous que le chemin est correct (ex: './database/models' si vous êtes dans le dossier 'backend')
-const db = require('./database/models'); 
+const db = require('./database/models');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -14,6 +14,9 @@ const PORT = process.env.PORT || 3000;
 // Middleware
 app.use(cors());
 app.use(express.json());
+
+const evaluationRoutes = require('./routes/evaluationRoutes');
+app.use('/api/evaluations', evaluationRoutes);
 
 // --- Initialisation et Démarrage ---
 
@@ -25,12 +28,12 @@ async function initializeApp() {
         // 1. Tester la connexion via Sequelize
         await db.sequelize.authenticate();
         console.log('✅ Connexion à la base de données (Sequelize) établie avec succès.');
-        
+
         // 2. (Optionnel en Production, mais important pour les migrations)
         // Vérifier que toutes les tables (créées par nos migrations) sont présentes.
         // Si vous avez déjà fait 'npx sequelize-cli db:migrate', cette étape est moins critique.
         // await db.sequelize.sync({ alter: true }); // A utiliser AVANT de migrer si vous n'avez pas encore migré
-        
+
         // 3. Lancer le serveur
         app.listen(PORT, () => {
             console.log(`🚀 Server running on port ${PORT}`);
@@ -48,8 +51,8 @@ async function initializeApp() {
 app.get('/db-test', async (req, res) => {
     try {
         // Exécuter une requête simple via Sequelize
-        const [results, metadata] = await db.sequelize.query('SELECT NOW() AS currentTime'); 
-        
+        const [results, metadata] = await db.sequelize.query('SELECT NOW() AS currentTime');
+
         res.json({
             message: "Database Connected Successfully via Sequelize!",
             time: results[0].currentTime
@@ -69,7 +72,7 @@ app.get('/', (req, res) => {
 initializeApp();
 
 // --- NOTE IMPORTANTE SUR LA CONFIGURATION DE NEON ---
-// Étant donné que Neon est utilisé, assurez-vous que votre fichier de configuration 
+// Étant donné que Neon est utilisé, assurez-vous que votre fichier de configuration
 // (config/config.js) est bien configuré pour utiliser l'URL complète de la base de données.
 // Par exemple:
 /*

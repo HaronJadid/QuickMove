@@ -10,21 +10,22 @@ module.exports = (sequelize) => {
     static associate(models) {
       // 1. Evaluation - Client (N Evaluations appartiennent à 1 Client)
       models.Evaluation.belongsTo(models.Client, {
-          foreignKey: 'client_id', // Qui a fait l'évaluation
-          as: 'evaluateur',
-          onDelete: 'SET NULL' 
+        foreignKey: 'client_id', // Qui a fait l'évaluation
+        as: 'evaluateur',
+        onDelete: 'SET NULL'
       });
 
       // 2. Evaluation - Livreur (N Evaluations concernent 1 Livreur)
       models.Evaluation.belongsTo(models.Livreur, {
-          foreignKey: 'livreur_id', // Qui est évalué
-          as: 'evalue',
-          onDelete: 'CASCADE' // Si le Livreur est supprimé, ses évaluations sont supprimées
+        foreignKey: 'livreur_id', // Qui est évalué
+        as: 'evalue',
+        onDelete: 'CASCADE' // Si le Livreur est supprimé, ses évaluations sont supprimées
       });
-      
+
       // OPTIONNEL : Souvent, une évaluation est liée à une Demande spécifique
       // Si c'est le cas, vous devriez ajouter une FK `demande_id` ici et la relation dans Demande et Evaluation.
       // models.Evaluation.belongsTo(models.Demande, { foreignKey: 'demande_id' });
+      models.Evaluation.belongsTo(models.Demande, { foreignKey: 'demande_id', as: 'demande' });
     }
   }
 
@@ -52,26 +53,34 @@ module.exports = (sequelize) => {
       type: DataTypes.TEXT,
       allowNull: true, // Le commentaire est facultatif
     },
-    
+
     // --- Clés Étrangères ---
-    
-    client_id: { 
-        type: DataTypes.INTEGER,
-        allowNull: true, // Peut être NULL si le client est supprimé (SET NULL en onDelete)
-        references: {
-            model: 'clients',
-            key: 'id_client', 
-        }
+
+    client_id: {
+      type: DataTypes.INTEGER,
+      allowNull: true, // Peut être NULL si le client est supprimé (SET NULL en onDelete)
+      references: {
+        model: 'clients',
+        key: 'id_client',
+      }
     },
-    livreur_id: { 
-        type: DataTypes.INTEGER,
-        allowNull: false, // Une évaluation doit toujours concerner un livreur
-        references: {
-            model: 'livreurs',
-            key: 'id_livreur', 
-        }
+    livreur_id: {
+      type: DataTypes.INTEGER,
+      allowNull: false, // Une évaluation doit toujours concerner un livreur
+      references: {
+        model: 'livreurs',
+        key: 'id_livreur',
+      }
     },
-    
+    demande_id: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+      references: {
+        model: 'demandes',
+        key: 'id',
+      }
+    },
+
   }, {
     sequelize,
     modelName: 'Evaluation',
