@@ -1,11 +1,14 @@
 // server.js (Version adaptée à Sequelize et Neon)
 
-require('dotenv').config({ path: './.env', silent: true });
+// Use the dotenv path from origin/main as it seems more specific, or fallback to root
+require('dotenv').config({ path: './database/.env' });
+// If that file doesn't exist, it might fall back to standard .env or process env. 
+// Given the previous setup, let's keep it simple.
+
 const express = require('express');
 const cors = require('cors');
 
-// Importation de l'objet de base de données Sequelize (qui inclut la connexion et les modèles)
-// Assurez-vous que le chemin est correct (ex: './database/models' si vous êtes dans le dossier 'backend')
+// Import db object which contains sequelize instance
 const db = require('./database/models');
 
 const app = express();
@@ -15,8 +18,34 @@ const PORT = process.env.PORT || 3000;
 app.use(cors());
 app.use(express.json());
 
+// --- ROUTES ---
+
+// Evaluation Routes (from HEAD)
 const evaluationRoutes = require('./routes/evaluationRoutes');
 app.use('/api/evaluations', evaluationRoutes);
+
+// Existing Routes (from origin/main)
+const authRoutes = require('./src/routes/authRoutes');
+app.use('/api/auth', authRoutes);
+
+const clientRoutes = require('./src/routes/clientRoutes');
+app.use('/api/client', clientRoutes);
+
+const livreurRoutes = require('./src/routes/livreurRoutes');
+app.use("/api/livreur", livreurRoutes);
+
+const userRoutes = require('./src/routes/userRoutes');
+app.use('/api/user', userRoutes);
+
+const villeRoutes = require('./src/routes/villeRoutes');
+app.use('/api/ville', villeRoutes);
+
+const vehiculeRoutes = require('./src/routes/vehiculeRoutes');
+app.use('/api/vehicule', vehiculeRoutes);
+
+const profileRoutes = require('./src/routes/profileRoutes');
+app.use('/api/profile', profileRoutes);
+
 
 // --- Initialisation et Démarrage ---
 
@@ -30,35 +59,26 @@ async function initializeApp() {
         console.log('✅ Connexion à la base de données (Sequelize) établie avec succès.');
 
         // 2. (Optionnel en Production, mais important pour les migrations)
-        // Vérifier que toutes les tables (créées par nos migrations) sont présentes.
-        // Si vous avez déjà fait 'npx sequelize-cli db:migrate', cette étape est moins critique.
-        // await db.sequelize.sync({ alter: true }); // A utiliser AVANT de migrer si vous n'avez pas encore migré
+        // await db.sequelize.sync({ alter: true }); 
 
         // 3. Lancer le serveur
         app.listen(PORT, () => {
             console.log(`🚀 Server running on port ${PORT}`);
         });
-
-    } catch (error) {
-        console.error('❌ Échec critique de la connexion ou du démarrage:', error.message);
-        console.error('Veuillez vérifier votre DATABASE_URL et la configuration Sequelize.');
-        process.exit(1);
+    } catch (err) {
+        console.error('❌ Unable to connect to the database:', err);
     }
 }
 
-
-// 2. Route de Test (Utilisation de Sequelize au lieu du Pool `pg`)
+// Route de Test
 app.get('/db-test', async (req, res) => {
     try {
-        // Exécuter une requête simple via Sequelize
         const [results, metadata] = await db.sequelize.query('SELECT NOW() AS currentTime');
-
         res.json({
             message: "Database Connected Successfully via Sequelize!",
             time: results[0].currentTime
         });
     } catch (err) {
-        // Normalement, cette erreur ne devrait pas arriver si authenticate() a réussi.
         res.status(500).json({ error: "Database Query Failed" });
     }
 });
@@ -68,26 +88,5 @@ app.get('/', (req, res) => {
 });
 
 
-// Démarrer l'application en initialisant la base de données
+// Démarrer l'application
 initializeApp();
-
-// --- NOTE IMPORTANTE SUR LA CONFIGURATION DE NEON ---
-// Étant donné que Neon est utilisé, assurez-vous que votre fichier de configuration
-// (config/config.js) est bien configuré pour utiliser l'URL complète de la base de données.
-// Par exemple:
-/*
-// config/config.js
-module.exports = {
-  development: {
-    use_env_variable: 'DATABASE_URL', // Indique à Sequelize d'utiliser la variable d'environnement pour la connexion
-    dialect: 'postgres',
-    dialectOptions: {
-        ssl: {
-            require: true, 
-            rejectUnauthorized: false // Peut être nécessaire selon votre env Node
-        }
-    }
-  },
-  // ...
-};
-*/

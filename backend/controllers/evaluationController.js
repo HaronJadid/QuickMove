@@ -4,7 +4,9 @@ module.exports = {
     // Create a new evaluation
     async createEvaluation(req, res) {
         try {
-            const { rate, comment, livreur_id, client_id, demande_id } = req.body;
+            const { rate, comment, livreur_id, demande_id } = req.body;
+            // Get client_id from the authenticated user (attached by authMiddleware)
+            const client_id = req.user ? req.user.roleId : null;
 
             // Basic validation
             if (!rate || rate < 1 || rate > 5) {
@@ -15,6 +17,9 @@ module.exports = {
             }
             if (!demande_id) {
                 return res.status(400).json({ error: 'Demande ID is required' });
+            }
+            if (!client_id) {
+                return res.status(403).json({ error: 'Unauthorized: Only clients can submit ratings.' });
             }
 
             // Verify existence (Optional but good practice)
@@ -29,7 +34,7 @@ module.exports = {
                 rate,
                 comment,
                 livreur_id,
-                client_id, // Can be null if anonymous or not provided, but usually required
+                client_id,
                 demande_id
             });
 

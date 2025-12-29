@@ -1,0 +1,159 @@
+@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap');
+
+/* --- 1. THE CONTAINER (Background) --- */
+.auth-container {
+  display: flex;
+  justify-content: center; /* Centers horizontally */
+  align-items: center;     /* Centers vertically */
+  min-height: 100vh;       /* Full screen height */
+  width: 100%;
+  background-color: #eee;  /* Darker grey so you can see the card */
+  font-family: 'Cairo', sans-serif;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+/* --- 2. THE CARD (The White Box) --- */
+.auth-card {
+  background-color: white;
+  
+  /* FORCE SMALL SIZE */
+  width: 350px !important;    /* Fixed width - won't stretch */
+  max-width: 90vw;            /* Prevents overflow on tiny phones */
+  
+  padding: 30px 25px;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+  text-align: center;
+}
+
+/* --- HEADER --- */
+.brand-logo {
+  font-size: 1.4rem;
+  font-weight: 800;
+  color: #222;
+  margin: 0 0 5px 0;
+  text-decoration: none;
+}
+
+.auth-title {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #333;
+  margin: 0 0 20px 0;
+}
+
+.auth-subtitle {
+  display: none; /* Hide subtitle to save space if needed */
+}
+
+/* --- INPUTS --- */
+.input-group {
+  margin-bottom: 12px;
+  text-align: right;
+  width: 100%;
+}
+
+.input-group label {
+  display: block;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #666;
+  margin-bottom: 4px;
+}
+
+.auth-input {
+  width: 100%;
+  box-sizing: border-box; /* CRITICAL: Prevents padding from making input wider than 100% */
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-family: 'Cairo', sans-serif;
+  font-size: 0.9rem;
+  outline: none;
+  background-color: #fafafa;
+  height: 40px; /* Fixed height to prevent huge inputs */
+}
+
+.auth-input:focus {
+  border-color: #C41E3A;
+  background-color: #fff;
+}
+
+/* --- BUTTONS --- */
+.auth-btn {
+  width: 100%;
+  padding: 10px;
+  background-color: #C41E3A;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-family: 'Cairo', sans-serif;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  margin-top: 10px;
+}
+
+.auth-btn:hover {
+  background-color: #a01830;
+}
+
+/* --- FOOTER LINKS --- */
+.forgot-password {
+  text-align: left;
+  margin-bottom: 15px;
+}
+.forgot-password a {
+  font-size: 0.75rem;
+  color: #777;
+  text-decoration: none;
+}
+
+.auth-footer {
+  margin-top: 15px;
+  font-size: 0.85rem;
+  color: #666;
+  border-top: 1px solid #f0f0f0;
+  padding-top: 15px;
+}
+
+.link-btn {
+  background: none;
+  border: none;
+  color: #C41E3A;
+  font-weight: 700;
+  font-family: 'Cairo', sans-serif;
+  font-size: 0.85rem;
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+.errmessage{
+  width: 40%;
+  padding: 10px;
+  background-color: #f5a4b1;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-family: 'Cairo', sans-serif;
+  font-size: 0.65rem;
+  font-weight: 300;
+  margin-top: 10px;
+  margin: 10px auto;
+  text-align: center;
+
+}
+
+
+/* Add to ../style/auth.css */
+
+.error-msg {
+  color: #C41E3A; /* Brand Red */
+  font-size: 0.85rem;
+  font-weight: 600;
+  margin-bottom: 15px;
+  background-color: rgba(196, 30, 58, 0.1);
+  padding: 8px;
+  border-radius: 4px;
+}

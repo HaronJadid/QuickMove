@@ -1,0 +1,213 @@
+/* Import Arabic Font */
+@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap');
+
+
+.sfc{
+   margin-bottom: 90px;
+}
+
+
+/* CARD CONTAINER */
+.search-card-container {
+  font-family: 'Cairo', sans-serif; /* The font used in the image */
+  background-color: white;
+  width: 100%;
+  max-width: 900px; /* Adjust based on your layout preference */
+  margin: 40px auto;
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+  border: 1px solid #f0f0f0;
+ 
+}
+
+/* HEADER */
+.card-header {
+  margin-bottom: 25px;
+  border-bottom: 1px solid #eee;
+  padding-bottom: 15px;
+}
+
+.header-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.header-title h2 {
+  margin: 0;
+  font-size: 1.5rem;
+  color: #333;
+  font-weight: 700;
+}
+
+.search-icon-red {
+  color: #D66F7A; /* The pinkish-red color from the image */
+  font-size: 1.4rem;
+  font-weight: bold;
+}
+
+/* FORM GRID */
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr; /* 2 Columns */
+  gap: 20px;
+  margin-bottom: 30px;
+}
+
+/* Responsive: 1 column on mobile */
+@media (max-width: 600px) {
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* INPUT GROUPS */
+.input-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  text-align: right;
+}
+
+.input-group label {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #444;
+}
+
+.required {
+  color: #D66F7A;
+  margin-right: 4px;
+}
+
+.form-input {
+  padding: 12px 15px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-family: 'Cairo', sans-serif;
+  font-size: 0.9rem;
+  color: #555;
+  outline: none;
+  background-color: #fff;
+  transition: border-color 0.2s;
+}
+
+.form-input:focus {
+  border-color: #D66F7A;
+}
+
+/* Placeholder styling */
+::placeholder {
+  color: #aaa;
+}
+
+/* SUBMIT BUTTON */
+.submit-btn {
+  width: 100%;
+  padding: 15px;
+  background-color: #E08490; /* The exact soft pink color */
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-family: 'Cairo', sans-serif;
+  font-size: 1.1rem;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  transition: background-color 0.2s;
+}
+
+.submit-btn:hover {
+  background-color: #d16b7a;
+}
+
+.btn-icon {
+  font-size: 1.2rem;
+  transform: scaleX(-1); /* Flips the search icon to match Arabic direction if needed */
+}
+
+.text{
+  margin: 40px;
+}
+.text1{
+  font-size: 13px;
+  align-self: center;
+  color: rgb(194, 194, 155);
+  margin-bottom: 20px;
+
+}
+.text2{
+  font-size: 50px;
+  font-weight: 900;
+  color: rgba(196, 30, 58, 1);
+}
+.text3{
+  font-size: 50px;
+  font-weight: 900;
+  margin-bottom: 30px;
+
+}
+.text4{
+  font-size: 13px;
+  align-self: center;
+  color: #555;
+}
+.minit{
+  display: inline;
+  margin-left: 70px;
+  color: rgba(107, 114, 128, 1);
+}
+
+
+
+/* =========================================
+   MOBILE RESPONSIVENESS (Add to bottom)
+   ========================================= */
+
+@media screen and (max-width: 768px) {
+
+  /* 1. Resize the Huge Titles */
+  .text2, .text3 {
+    font-size: 2rem;       /* Reduced from 50px to ~32px */
+    line-height: 1.2;      /* tighter spacing */
+    text-align: center;    /* Center the text for mobile */
+    display: block;        /* Ensures they stack properly */
+  }
+
+  /* 2. Adjust Text Container */
+  .text {
+    margin: 20px 15px;     /* Reduce margin from 40px */
+    text-align: center;    /* Center all text content */
+  }
+
+  /* 3. Fix the "minit" Element */
+  .minit {
+    display: block;        /* Stack it on its own line */
+    margin-left: 0;        /* Remove the 70px left margin */
+    margin-top: 10px;      /* Add a little top space */
+    text-align: center;
+  }
+
+  /* 4. Adjust Search Card */
+  .search-card-container {
+    padding: 20px;         /* Reduce internal padding */
+    margin: 20px auto;     /* Reduce outer margin */
+    width: 95%;            /* Prevent it from touching edges */
+    box-sizing: border-box;
+  }
+
+  /* 5. Force Form to 1 Column (Overrides the 600px rule if needed) */
+  .form-grid {
+    grid-template-columns: 1fr;
+    gap: 15px;
+  }
+
+  /* 6. General Spacing */
+  .sfc {
+    margin-bottom: 40px;   /* Reduce the large bottom gap */
+  }
+}

@@ -1,0 +1,178 @@
+@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap');
+
+.review-card {
+  font-family: 'Cairo', sans-serif;
+  background-color: #fff;
+  border: 1px solid #f0f0f0;
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03);
+  max-width: 400px; /* Adjust based on your grid needs */
+  width: 100%;
+  margin: 10px;
+  transition: transform 0.2s ease;
+}
+
+.review-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.06);
+}
+
+/* --- STARS --- */
+.review-stars {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 12px;
+}
+
+.star {
+  font-size: 1.2rem;
+  color: #e0e0e0; /* Grey for empty stars */
+}
+
+.star.filled {
+  color: #D4AF37; /* Gold color matching the image */
+}
+
+/* --- TEXT BODY --- */
+.review-text {
+  color: #444;
+  font-size: 0.95rem;
+  line-height: 1.6;
+  margin-bottom: 20px;
+  font-weight: 600;
+}
+
+/* --- DIVIDER --- */
+.review-divider {
+  border: 0;
+  border-top: 1px solid #f0f0f0;
+  margin: 0 0 15px 0;
+}
+
+/* --- FOOTER --- */
+.review-footer {
+  display: flex;
+  justify-content: space-between; /* Pushes date to far left */
+  align-items: center;
+}
+
+/* User Profile Section */
+.user-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.user-avatar {
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.user-details {
+  display: flex;
+  flex-direction: column;
+}
+
+.user-name {
+  margin: 0;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #222;
+}
+
+.user-location {
+  font-size: 0.8rem;
+  color: #888;
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  margin-top: 2px;
+}
+
+.pin-icon {
+  font-size: 0.8rem;
+}
+
+/* Date Section */
+.review-date {
+  font-size: 0.8rem;
+  color: #999;
+  font-weight: 400;
+  /* Since it's RTL, the date appears on the left naturally with space-between */
+}
+
+.list{    
+    display: grid;
+    grid-template-columns: repeat(3,1fr);
+    gap: 70px;
+    justify-items: center;
+    margin: 30px;
+    padding: 20px;
+      
+}
+.text1{
+    color:#D4AF37;
+    font-weight: 700;
+  font-size: 0.9rem;
+  display: block;
+  margin-bottom: 10px;
+
+}
+.text2{
+    font-size: 2.5rem;
+  font-weight: 800;
+  color: #222;
+  margin: 0 0 10px 0;
+
+}
+.text3{
+    color:#949491;
+     font-size: 1rem;
+
+}
+
+
+
+/* =========================================
+   MOBILE RESPONSIVENESS (Add to bottom)
+   ========================================= */
+
+@media screen and (max-width: 768px) {
+
+  /* 1. Change Grid to Single Column */
+  .list {
+    grid-template-columns: 1fr; /* Changes from 3 columns to 1 column */
+    gap: 30px;                  /* Reduces the huge 70px gap */
+    margin: 15px;               /* Reduces outer margin */
+    padding: 0;                 /* Removes extra padding to save space */
+    justify-items: center;      /* Keeps cards centered */
+  }
+
+  /* 2. Adjust Heading Size */
+  .text2 {
+    font-size: 1.8rem;          /* Reduces text from 2.5rem to fit mobile screens */
+    line-height: 1.2;
+  }
+
+  /* 3. Ensure Card fits screen */
+  .review-card {
+    width: 100%;                /* Takes full available width */
+    max-width: 100%;            /* Overrides the 400px limit if screen is smaller */
+    padding: 20px;              /* Slightly tighter internal padding */
+    box-sizing: border-box;     /* Prevents padding from breaking layout */
+  }
+
+  /* 4. Adjust Footer (User Info & Date) */
+  .review-footer {
+    flex-direction: column;     /* Stacks User info and Date vertically */
+    align-items: flex-start;    /* Aligns them to the start */
+    gap: 10px;                  /* Adds space between user and date */
+  }
+  
+  .review-date {
+    align-self: flex-end;       /* Pushes the date to the right (optional style choice) */
+  }
+}

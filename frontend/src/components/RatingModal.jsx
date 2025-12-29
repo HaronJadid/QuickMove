@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
 import { Star, X } from 'lucide-react';
-import './RatingModal.css'; // We will create this simple CSS file
+import { useTranslation } from 'react-i18next';
+import './RatingModal.css';
 
 const RatingModal = ({ isOpen, onClose, onSubmit, livreurName }) => {
+    const { t } = useTranslation();
     const [rate, setRate] = useState(0);
     const [comment, setComment] = useState('');
     const [hover, setHover] = useState(0);
@@ -28,8 +30,8 @@ const RatingModal = ({ isOpen, onClose, onSubmit, livreurName }) => {
                     <X size={24} />
                 </button>
 
-                <h2>Rate Driver</h2>
-                {livreurName && <p className="driver-name">Driver: {livreurName}</p>}
+                <h2>{t('my_deliveries.rate_modal.title')}</h2>
+                {livreurName && <p className="driver-name">{t('my_deliveries.rate_modal.subtitle', { name: livreurName })}</p>}
 
                 <form onSubmit={handleSubmit}>
                     <div className="rating-container">
@@ -60,14 +62,14 @@ const RatingModal = ({ isOpen, onClose, onSubmit, livreurName }) => {
 
                     <div className="comment-container">
                         <textarea
-                            placeholder="Leave a comment (optional)..."
+                            placeholder={t('my_deliveries.rate_modal.comment_placeholder')}
                             value={comment}
                             onChange={(e) => setComment(e.target.value)}
                             rows="4"
                         />
                     </div>
 
-                    <button type="submit" className="submit-btn">Submit Rating</button>
+                    <button type="submit" className="submit-btn">{t('my_deliveries.rate_modal.submit')}</button>
                 </form>
             </div>
         </div>

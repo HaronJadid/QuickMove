@@ -22,11 +22,11 @@ module.exports = (sequelize) => {
       });
       
       // 3. Relation avec Demande (Plusieurs-à-Plusieurs, si on suit le MCD strict)
-      models.Client.belongsToMany(models.Demande, {
-          through: 'ClientDemande',
+        models.Client.belongsToMany(models.Demande, {
+          through: 'ClientDemandes',
           foreignKey: 'client_id',
           as: 'demandesFaites'
-      });
+        });
     }
   }
 
