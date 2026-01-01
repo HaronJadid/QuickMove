@@ -128,6 +128,7 @@ exports.getBookingsByClient = async (req, res) => {
 exports.getClientStatistics = async (req, res) => {
   const clientId = req.params.id;
 
+
   try {
     // Check if client exists
     const client = await db.Client.findByPk(clientId);
@@ -159,6 +160,7 @@ exports.getClientStatistics = async (req, res) => {
       confirmed: 0,
       totalSpent: 0
     };
+
 
     stats.forEach(s => {
       // With raw: true, s is a plain object. Keys might be 'status', 'count', 'totalSpent'

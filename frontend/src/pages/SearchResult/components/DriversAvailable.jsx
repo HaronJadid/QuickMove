@@ -7,13 +7,16 @@ import { useState } from 'react';
 
 
 export default function DriverComponent() {
+ 
+  const API_URL = import.meta.env.VITE_API_URL;
+
   let {ville_depart}=useSearchparams()
   let [livreurs,setLivreurs]=useState(null)
   console.log('called1',ville_depart)
   useEffect(()=>{
     const fetchLivreurs=async()=>{
        try{
-      const res=await axios.get(`http://localhost:3000/api/livreur?ville=${ville_depart}`)
+      const res=await axios.get(`${API_URL}api/livreur?ville=${ville_depart}`)
       const resList=res.data
       setLivreurs(resList)
       console.log(res)

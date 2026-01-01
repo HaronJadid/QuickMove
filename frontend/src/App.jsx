@@ -15,6 +15,7 @@ import Header from './layout/Header/Header.jsx'
 import SearchResult from './pages/SearchResult/SearchResult.jsx'
 import Sendlink from './features/Authentication/components/Sendlink.jsx'
 
+
 function App() {
   const {pathname}=useLocation()
 
@@ -24,30 +25,30 @@ function App() {
 
   return (
     <>
-      {pathname!== '/' && pathname!== '/signup' && pathname!== '/driversignup' && pathname!== '/login' && pathname!== '/resetpwd' && pathname!== '/sendlink' && <Header />}
-      
-      <Routes>
-        <Route path='/' element={<HomePage  />} />
-        <Route path='/aboutus' element={<Aboutus/>} />
-        <Route path='/signup' element={<Signup/>} />
-        <Route path='/login' element={<Login/>} />
-        <Route path='/resetpwd' element={<Resetpwd />}  />
-        <Route path='/sendlink' element={<Sendlink />}  />
-        <Route path='/searchresult' element={<SearchResult />} />
-
-
-        {/* <Route element={<Privateroute />}> */}
-          <Route path='/driverprofile' element={<Driverprofile />} />
-          <Route path='/clientprofile' element={<Clientprofile />} />
+        {pathname!== '/' && pathname!== '/signup' && pathname!== '/driversignup' && pathname!== '/login' && pathname!== '/resetpwd' && pathname!== '/sendlink' && <Header />}
         
+        <Routes>
+          <Route path='/' element={<HomePage  />} />
+          <Route path='/aboutus' element={<Aboutus/>} />
+          <Route path='/signup' element={<Signup/>} />
+          <Route path='/driversignup' element={<Signup/>} />
+          <Route path='/login' element={<Login/>} />
+          <Route path='/resetpwd' element={<Resetpwd />}  />
+          <Route path='/sendlink' element={<Sendlink />}  />
+          <Route path='/searchresult' element={<SearchResult />} />
 
-{/*         </Route>
- */}        <Route path='*' element={<div>Page not found !! </div>} />
-      </Routes>
 
-      <Footer/>
-   
-    
+          {/* <Route element={<Privateroute />}> */}
+            <Route path='/driverprofile' element={<Driverprofile />} />
+            <Route path='/clientprofile' element={<Clientprofile />} />
+          
+
+  {/*         </Route>
+  */}        <Route path='*' element={<div>Page not found !! </div>} />
+        </Routes>
+
+        <Footer/>
+        
     </>
   )
 }

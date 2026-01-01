@@ -7,7 +7,7 @@ import { useLocation } from "react-router-dom";
 
 
 export default function ResetPassword() {
-  
+  const API_URL = import.meta.env.VITE_API_URL;
 
   const [pwd, setPwd] = useState('');
   const [confirmpwd, setConfirmpwd] = useState('');
@@ -42,7 +42,7 @@ export default function ResetPassword() {
 
     setError('');
     try{
-        const res=await axios.post('http://localhost:3000/api/auth/reset-password',{token,newPassword:pwd})
+        const res=await axios.post(`${API_URL}api/auth/reset-password`,{token,newPassword:pwd})
 
         if(res.status==200){
             alert('تم تغيير كلمة المرور بنجاح! ✅');

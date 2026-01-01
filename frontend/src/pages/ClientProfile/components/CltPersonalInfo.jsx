@@ -6,6 +6,9 @@ import axios from 'axios';
 
 export default function DrPersonalInfo() {
   
+    const API_URL = import.meta.env.VITE_API_URL;
+
+
     let [email,setEmail]=useState('')
     let [prenom,setPrenom]=useState('')
     let [nom,setNom]=useState('')
@@ -30,7 +33,7 @@ export default function DrPersonalInfo() {
     useEffect(()=>{
       const getinfo=async()=>{
         try{
-          let res=await axios.get(`http://localhost:3000/api/user/${id}`)
+          let res=await axios.get(`${API_URL}api/user/${id}`)
           res=res.data.userInfo
           const fetchedData = {
             prenom: res.prenom,
@@ -106,7 +109,14 @@ export default function DrPersonalInfo() {
 
         <div className="profile-footer">
          {(!edit ) ? ( <button className="edit-btn" onClick={()=>setEdit(true)}>تعديل الملف الشخصي</button>):
-          (<button className="edit-btn" onClick={save}>حفظ</button>)}
+          <div style={{ display: 'flex', gap: '10px' }}>
+            <button className="edit-btn" onClick={save}>
+                حفظ
+            </button>
+            <button className="edit-btn" onClick={()=>setEdit(false)}>
+                إلغاء
+            </button>
+          </div> }
         </div>
 
       </div>

@@ -10,6 +10,7 @@ export default function Sendlink() {
     setEmail(event.target.value)
   }
 
+  const API_URL = import.meta.env.VITE_API_URL;
  
   const [error, setError] = useState('');
 
@@ -21,7 +22,7 @@ export default function Sendlink() {
 
     setError('');
     try{
-        const res=await axios.post('http://localhost:3000/api/auth/forgot-password',{email})
+        const res=await axios.post(`${API_URL}api/auth/forgot-password`,{email})
 
         if(res.status==200){
             alert('تم ارسال الرابط بنجاح! ✅');

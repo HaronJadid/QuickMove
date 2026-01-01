@@ -1,10 +1,8 @@
-import Header from "../Header"
 import '../headerComponentsStyle/Aboutus.css'
 
 function Aboutus(){
     return (
         <div >
-            <Header/>
             <div className="container" align='right'>
                                 
                  MoveMorocco تطبيق 

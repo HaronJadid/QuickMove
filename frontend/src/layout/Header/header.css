@@ -209,6 +209,7 @@ img{
   width: 70px;
   cursor: pointer;
   text-decoration: none;
+  margin-right: 50px;
 }
 .user-avatar {
   width: 36px;

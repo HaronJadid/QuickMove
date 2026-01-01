@@ -1,13 +1,16 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import '../style/auth.css';
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import {useAuth} from './Authprovider'
 import axios from "axios";
 
-
+import { useLocation } from 'react-router-dom';
 
 export default function Signup() {
+
+  const API_URL = import.meta.env.VITE_API_URL;
+   const location = useLocation();
 
   const navigate=useNavigate()
   const {login}=useAuth()
@@ -45,6 +48,15 @@ export default function Signup() {
   let [isdriver,setIsdriver]=useState(false)
 
 
+  useEffect(()=>{
+    const fct=()=>{
+      
+      if(location.pathname=='/driversignup'){
+        setIsdriver(true)
+      }
+    }
+    fct()
+  },[])
 
 
 
@@ -52,7 +64,7 @@ export default function Signup() {
      e.preventDefault();
     setError(false)
       try{
-        if(!email || !pwd ||!prenom || !nom || !tel){
+        if(!email.trim() || !pwd.trim() ||!prenom.trim() || !nom.trim() || !tel.trim()){
           setError(true)
           setErrmsg(' الرجاء ملء جميع الحقول !')
           return
@@ -74,7 +86,7 @@ export default function Signup() {
         let role=isdriver?'driver':'client'
         formData.append("role", role);
 
-        const res=await axios.post(`http://localhost:3000/api/auth/register`, formData);
+        const res=await axios.post(`${API_URL}api/auth/register`, formData);
 
         if(res.status==201){
             console.log(`${role} was created`)

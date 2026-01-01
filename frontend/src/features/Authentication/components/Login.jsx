@@ -5,7 +5,8 @@ import {useAuth} from './Authprovider'
 import axios from 'axios';
 
 export default function Login() {
- 
+  const API_URL = import.meta.env.VITE_API_URL;
+
 
   const navigate=useNavigate()
   const {login}=useAuth()
@@ -28,13 +29,13 @@ export default function Login() {
      e.preventDefault();
     try{
   
-      if(!email || !pwd){
+      if(!email.trim() || !pwd.trim()){
         setError(true)
         setErrmsg('  يجب ملء كلا الحقلين !')
         return
       }
       setError(false)
-      const res=await axios.post('http://localhost:3000/api/auth/login',{email,password:pwd})
+      const res=await axios.post(`${API_URL}api/auth/login`,{email,password:pwd})
 
       if(res.status==200){
 
@@ -56,7 +57,7 @@ export default function Login() {
 
     }catch(err){
       setError(true)
-      setErrmsg(err.response?.data|| '!! Error logging in ')
+      setErrmsg( '!! Error logging in ')
       console.log(' !! Error logging in ',err)
     }
 
