@@ -1,0 +1,131 @@
+{
+    "header": {
+        "search": "Search Transport",
+        "about": "About us",
+        "contact": "Contact us",
+        "dashboard": "Dashboard",
+        "login_signup": "Login | Sign up",
+        "profile": "Profile"
+    },
+    "my_deliveries": {
+        "title": "My Deliveries",
+        "delivery_num": "Delivery #{{id}}",
+        "driver": "Driver",
+        "rate_btn": "Rate Driver",
+        "status": {
+            "completed": "Completed",
+            "pending": "Pending"
+        },
+        "rate_modal": {
+            "title": "Rate Driver",
+            "subtitle": "How was your experience with {{name}}?",
+            "comment_placeholder": "Share your experience...",
+            "cancel": "Cancel",
+            "submit": "Submit Rating"
+        }
+    },
+    "home": {
+        "hero": {
+            "subtitle": "Reliable Furniture Moving Platform",
+            "title": "Find a Trusted Driver",
+            "slogan": "To Move Your Furniture Safely",
+            "description": "Discover the best verified drivers in Morocco to move your furniture between cities with transparent prices and real reviews",
+            "badges": {
+                "verified_drivers": "Verified Drivers",
+                "reliable_ratings": "Reliable Ratings",
+                "transparent_prices": "Transparent Prices"
+            }
+        },
+        "search": {
+            "title": "Start Search Now",
+            "departure": "Departure City",
+            "arrival": "Arrival City",
+            "date": "Date",
+            "vehicle_type": "Vehicle Type",
+            "select_departure": "Select Departure City",
+            "select_arrival": "Select Arrival City",
+            "select_vehicle": "Select Vehicle Type",
+            "truck": "Truck",
+            "van": "Van",
+            "submit_btn": "Find Available Drivers",
+            "error_departure": "You must select at least a departure city !!"
+        },
+        "steps": {
+            "subtitle": "How it works 💡",
+            "title": "Simple Steps",
+            "description": "Easy and fast booking process to get the best furniture moving service",
+            "step1_title": "Find a Driver",
+            "step1_desc": "Choose departure and arrival cities and the vehicle type suitable for your needs",
+            "step2_title": "Compare and Choose",
+            "step2_desc": "Browse available drivers and compare prices and ratings",
+            "step3_title": "Book Your Trip",
+            "step3_desc": "Choose the right driver and complete the booking in simple steps",
+            "step4_title": "Enjoy the Service",
+            "step4_desc": "The driver will arrive on time to move your furniture safely"
+        },
+        "joinus": {
+            "tag": "Start Now",
+            "title": "Are you a driver?",
+            "title_sub": "Join our platform and start earning",
+            "desc": "Register as a verified driver and get booking requests from thousands of customers across Morocco",
+            "learn_more": "Learn More",
+            "register_driver": "Register as Driver",
+            "income_title": "30%+",
+            "income_desc": "Income Increase",
+            "flexibility_title": "Flexibility",
+            "flexibility_desc": "Choose your schedule",
+            "security_title": "Security",
+            "security_desc": "Guaranteed payment"
+        },
+        "drivers": {
+            "featured_title": "Featured Drivers",
+            "badges": {
+                "featured": "Featured",
+                "verified": "Verified"
+            },
+            "card": {
+                "starts_from": "Starts from",
+                "currency": "MAD",
+                "trips": "Trips",
+                "available_today": "Available: Today",
+                "reviews": "Reviews",
+                "view_profile": "View Profile"
+            }
+        },
+        "comments": {
+            "label": "Customer Reviews",
+            "title": "What our customers say",
+            "subtitle": "Real experiences from customers who used our platform to move their furniture",
+            "sample": {
+                "text": "Used it twice and the experience was excellent every time. The drivers are professional and prices are reasonable."
+            }
+        }
+    },
+    "footer": {
+        "copyright": "© 2025 MoveMorocco. All rights reserved."
+    },
+    "auth": {
+        "login_title": "Login",
+        "signup_title": "Create Account",
+        "driver_signup_title": "Register as Driver and Start Earning",
+        "email": "Email Address",
+        "password": "Password",
+        "firstname": "First Name",
+        "lastname": "Last Name",
+        "phone": "Phone Number",
+        "profile_pic": "Upload Profile Picture",
+        "login_btn": "Login",
+        "signup_btn": "Sign Up",
+        "forgot_password": "Forgot Password?",
+        "no_account": "Don't have an account?",
+        "have_account": "Already have an account?",
+        "create_account": "Create Account Now",
+        "switch_to_driver": "Want to register as a driver?",
+        "click_here": "Click Here",
+        "switch_to_login": "Login",
+        "fill_all_fields": "Please fill all fields!",
+        "login_error": "Error logging in",
+        "password_hint": "Password must contain at least 8 characters, one uppercase, one lowercase, one number and one special character",
+        "return_home": "Return to Home"
+    }
+}
