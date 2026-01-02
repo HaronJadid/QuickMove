@@ -14,7 +14,7 @@ import { useLocation } from "react-router-dom";
 import Header from './layout/Header/Header.jsx'
 import SearchResult from './pages/SearchResult/SearchResult.jsx'
 import Sendlink from './features/Authentication/components/Sendlink.jsx'
-
+import DriverProfileClientSide  from './pages/SearchResult/components/DriverProfileClientSide.jsx'
 
 function App() {
   const {pathname}=useLocation()
@@ -36,7 +36,7 @@ function App() {
           <Route path='/resetpwd' element={<Resetpwd />}  />
           <Route path='/sendlink' element={<Sendlink />}  />
           <Route path='/searchresult' element={<SearchResult />} />
-
+          <Route path='/lookupdriverprofile' element={<DriverProfileClientSide />} />
 
           {/* <Route element={<Privateroute />}> */}
             <Route path='/driverprofile' element={<Driverprofile />} />

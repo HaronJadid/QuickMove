@@ -11,8 +11,12 @@ router.post('/', villeController.createVille);
 // Associate a ville to a livreur (Body: { villeNom, livreurId })
 router.post('/assign-livreur', villeController.assignVilleToLivreur);
 
+
 // Get all villes
 router.get('/', villeController.getAllVilles);
+
+// Get villes by driver ID
+router.get('/driver/:driverId', villeController.getVilleByDriverid);
 
 // Get one ville
 router.get('/:villeId', villeController.getVilleById);
@@ -22,5 +26,8 @@ router.put('/:villeId', villeController.updateVille);
 
 // Delete ville
 router.delete('/:villeId', villeController.deleteVille);
+
+// DELETE route for removing city from driver's service zones
+router.delete('/:villeId/driver/:driverId', villeController.removeVilleFromDriver);
 
 module.exports = router;

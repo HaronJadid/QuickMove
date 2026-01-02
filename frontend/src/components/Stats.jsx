@@ -11,19 +11,13 @@ const fetchStats = async (id,role) => {
      let response=null
     if(role=='client'){
        response = await axios.get(`${API_URL}api/client/${id}/statistics`);
-
+       return response.data
   }else if(role=='driver'){
        response = await axios.get(`${API_URL}api/livreur/${id}/statistics`);
-
- let statistics={
-    completed:0,
-    confirmed:0,
-    pending: 0,
-    totalSpent: 0
+ 
+       return response.data.statistics;
   }
-  return statistics
-  }
-    return response.data;
+   
   } catch (error) {
     throw new Error(error.response?.data?.message || 'Failed to fetch statistics');
   }
@@ -58,14 +52,24 @@ export default function Stats() {
   
   // Handle case where user is not logged in
   if (!user) return <div className="error">Please log in to view statistics</div>;
-  
-  
-  let statistics={
+  let statistics={}
+  if(role=='client'){
+    statistics={
     completed:stats.completed||0,
     confirmed:stats.pending||0,
     pending: stats.confirmed||0,
-    totalSpent:  stats.totalSpent||0
+    totalSpent:  stats.totalSpent||0.0
   }
+  }else if(role=='driver'){
+    statistics={
+    totalCompletedTrips:stats.totalCompletedTrips||0,
+    averageRatings:stats.averageRatings||0,
+    totalPendingTrips: stats.totalPendingTrips||0,
+    totalEarnings:  stats.totalEarnings||0
+    
+  }}
+  console.log(statistics)
+   
   
   return (
     <div className="dashboard-section">
@@ -81,8 +85,8 @@ export default function Stats() {
         </div>)
         :
         ( <div className="stat-card">
-          <span className="stat-label">Total Bookings</span>
-          <h3 className="stat-value text-red">2</h3>
+          <span className="stat-label">Total Completed Trips</span>
+          <h3 className="stat-value text-red">{statistics.totalCompletedTrips}</h3>
         </div>)}
 
 
@@ -92,19 +96,19 @@ export default function Stats() {
           <h3 className="stat-value text-black">{statistics.pending}</h3>
         </div>):
          (<div className="stat-card">
-          <span className="stat-label">Pending</span>
-          <h3 className="stat-value text-black">2</h3>
+          <span className="stat-label">Average Rating</span>
+          <h3 className="stat-value text-black">{statistics.averageRatings}</h3>
         </div>)}
 
         {/* Card 3:  */}
        {role=='client'?
        ( <div className="stat-card">
-          <span className="stat-label">Completed</span>
-          <h3 className="stat-value text-green">{statistics.completed}</h3>
+          <span className="stat-label">Confirmed</span>
+          <h3 className="stat-value text-green">{statistics.confirmed}</h3>
         </div>):
         (<div className="stat-card">
-          <span className="stat-label">Ratings</span>
-          <h3 className="stat-value text-green">2</h3>
+          <span className="stat-label">Total Pending Trips</span>
+          <h3 className="stat-value text-green">{statistics.totalPendingTrips}</h3>
         </div>)}
 
         {/* Card 4: Total Spent */}
@@ -115,7 +119,7 @@ export default function Stats() {
         </div>):
        ( <div className="stat-card">
           <span className="stat-label">Total Earnings</span>
-          <h3 className="stat-value text-blue">2,500 MAD</h3>
+          <h3 className="stat-value text-blue">{statistics.totalEarnings} MAD</h3>
         </div>)}
 
       </div>

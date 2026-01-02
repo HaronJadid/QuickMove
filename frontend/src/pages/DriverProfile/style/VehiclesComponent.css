@@ -1,0 +1,149 @@
+.vehicles-wrapper {
+    padding: 40px;
+    display: flex;
+    justify-content: center;
+}
+
+/* THE WHITE CARD - Matches your Cities design */
+.vehicles-main-card {
+    background-color: #ffffff;
+    width: 100%;
+    max-width: 800px;
+    border-radius: 40px; /* Matching the deep rounded corners */
+    padding: 40px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
+
+.vehicles-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+ 
+}
+
+.card-title {
+    font-size: 28px;
+    font-weight: 800;
+    color: #000000;
+  
+}
+
+.add-vehicle-btn {
+    background-color: white;
+    color: #cf3445;
+    border: 1px solid #cf3445;
+    padding: 10px 20px;
+    border-radius: 15px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.2s;
+    margin: 20px;
+   
+}
+
+.add-vehicle-btn:hover {
+    background-color: #cf3445;
+    color: white;
+}
+
+/* Form Styling */
+.vehicle-form-box {
+    background-color: #f9f9f9;
+    padding: 20px;
+    border-radius: 20px;
+    margin-bottom: 30px;
+    border: 1px dashed #ddd;
+}
+
+.form-row {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 15px;
+}
+
+.form-row input {
+    flex: 1;
+    padding: 12px;
+    border-radius: 12px;
+    border: 1px solid #ddd;
+    outline: none;
+}
+
+.submit-btn {
+    background-color: #1a1a1a;
+    color: white;
+    border: none;
+    padding: 0 30px;
+    border-radius: 12px;
+    cursor: pointer;
+}
+
+/* List Items */
+.vehicle-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 0;
+    border-bottom: 1px solid #eee;
+}
+
+.vehicle-info {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.v-img {
+    width: 60px;
+    height: 45px;
+    border-radius: 8px;
+    object-fit: cover;
+    background: #eee;
+}
+
+.v-name {
+    font-weight: bold;
+    font-size: 18px;
+    margin: 0;
+}
+
+.v-cap {
+    color: #888;
+    font-size: 14px;
+    margin: 0;
+}
+
+/* Action Buttons */
+.vehicle-actions {
+    display: flex;
+    gap: 10px;
+}
+
+.edit-btn {
+    background-color: #f0f0f0;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-weight: 600;
+    width: 150px;
+    margin-left: 90px;
+}
+
+.delete-btn {
+    background-color: #ffebec;
+    color: #cf3445;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-weight: 600;
+     width: 150px;
+}
+
+.empty-msg {
+    text-align: center;
+    color: #aaa;
+    padding: 40px 0;
+}

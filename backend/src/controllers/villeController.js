@@ -154,3 +154,82 @@ exports.deleteVille = async (req, res) => {
     return res.status(500).json({ message: 'Erreur serveur.', details: error.message });
   }
 };
+
+/**
+ * Récupère les villes desservies par un livreur spécifique
+ * GET /api/ville/driver/:driverId
+ */
+exports.getVilleByDriverid = async (req, res) => {
+  const { driverId } = req.params;
+  try {
+    const livreur = await db.Livreur.findByPk(driverId, {
+      include: [
+        {
+          model: db.Ville,
+          as: 'zonesService',
+          through: { attributes: [] }, // Masquer la table de liaison
+          attributes: ['id_ville', 'nom']
+        }
+      ]
+    });
+
+    if (!livreur) {
+      return res.status(404).json({ message: `Livreur id=${driverId} introuvable.` });
+    }
+
+    // Le tableau des villes est dans livreur.zonesService
+    return res.status(200).json({
+      message: 'Villes du livreur récupérées avec succès.',
+      villes: livreur.zonesService
+    });
+
+  } catch (error) {
+    console.error('Erreur getVilleByDriverid:', error);
+    return res.status(500).json({ message: 'Erreur serveur.', details: error.message });
+  }
+};
+/**
+ * Remove a city from a driver's service zones
+ * DELETE /api/ville/:villeId/driver/:driverId
+ */
+exports.removeVilleFromDriver = async (req, res) => {
+  const { villeId, driverId } = req.params;
+  
+
+  try {
+    // Find the ville
+    const ville = await db.Ville.findByPk(villeId);
+    if (!ville) {
+      return res.status(404).json({ message: `Ville id=${villeId} introuvable.` });
+    }
+
+    // Find the driver
+    const driver = await db.Livreur.findByPk(driverId);
+    if (!driver) {
+      return res.status(404).json({ message: `Livreur id=${driverId} introuvable.` });
+    }
+    // Check if the driver actually serves this city
+    const servesCity = await driver.hasZonesService(ville);
+    
+    if (!servesCity) {
+      return res.status(404).json({ 
+        message: `Le livreur ne dessert pas la ville ${ville.nom}.` 
+      });
+    }
+
+    // Remove the association
+    await driver.removeZonesService(ville);
+
+    return res.status(200).json({ 
+      message: `La ville ${ville.nom} a été retirée des zones de service du livreur.`,
+      removed: true
+    });
+
+  } catch (error) {
+    console.error('Erreur removeVilleFromDriver:', error);
+    return res.status(500).json({ 
+      message: 'Erreur serveur lors de la suppression de la ville des zones de service.', 
+      details: error.message 
+    });
+  }
+};

@@ -16,13 +16,16 @@ export default function DrPersonalInfo() {
         prenom: '',
         nom: '',
         email: '',
-        phone: ''
+        phone: '',
+        description:''
     });
 
     // Get user ID from localStorage
     const userRetrieved = localStorage.getItem('user');
     const userParsed = userRetrieved ? JSON.parse(userRetrieved) : null;
     const id = userParsed?.userId;
+
+    let fetchedData={}
 
     // Fetch user data
     useEffect(() => {
@@ -42,13 +45,14 @@ export default function DrPersonalInfo() {
                 // Fix: Access data correctly based on your API response structure
                 const userData = res.data.userInfo || res.data;
                 
-                const fetchedData = {
+                 fetchedData = {
                     prenom: userData.prenom || '',
                     nom: userData.nom || '',
                     email: userData.email || '',
                     phone: userData.numero|| '',
                     role: "حساب سائق",
-                    avatar: userData.imgUrl || '../../../../public/alt_img.webp'
+                    avatar: userData.imgUrl || '../../../../public/alt_img.webp',
+                    description:userData.description|| ''
                 };
                 
                 setUser(fetchedData);
@@ -56,7 +60,8 @@ export default function DrPersonalInfo() {
                     prenom: fetchedData.prenom,
                     nom: fetchedData.nom,
                     email: fetchedData.email,
-                    phone: fetchedData.phone
+                    phone: fetchedData.phone,
+                    description:fetchedData.description
                 });
                 setError(null);
             } catch (err) {
@@ -79,8 +84,8 @@ export default function DrPersonalInfo() {
             };
             
             // Send update to API
-            await axios.put(`${API_URL}api/user/${id}`, formData);
-            
+             await axios.put(`${API_URL}api/user/${id}`, formData);
+             
             // Update local state
             setUser(updatedUser);
             setEdit(false);
@@ -112,7 +117,8 @@ export default function DrPersonalInfo() {
             prenom: user.prenom,
             nom: user.nom,
             email: user.email,
-            phone: user.phone
+            phone: user.phone,
+            description:user.description
         });
         setEdit(false);
     };
@@ -197,6 +203,21 @@ export default function DrPersonalInfo() {
                                 className="form-input"
                                 value={formData.phone}
                                 onChange={handleInputChange}
+                            />
+                        )}
+                    </div>
+                     <div className="input-group">
+                        <label> خانة الوصف</label>
+                        {!edit ? (
+                            <div style={{minHeight:'14vh'}} className="read-only-input" dir="ltr">{user.description}</div>
+                        ) : (
+                            <textarea
+                                name="description"
+                                className="form-input"
+                                value={formData.description}
+                                onChange={handleInputChange}
+                                rows={4} 
+                                placeholder=" ... Enter description"
                             />
                         )}
                     </div>

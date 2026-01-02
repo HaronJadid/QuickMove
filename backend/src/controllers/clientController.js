@@ -17,6 +17,7 @@ exports.createBooking = async (req, res) => {
     vehicule_id,
     livreur_id // must be provided by frontend (the driver being booked)
   } = req.body;
+  console.log(req.body)
 
   if (!ville_depart || !ville_arrivee || prix == null || !vehicule_id || !livreur_id) {
     return res.status(400).json({ message: "Champs requis: 'ville_depart', 'ville_arrivee', 'prix', 'vehicule_id', 'livreur_id'." });

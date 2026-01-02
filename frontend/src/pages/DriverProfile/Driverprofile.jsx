@@ -5,6 +5,7 @@ import { useAuth } from '../../features/Authentication/components/Authprovider'
 import Stats from '../../components/Stats'
 import { useState } from 'react'
 import CitiesComponent from './components/CitiesComponent'
+import VehiclesComponent from './components/VehiclesComponent'
 
 
 export default function Driverprofile(){
@@ -39,7 +40,7 @@ export default function Driverprofile(){
                 <div className="tabs-container">
                     <button onClick={()=>setSelectedTab('myprofile')} className={(selectedTab=='myprofile')?"tab-item active":"tab-item"}>My Profile</button>
                     <button onClick={()=>setSelectedTab('myrequests')} className={(selectedTab=='myrequests')?"tab-item active":"tab-item"}>My Requests</button>
-                    <button onClick={()=>setSelectedTab('myvehicules')} className={(selectedTab=='myvehicules')?"tab-item active":"tab-item"}>My Vehicules</button>
+                    <button onClick={()=>setSelectedTab('myvehicles')} className={(selectedTab=='myvehicles')?"tab-item active":"tab-item"}>My Vehicles</button>
                     <button onClick={()=>setSelectedTab('cities')} className={(selectedTab=='cities')?"tab-item active":"tab-item"}>Cities</button>
                     <button onClick={()=>setSelectedTab('myratings')} className={(selectedTab=='myratings')?"tab-item active":"tab-item"}>My Ratings</button>
 
@@ -47,6 +48,7 @@ export default function Driverprofile(){
             </div>
             {selectedTab=='myprofile' &&<DrPersonalInfo />}
             {selectedTab=='cities' &&<CitiesComponent />}
+            {selectedTab=='myvehicles' &&<VehiclesComponent />}
             <div className='logout-ctn' >
                 <button onClick={logoutfct} className='logout'>Log out</button>
             </div>

@@ -14,6 +14,9 @@ router.get('/:id/evaluations', livreurController.getEvaluationsByLivreur);
 router.get('/:id/demands', livreurController.getDemandsByDriver);
 router.put('/:id/demands/:demandeId/status', livreurController.updateDemandStatus);
 
+// Statistics
+router.get('/:id/statistics', livreurController.getDriverStatistics);
+
 // router.get('/:id', livreurController.getLivreurDetails); // Future route
 
 module.exports = router;

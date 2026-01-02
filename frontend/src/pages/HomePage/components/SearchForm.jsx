@@ -1,9 +1,8 @@
 import React, { useEffect } from 'react';
 import '../style/SearchForm.css';
 import { useState } from 'react';
-import axios from 'axios'
+import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import { useSearchparams } from '../../SearchResult/components/SearchparamsContext.jsx';
 
 
 export default function SearchForm() {
@@ -11,10 +10,8 @@ export default function SearchForm() {
   const API_URL = import.meta.env.VITE_API_URL;
   let [villes,setVilles]=useState(null)
 
-  let { ville_depart,setVille_depart,
-     ville_arrivee,setVille_arrivee,
-     date_depart,setDate_depart,
-     type_transport,setType_transport}=useSearchparams()
+  let [ville_depart,setVille_depart]=useState('')
+  let [ville_arrivee,setVille_arrivee]=useState('')
 
 
      useEffect(()=>{
@@ -31,9 +28,15 @@ export default function SearchForm() {
 
   const navigate=useNavigate()
 
-  const lookup=async()=>{
+  const lookup=async(e)=>{
+     e.preventDefault();
     setErr(false)
-    if(ville_depart){
+
+    if(ville_depart&&ville_arrivee){
+      localStorage.setItem('ville_depart', ville_depart);
+      localStorage.setItem('ville_arrivee', ville_arrivee);
+      setVille_depart('')
+      setVille_arrivee('')
       navigate('/searchresult')
     }
     else{
@@ -56,7 +59,7 @@ export default function SearchForm() {
           <h2>ابدأ البحث الآن</h2>
         </div>
       </div>
-
+    <form onSubmit={lookup}>
       <div className="form-grid">
         
         <div className="input-group">
@@ -72,7 +75,7 @@ export default function SearchForm() {
         </div>
 
         <div className="input-group">
-          <label>مدينة الوصول </label>
+          <label>مدينة الوصول <span className="required">*</span></label>
           <select className="form-input" value={ville_arrivee} onChange={(event)=>setVille_arrivee(event.target.value)}>
               <option value="" disabled selected>اختر مدينة المغادرة </option>
 
@@ -99,12 +102,13 @@ export default function SearchForm() {
 
       </div>
 
-      <button className="submit-btn" onClick={lookup}>
+      <button type='submit' className="submit-btn">
         ابحث عن السائقين المتاحين 
         <span className="btn-icon">🔍</span>
       </button>
+      </form>
       {err &&<div style={{color:'rgba(215, 130, 144, 1)',textAlign:'center'
-      }} >يجب تحديد مدينة المغادرة على الاقل !!</div>}
+      }} >يجب تحديد كلتا المدينتين  !!</div>}
 
     </div>
   );
