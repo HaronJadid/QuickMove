@@ -1,31 +1,34 @@
 import React from 'react';
 import '../style/DriverComponent.css';
+import { useTranslation } from 'react-i18next';
 
 
 export default function DriverComponent() {
+  const { t } = useTranslation();
+
   return (
-    <div className="driver-card" dir="rtl">
-      
+    <div className="driver-card">
+
       {/* IMAGE SECTION */}
       <div className="card-image-wrapper">
-        <img 
-          src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" 
-          alt="Driver" 
-          className="driver-image" 
+        <img
+          src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
+          alt="Driver"
+          className="driver-image"
         />
-        
+
         {/* Top Badges */}
         <div className="badge-featured">
-          <span className="crown-icon">👑</span> مميز
+          <span className="crown-icon">👑</span> {t('home.drivers.badges.featured')}
         </div>
         <div className="badge-verified">
-          <span>معتمد</span> <span className="check-icon">🛡️</span>
+          <span>{t('home.drivers.badges.verified')}</span> <span className="check-icon">🛡️</span>
         </div>
       </div>
 
       {/* CONTENT SECTION */}
       <div className="card-content">
-        
+
         {/* Header: Name & Rating */}
         <div className="card-header-row">
           <h2 className="driver-name">أحمد بنعلي</h2>
@@ -52,13 +55,13 @@ export default function DriverComponent() {
         {/* Stats Row (Price & Trips) */}
         <div className="stats-row">
           <div className="price-section">
-            <span className="label-small">يبدأ من</span>
+            <span className="label-small">{t('home.drivers.card.starts_from')}</span>
             <div className="price-value">
-              350 <span className="currency">درهم</span>
+              350 <span className="currency">{t('home.drivers.card.currency')}</span>
             </div>
           </div>
           <div className="trips-section">
-            <span className="label-small">عدد الرحلات</span>
+            <span className="label-small">{t('home.drivers.card.trips')}</span>
             <div className="trips-value">234</div>
           </div>
         </div>
@@ -67,17 +70,17 @@ export default function DriverComponent() {
         <div className="info-list">
           <div className="info-item">
             <span className="icon-clock">🕒</span>
-            <span>متاح: متاح اليوم</span>
+            <span>{t('home.drivers.card.available_today')}</span>
           </div>
           <div className="info-item">
             <span className="icon-chat">💬</span>
-            <span>156 تقييم</span>
+            <span>156 {t('home.drivers.card.reviews')}</span>
           </div>
         </div>
 
         {/* Action Button */}
         <button className="view-profile-btn">
-          عرض الملف الشخصي
+          {t('home.drivers.card.view_profile')}
           <span className="arrow-icon">←</span>
         </button>
 

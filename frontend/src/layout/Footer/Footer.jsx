@@ -1,11 +1,13 @@
 import './footer.css'
+import { useTranslation } from 'react-i18next';
 
 
-export default function Footer(){
+export default function Footer() {
+    const { t } = useTranslation();
 
-    return(
+    return (
         <div className="footer" >
-            <div className="t2" align='left'>© 2025 MoveMorocco. جميع الحقوق محفوظة.</div>
+            <div className="t2" align='left'>{t('footer.copyright')}</div>
         </div>
-                    )
+    )
 }

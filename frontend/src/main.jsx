@@ -6,6 +6,7 @@ import { BrowserRouter } from 'react-router-dom'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import Authprovider from './features/Authentication/components/Authprovider.jsx'
 import SearchparamsProvider from './pages/SearchResult/components/SearchparamsContext.jsx'
+import './i18n'; // Import i18n configuration
 
 const queryClient = new QueryClient()
 

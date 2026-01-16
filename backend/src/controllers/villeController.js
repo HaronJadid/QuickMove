@@ -154,3 +154,37 @@ exports.deleteVille = async (req, res) => {
     return res.status(500).json({ message: 'Erreur serveur.', details: error.message });
   }
 };
+
+/**
+ * Récupère les villes desservies par un livreur spécifique
+ * GET /api/ville/driver/:driverId
+ */
+exports.getVilleByDriverid = async (req, res) => {
+  const { driverId } = req.params;
+  try {
+    const livreur = await db.Livreur.findByPk(driverId, {
+      include: [
+        {
+          model: db.Ville,
+          as: 'zonesService',
+          through: { attributes: [] }, // Masquer la table de liaison
+          attributes: ['id_ville', 'nom']
+        }
+      ]
+    });
+
+    if (!livreur) {
+      return res.status(404).json({ message: `Livreur id=${driverId} introuvable.` });
+    }
+
+    // Le tableau des villes est dans livreur.zonesService
+    return res.status(200).json({
+      message: 'Villes du livreur récupérées avec succès.',
+      villes: livreur.zonesService
+    });
+
+  } catch (error) {
+    console.error('Erreur getVilleByDriverid:', error);
+    return res.status(500).json({ message: 'Erreur serveur.', details: error.message });
+  }
+};

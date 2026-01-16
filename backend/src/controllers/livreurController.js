@@ -349,3 +349,61 @@ exports.updateDemandStatus = async (req, res) => {
         return res.status(500).json({ message: 'Erreur serveur.', details: error.message });
     }
 };
+/**
+ * Get statistics for a driver (Total trips, Pending, Avg Rating, Total Earnings)
+ * GET /api/livreur/:id/statistics
+ */
+exports.getDriverStatistics = async (req, res) => {
+    const livreurId = req.params.id;
+
+    try {
+        const livreur = await db.Livreur.findByPk(livreurId);
+        if (!livreur) return res.status(404).json({ message: 'Livreur id=' + livreurId + ' introuvable.' });
+
+        // 1. Get all demands associated with this driver via Vehicule
+        const demands = await db.Demande.findAll({
+            include: [{
+                model: db.Vehicule,
+                as: 'VehiculeUtilise',
+                where: { livreur_id: livreurId },
+                attributes: []
+            }],
+            attributes: ['id', 'status', 'prix']
+        });
+
+        const totalCompletedTrips = demands.filter(d => d.status === 'COMPLETED').length;
+        const totalPendingTrips = demands.filter(d => d.status === 'PENDING').length;
+        
+        // Calculate Total Earnings (only form COMPLETED trips)
+        const totalEarnings = demands
+            .filter(d => d.status === 'COMPLETED')
+            .reduce((sum, d) => sum + parseFloat(d.prix || 0), 0);
+
+        // 2. Get Average Rating
+        const evaluations = await db.Evaluation.findAll({
+            where: { livreur_id: livreurId },
+            attributes: ['rate']
+        });
+
+        let averageRating = 0;
+        if (evaluations.length > 0) {
+            const sumRatings = evaluations.reduce((sum, e) => sum + e.rate, 0);
+            averageRating = sumRatings / evaluations.length;
+        }
+
+        return res.status(200).json({
+            message: 'Statistiques pour le livreur id=' + livreurId,
+            statistics: {
+                totalCompletedTrips,
+                totalPendingTrips,
+                totalEarnings: totalEarnings.toFixed(2), // Format to 2 decimal places
+                averageRating: parseFloat(averageRating.toFixed(1)) // 1 decimal place
+            }
+        });
+
+    } catch (error) {
+        console.error('Erreur getDriverStatistics:', error);
+        return res.status(500).json({ message: 'Erreur serveur.', details: error.message });
+    }
+};
+

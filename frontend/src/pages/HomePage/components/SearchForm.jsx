@@ -4,51 +4,53 @@ import { useState } from 'react';
 import axios from 'axios'
 import { useNavigate } from 'react-router-dom';
 import { useSearchparams } from '../../SearchResult/components/SearchparamsContext.jsx';
+import { useTranslation } from 'react-i18next';
 
 
 export default function SearchForm() {
-  let [err,setErr]=useState(false)
+  const { t } = useTranslation();
+  let [err, setErr] = useState(false)
 
 
-  let { ville_depart,setVille_depart,
-     ville_arrivee,setVille_arrivee,
-     date_depart,setDate_depart,
-     type_transport,setType_transport}=useSearchparams()
+  let { ville_depart, setVille_depart,
+    ville_arrivee, setVille_arrivee,
+    date_depart, setDate_depart,
+    type_transport, setType_transport } = useSearchparams()
 
-  const navigate=useNavigate()
+  const navigate = useNavigate()
 
-  const lookup=async()=>{
+  const lookup = async () => {
     setErr(false)
-    if(ville_depart){
+    if (ville_depart) {
       navigate('/searchresult')
     }
-    else{
+    else {
       setErr(true)
 
 
     }
-      
+
 
   }
 
 
   return (
-    <div className="search-card-container" dir="rtl">
-      
+    <div className="search-card-container">
+
       <div className="card-header">
         <div className="header-title">
 
           <span className="search-icon-red">🔍</span>
-          <h2>ابدأ البحث الآن</h2>
+          <h2>{t('home.search.title')}</h2>
         </div>
       </div>
 
       <div className="form-grid">
-        
+
         <div className="input-group">
-          <label>مدينة المغادرة <span className="required">*</span></label>
-          <select className="form-input" value={ville_depart} onChange={(event)=>setVille_depart(event.target.value)}>
-            <option value="" disabled selected>اختر مدينة المغادرة </option>
+          <label>{t('home.search.departure')} <span className="required">*</span></label>
+          <select className="form-input" value={ville_depart} onChange={(event) => setVille_depart(event.target.value)}>
+            <option value="" disabled selected>{t('home.search.select_departure')}</option>
             <option value="rabat">الرباط</option>
             <option value="Ad Dakhla">الداخلة</option>
             <option value="Ad Darwa">الداروة</option>
@@ -123,6 +125,7 @@ export default function SearchForm() {
             <option value="Oulad Teïma">أولاد تايمة</option>
             <option value="Oulad Yaïch">أولاد يعِيّش</option>
             <option value="Qasbat Tadla">قصبة تادلة</option>
+            <option value="Rabat">الرباط</option>
             <option value="Safi">آسفي</option>
             <option value="Sale">سلا</option>
             <option value="Sefrou">صفرو</option>
@@ -136,6 +139,7 @@ export default function SearchForm() {
             <option value="Souk et Tnine Jorf el Mellah">سوق الأربعاء جرف الملح</option>
             <option value="Souq Sebt Oulad Nemma">سوق سبت أولاد النّمّة</option>
             <option value="Tahla">طهلة</option>
+            <option value="Tameslouht">تامسلوحت</option>
             <option value="Tameslouht">تامسلوحت</option>
             <option value="Tangier">طنجة</option>
             <option value="Taourirt">تاوريرت</option>
@@ -156,9 +160,9 @@ export default function SearchForm() {
         </div>
 
         <div className="input-group">
-          <label>مدينة الوصول </label>
-          <select className="form-input" value={ville_arrivee} onChange={(event)=>setVille_arrivee(event.target.value)}>
-            <option value="" disabled selected>اختر مدينة الوصول </option>
+          <label>{t('home.search.arrival')} </label>
+          <select className="form-input" value={ville_arrivee} onChange={(event) => setVille_arrivee(event.target.value)}>
+            <option value="" disabled selected>{t('home.search.select_arrival')}</option>
             <option value="marrakech">مراكش</option>
             <option value="tangier">طنجة</option>
             <option value="Ad Darwa">الداروة</option>
@@ -211,6 +215,7 @@ export default function SearchForm() {
             <option value="Ksar El Kebir">القصر الكبير</option>
             <option value="Larache">العرائش</option>
             <option value="Laâyoune">العيون</option>
+            <option value="Marrakech">مراكش</option>
             <option value="Martil">مرتيل</option>
             <option value="Mechraa Bel Ksiri">مشرع بلقصيري</option>
             <option value="Mehdya">المهدية</option>
@@ -247,6 +252,7 @@ export default function SearchForm() {
             <option value="Souq Sebt Oulad Nemma">سوق سبت أولاد النّمّة</option>
             <option value="Tahla">طهلة</option>
             <option value="Tameslouht">تامسلوحت</option>
+            <option value="Tangier">طنجة</option>
             <option value="Taourirt">تاوريرت</option>
             <option value="Taza">تزّانّة</option>
             <option value="Temara">تمارة</option>
@@ -265,27 +271,28 @@ export default function SearchForm() {
         </div>
 
         <div className="input-group">
-          <label>تاريخ النقل</label>
-          <input type="date" className="form-input" value={date_depart} onChange={(event)=>setDate_depart(event.target.value)} />
+          <label>{t('home.search.date')}</label>
+          <input type="date" className="form-input" value={date_depart} onChange={(event) => setDate_depart(event.target.value)} />
         </div>
 
         <div className="input-group">
-          <label>نوع المركبة </label>
-          <select className="form-input" value={type_transport} onChange={(event)=>setType_transport(event.target.value)}>
-            <option value="" disabled selected>اختر نوع المركبة</option>
-            <option value="truck">شاحنة</option>
-            <option value="van">عربة نقل</option>
+          <label>{t('home.search.vehicle_type')} </label>
+          <select className="form-input" value={type_transport} onChange={(event) => setType_transport(event.target.value)}>
+            <option value="" disabled selected>{t('home.search.select_vehicle')}</option>
+            <option value="truck">{t('home.search.truck')}</option>
+            <option value="van">{t('home.search.van')}</option>
           </select>
         </div>
 
       </div>
 
       <button className="submit-btn" onClick={lookup}>
-        ابحث عن السائقين المتاحين 
+        {t('home.search.submit_btn')}
         <span className="btn-icon">🔍</span>
       </button>
-      {err &&<div style={{color:'rgba(215, 130, 144, 1)',textAlign:'center'
-      }} >يجب تحديد مدينة المغادرة على الاقل !!</div>}
+      {err && <div style={{
+        color: 'rgba(215, 130, 144, 1)', textAlign: 'center'
+      }} >{t('home.search.error_departure')}</div>}
 
     </div>
   );
