@@ -21,7 +21,7 @@ app.use(express.json());
 // --- ROUTES ---
 
 // Evaluation Routes (from HEAD)
-const evaluationRoutes = require('./routes/evaluationRoutes');
+const evaluationRoutes = require('./src/routes/evaluationRoutes');
 app.use('/api/evaluations', evaluationRoutes);
 
 // Existing Routes (from origin/main)

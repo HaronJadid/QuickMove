@@ -95,7 +95,21 @@ exports.getBookingsByClient = async (req, res) => {
           include: [
             { model: db.Ville, as: 'VilleDepart', attributes: ['id_ville', 'nom'] },
             { model: db.Ville, as: 'VilleArrivee', attributes: ['id_ville', 'nom'] },
-            { model: db.Vehicule, as: 'VehiculeUtilise', attributes: ['id_vehicule', 'nom', 'imgUrl', 'capacite'] }
+            {
+              model: db.Vehicule,
+              as: 'VehiculeUtilise',
+              attributes: ['id_vehicule', 'nom', 'imgUrl', 'capacite'],
+              include: [
+                {
+                  model: db.Livreur,
+                  as: 'proprietaire',
+                  include: [{
+                    model: db.User,
+                    attributes: ['nom', 'prenom']
+                  }]
+                }
+              ]
+            }
           ]
         }
       ]
@@ -103,19 +117,33 @@ exports.getBookingsByClient = async (req, res) => {
 
     if (!client) return res.status(404).json({ message: `Client id=${clientId} introuvable.` });
 
-    const demandes = (client.demandesFaites || []).map(d => ({
-      id: d.id,
-      status: d.status,
-      prix: d.prix,
-      comment: d.comment,
-      dateDepartExacte: d.dateDepartExacte,
-      dateArriveeExacte: d.dateArriveeExacte,
-      villeDepart: d.VilleDepart ? { id: d.VilleDepart.id_ville, nom: d.VilleDepart.nom } : null,
-      villeArrivee: d.VilleArrivee ? { id: d.VilleArrivee.id_ville, nom: d.VilleArrivee.nom } : null,
-      vehicule: d.VehiculeUtilise ? { id: d.VehiculeUtilise.id_vehicule, nom: d.VehiculeUtilise.nom, capacite: d.VehiculeUtilise.capacite } : null,
-      createdAt: d.createdAt,
-      updatedAt: d.updatedAt
-    }));
+    const demandes = (client.demandesFaites || []).map(d => {
+      // Extract driver info safely
+      let driverInfo = null;
+      if (d.VehiculeUtilise && d.VehiculeUtilise.proprietaire && d.VehiculeUtilise.proprietaire.User) {
+        const u = d.VehiculeUtilise.proprietaire.User;
+        driverInfo = {
+          nom: u.nom,
+          prenom: u.prenom,
+          fullName: `${u.prenom} ${u.nom}`
+        };
+      }
+
+      return {
+        id: d.id,
+        status: d.status,
+        prix: d.prix,
+        comment: d.comment,
+        dateDepartExacte: d.dateDepartExacte,
+        dateArriveeExacte: d.dateArriveeExacte,
+        villeDepart: d.VilleDepart ? { id: d.VilleDepart.id_ville, nom: d.VilleDepart.nom } : null,
+        villeArrivee: d.VilleArrivee ? { id: d.VilleArrivee.id_ville, nom: d.VilleArrivee.nom } : null,
+        vehicule: d.VehiculeUtilise ? { id: d.VehiculeUtilise.id_vehicule, nom: d.VehiculeUtilise.nom, capacite: d.VehiculeUtilise.capacite } : null,
+        driver: driverInfo,
+        createdAt: d.createdAt,
+        updatedAt: d.updatedAt
+      };
+    });
 
     return res.status(200).json({ message: 'Bookings du client', count: demandes.length, demandes });
   } catch (error) {
@@ -124,7 +152,10 @@ exports.getBookingsByClient = async (req, res) => {
   }
 };
 
-
+/**
+ * Get client statistics
+ * GET /api/client/:id/statistics
+ */
 exports.getClientStatistics = async (req, res) => {
   const clientId = req.params.id;
 
