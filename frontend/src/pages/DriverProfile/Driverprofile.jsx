@@ -6,6 +6,8 @@ import Stats from '../../components/Stats'
 import { useState } from 'react'
 import CitiesComponent from './components/CitiesComponent'
 import VehiclesComponent from './components/VehiclesComponent'
+import BookingRequestCard from './components/BookingRequestCard'
+import Bookings from './components/Bookings'
 
 
 export default function Driverprofile(){
@@ -49,6 +51,7 @@ export default function Driverprofile(){
             {selectedTab=='myprofile' &&<DrPersonalInfo />}
             {selectedTab=='cities' &&<CitiesComponent />}
             {selectedTab=='myvehicles' &&<VehiclesComponent />}
+            {selectedTab=='myrequests' &&<Bookings />}
             <div className='logout-ctn' >
                 <button onClick={logoutfct} className='logout'>Log out</button>
             </div>

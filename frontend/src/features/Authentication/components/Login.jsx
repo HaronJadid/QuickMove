@@ -31,7 +31,7 @@ export default function Login() {
   
       if(!email.trim() || !pwd.trim()){
         setError(true)
-        setErrmsg('  يجب ملء كلا الحقلين !')
+        setErrmsg('Both fields must be filled!')
         return
       }
       setError(false)
@@ -67,39 +67,39 @@ export default function Login() {
 
 
   return (
-    <div className="auth-container" dir="rtl">
+    <div className="auth-container" dir="ltr">
       
       <div className="auth-card">
         
         <Link to='/' className="brand-logo">🚚 MoveMorocco</Link>
-        <h3 className="auth-title">تسجيل الدخول</h3>
+        <h3 className="auth-title">Login</h3>
 
         <div className="form-content fade-in">
           <form onSubmit={trylogin}>
             <div className="input-group">
-              <label>البريد الإلكتروني</label>
+              <label>Email Address</label>
               <input type="email" placeholder="example@mail.com" className="auth-input" value={email} onChange={emailInput} />
             </div>
             
             <div className="input-group">
-              <label>كلمة المرور</label>
+              <label>Password</label>
               <input type="password"  placeholder="••••••••" className="auth-input" value={pwd} onChange={pwdInput}  pattern="(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}"
-  title="كلمة المرور يجب أن تحتوي على 8 أحرف على الأقل، حرف كبير، حرف صغير، رقم، ورمز خاص"
+  title="Password must contain at least 8 characters, one uppercase, one lowercase, one number, and one special character"
    />
             </div>
 
             <div className="forgot-password">
-              <Link to='/sendlink'>نسيت كلمة المرور؟</Link>
+              <Link to='/sendlink'>Forgot your password?</Link>
             </div>
 
-            <button className="auth-btn" >تسجيل الدخول</button>
+            <button className="auth-btn" >Login</button>
           </form>
           {error && (<div className='errmessage'>{errmsg}</div>)}
 
           <div className="auth-footer">
-            <span>ليس لديك حساب؟ </span>
+            <span>Don't have an account? </span>
             <Link to='/signup' className="link-btn">
-              انشئ حساب الآن
+              Create account now
             </Link>
           </div>
         </div>

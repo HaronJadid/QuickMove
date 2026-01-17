@@ -15,6 +15,7 @@ import Header from './layout/Header/Header.jsx'
 import SearchResult from './pages/SearchResult/SearchResult.jsx'
 import Sendlink from './features/Authentication/components/Sendlink.jsx'
 import DriverProfileClientSide  from './pages/SearchResult/components/DriverProfileClientSide.jsx'
+import Bookings from './pages/DriverProfile/components/Bookings.jsx'
 
 function App() {
   const {pathname}=useLocation()
@@ -37,6 +38,7 @@ function App() {
           <Route path='/sendlink' element={<Sendlink />}  />
           <Route path='/searchresult' element={<SearchResult />} />
           <Route path='/lookupdriverprofile' element={<DriverProfileClientSide />} />
+          <Route path='/bookings' element={<Bookings/>} />
 
           {/* <Route element={<Privateroute />}> */}
             <Route path='/driverprofile' element={<Driverprofile />} />

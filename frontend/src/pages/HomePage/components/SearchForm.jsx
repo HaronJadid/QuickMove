@@ -50,22 +50,22 @@ export default function SearchForm() {
 
 
   return (
-    <div className="search-card-container" dir="rtl">
+    <div className="search-card-container" >
       
       <div className="card-header">
         <div className="header-title">
 
           <span className="search-icon-red">🔍</span>
-          <h2>ابدأ البحث الآن</h2>
+          <h2>  Begin searching now</h2>
         </div>
       </div>
     <form onSubmit={lookup}>
       <div className="form-grid">
         
         <div className="input-group">
-          <label>مدينة المغادرة <span className="required">*</span></label>
+          <label align='left'>City of departure  <span className="required">*</span></label>
           <select className="form-input" value={ville_depart} onChange={(event)=>setVille_depart(event.target.value)}>
-            <option value="" disabled selected>اختر مدينة المغادرة </option>
+            <option value="" disabled selected> Choose city of departure  </option>
            {( villes)&& villes.map((ville,index)=>(
               <option  key={index} value={ville.id}>{ville.nom}</option>
             ))}
@@ -75,9 +75,9 @@ export default function SearchForm() {
         </div>
 
         <div className="input-group">
-          <label>مدينة الوصول <span className="required">*</span></label>
+          <label align='left'>City of arrival  <span className="required">*</span></label>
           <select className="form-input" value={ville_arrivee} onChange={(event)=>setVille_arrivee(event.target.value)}>
-              <option value="" disabled selected>اختر مدينة المغادرة </option>
+              <option value="" disabled selected> Choose city of arrival  </option>
 
                 {(villes) &&villes.map((ville,index)=>(
               <option  key={index} value={ville.id}>{ville.nom}</option>
@@ -86,29 +86,17 @@ export default function SearchForm() {
           </select>
         </div>
 
-        {/* <div className="input-group">
-          <label>تاريخ النقل</label>
-          <input type="date" className="form-input" value={date_depart} onChange={(event)=>setDate_depart(event.target.value)} />
-        </div>
-
-        <div className="input-group">
-          <label>نوع المركبة </label>
-          <select className="form-input" value={type_transport} onChange={(event)=>setType_transport(event.target.value)}>
-            <option value="" disabled selected>اختر نوع المركبة</option>
-            <option value="truck">شاحنة</option>
-            <option value="van">عربة نقل</option>
-          </select>
-        </div> */}
+      
 
       </div>
 
       <button type='submit' className="submit-btn">
-        ابحث عن السائقين المتاحين 
+            Look up available drivers
         <span className="btn-icon">🔍</span>
       </button>
       </form>
       {err &&<div style={{color:'rgba(215, 130, 144, 1)',textAlign:'center'
-      }} >يجب تحديد كلتا المدينتين  !!</div>}
+      }} >You should specify both cities !!</div>}
 
     </div>
   );

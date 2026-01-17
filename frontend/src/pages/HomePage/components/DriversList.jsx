@@ -7,7 +7,7 @@ export default function DriversList(){
     
     return(
         <div>
-            <div className="text" align='right'>السائقون المميزون</div>
+            <div className="text" align='left'>The top rated drivers </div>
             <div className="Driverslist">
                 
                 <DriverComponent/>

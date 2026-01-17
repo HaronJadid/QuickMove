@@ -30,6 +30,21 @@ const DriverCard = ({ driver }) => {
     e.preventDefault();
     console.log("Booking Submitted:", bookingData);
     try{
+      const dep = new Date(bookingData.dateDepartExacte);
+      const arr = new Date(bookingData.dateArriveeExacte);
+      const now = new Date();
+
+      // 1. Check if Departure is in the past
+      if (dep < now) {
+        alert("Departure date cannot be in the past!");
+        return;
+      }
+
+      // 2. Check if Arrival is before Departure
+      if (arr <= dep) {
+        alert("The expected date of arrival should be later than the departure date!");
+        return;
+      }
      
     const res=await axios.post(`${API_URL}api/client/${id}/book`,{ ville_depart,
     ville_arrivee,
@@ -57,12 +72,19 @@ const DriverCard = ({ driver }) => {
   };
   const lookupdriver=()=>{
     localStorage.setItem('driverID',driver.id)
-    navigation('/lookupdriverprofile')
+    navigation('/lookupdriverprofile',{ state: { driverData: driver } })
 
   }
 
+  const getMinDateTime = () => {
+  const now = new Date();
+  // Adjust to local timezone string format
+  now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
+  return now.toISOString().slice(0, 16);
+  };
+
   return (
-    <div className="search-result-wrapper" dir="rtl">
+    <div className="search-result-wrapper">
       {/* --- HORIZONTAL CARD --- */}
       <div className="driver-horizontal-card">
         <div className="card-left-section" style={{cursor:'pointer'}} onClick={lookupdriver}>
@@ -82,11 +104,11 @@ const DriverCard = ({ driver }) => {
 
         <div className="card-right-section">
           <div className="price-tag">
-            <span className="price-label">يبدأ من</span>
-            <span className="price-value">{driver.prix_base || 350} درهم</span>
+            <span className="price-label">Starts from  </span>
+            <span className="price-value">{driver.prix_base || 350} DH</span>
           </div>
           <button className="book-now-btn" onClick={() => setShowModal(true)}>
-            احجز الآن ←
+           Book now ←
           </button>
         </div>
       </div>
@@ -96,24 +118,24 @@ const DriverCard = ({ driver }) => {
         <div className="modal-overlay">
           <div className="modal-content">
             <div className="modal-header">
-              <h3>تأكيد الحجز مع {driver.user.prenom +' '+ driver.user.nom}</h3>
+              <h3>  Confirm booking with  {driver.user.prenom +' '+ driver.user.nom}</h3>
               <button className="close-x" onClick={() => setShowModal(false)}>×</button>
             </div>
             
             <form onSubmit={handleBooking} className="booking-form">
               <div className="form-grid">
                 <div className="form-group">
-                  <label>الميزانية المقترحة (درهم)</label>
+                  <label> The suggested price (DH) <span className="required"> *</span> </label>
                   <input type="number" required value={bookingData.prix} 
                     onChange={(e) => setBookingData({...bookingData, prix: e.target.value})} />
                 </div>
 
                 <div className="form-group">
-                  <label>اختيار المركبة</label>
+                  <label>Choose vehicule <span className="required"> *</span> </label>
                   <select required value={bookingData.vehicule_id}
                     onChange={(e) =>setBookingData({...bookingData, vehicule_id: e.target.value})}>
                    
-                    <option value="">اختر من مركبات السائق</option>
+                    <option value=""> Choose from the driver´s vehicules  </option>
                     {driver.vehicules?.map(v => (
                       <option key={v.id} value={v.id}>{v.nom} ({v.capacite}kg)</option>
                     ))}
@@ -121,25 +143,29 @@ const DriverCard = ({ driver }) => {
                 </div>
 
                 <div className="form-group">
-                  <label>تاريخ ووقت المغادرة</label>
+                  <label> Date and time of departure  <span className="required"> *</span></label> 
                   <input type="datetime-local" required 
+                   min={getMinDateTime()} 
+                   value={bookingData.dateDepartExacte}
                     onChange={(e) => setBookingData({...bookingData, dateDepartExacte: e.target.value})} />
                 </div>
 
                 <div className="form-group">
-                  <label>تاريخ ووقت الوصول المتوقع</label>
-                  <input type="datetime-local" required 
+                  <label>Expected Date and time of arrival   </label>
+                  <input type="datetime-local"  
+                  min={bookingData.dateDepartExacte || getMinDateTime()} 
+                  value={bookingData.dateArriveeExacte}
                     onChange={(e) => setBookingData({...bookingData, dateArriveeExacte: e.target.value})} />
                 </div>
 
                 <div className="form-group full-width">
-                  <label>ملاحظات إضافية</label>
-                  <textarea rows="3" placeholder="أضف تفاصيل عن الشحنة..."
+                  <label> Additionnal comments </label>
+                  <textarea rows="3" placeholder="  Add comments about the trip ..."
                     onChange={(e) => setBookingData({...bookingData, comment: e.target.value})}></textarea>
                 </div>
               </div>
 
-              <button type="submit" className="confirm-booking-btn">إرسال الطلب</button>
+              <button type="submit" className="confirm-booking-btn"> Send request</button>
             </form>
           </div>
         </div>

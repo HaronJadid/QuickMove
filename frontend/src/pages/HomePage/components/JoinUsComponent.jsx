@@ -4,28 +4,28 @@ import { Link } from 'react-router-dom';
 
 export default function Joinus() {
   return (
-    <section className="cta-section" dir="rtl">
+    <section className="cta-section" >
       
       <div className="cta-container">
         
         <div className="cta-tag">
-          <span>⚡</span> ابدأ الآن
+          <span>⚡</span>  Start now
         </div>
 
         <h1 className="cta-title">
-          هل أنت سائق؟ <br />
-          انضم إلى منصتنا وابدأ الربح
+         Are you a driver ? <br />
+          Join our plateform and start earning
         </h1>
         <p className="cta-desc">
-          سجل كسائق معتمد واحصل على طلبات حجز من آلاف العملاء في جميع أنحاء المغرب
+         Sign up as a qualified driver and get requests from hundreds of clients all over Morocco. 
         </p>
 
         <div className="cta-buttons">
           <Link to='/aboutus' className="btn-outline">
-            <span>ⓘ</span> اعرف المزيد
+            <span>ⓘ</span> Learn more 
           </Link>
           <Link to='/driversignup' className="btn-green">
-            <span>👤+</span> سجل كسائق
+            <span>👤+</span> Sign up as a driver 
           </Link>
         </div>
 
@@ -33,20 +33,20 @@ export default function Joinus() {
           
           <div className="glass-card">
             <div className="card-icon">📈</div>
-            <h3>٣٠٪+</h3>
-            <p>زيادة في الدخل</p>
+            <h3>30٪ +</h3>
+            <p> Increase your income </p>
           </div>
 
           <div className="glass-card">
             <div className="card-icon">📅</div>
-            <h3>مرونة</h3>
-            <p>اختر مواعيدك</p>
+            <h3>Flexibility</h3>
+            <p>Choose your own working time </p>
           </div>
 
           <div className="glass-card">
             <div className="card-icon">🛡️</div>
-            <h3>أمان</h3>
-            <p>دفع مضمون</p>
+            <h3>Security</h3>
+            <p> Guaranteed Payment  </p>
           </div>
 
         </div>

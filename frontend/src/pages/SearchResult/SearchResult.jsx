@@ -45,7 +45,7 @@ export default function SearchResult(){
     return <div style={{
         fontSize:'10px',
         color:'grey'
-    }}>لا يوجد سائق يعمل في المدن المحددة !</div>
+    }}> No driver work in the specified cities !</div>
     }
 
 
@@ -56,7 +56,7 @@ export default function SearchResult(){
         <div className="container">
 
             <div className='text'>
-              :  نتائج البحث 
+            Search Results : 
             </div>
             <div>
                 {livreurs.map((livreur,index)=>

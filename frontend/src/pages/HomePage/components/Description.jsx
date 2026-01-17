@@ -6,38 +6,38 @@ export default function Description() {
   const steps = [
     {
       id: 1,
-      title: "ابحث عن سائق",
-      desc: "اختر مدينة المغادرة والوصول ونوع المركبة المناسبة لاحتياجاتك",
+      title: "Look for a driver",
+      desc: " Choose the city of departure and arrival depending on your needs.  ",
       icon: ""
     },
     {
       id: 2,
-      title: "قارن واختر",
-      desc: "استعرض طلبات السائقين المتاحين وقارن الأسعار والتقييمات",
+      title: "Compare and choose",
+      desc: "Look up  the drivers available, check the prices and the reviews.",
       icon: ""
     },
     {
       id: 3,
-      title: "احجز رحلتك",
-      desc: "اختر السائق المناسب وأكمل الحجز بخطوات بسيطة",
+      title: " Book your trip",
+      desc: "Choose the driver you want and fill the request form with the requested information.",
       icon: ""
     },
     {
       id: 4,
-      title: "استمتع بالخدمة",
-      desc: "السائق سيصل في الموعد المحدد، لنقل أثاثك بأمان",
+      title: "Enjoy the service ",
+      desc: "The driver will arrive in the determined time to move your furniture ",
       icon: ""
     }
   ];
 
   return (
-    <div className="timeline-section" dir="rtl">
+    <div className="timeline-section" >
       
       {/* SECTION HEADER */}
       <div className="section-header">
-        <span className="subtitle">كيف يعمل 💡</span>
-        <h2 className="title">خطوات بسيطة</h2>
-        <p className="description">عملية حجز سهلة وسريعة للحصول على أفضل خدمة نقل أثاث</p>
+        <span className="subtitle">How It works💡</span>
+        <h2 className="title">Simple Steps </h2>
+        <p className="description"> A quick and easy booking procedure to get the best furniture moving service </p>
       </div>
 
       {/* TIMELINE CONTAINER */}

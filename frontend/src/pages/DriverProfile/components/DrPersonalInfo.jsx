@@ -14,11 +14,13 @@ export default function DrPersonalInfo() {
     // Form state for editing
     const [formData, setFormData] = useState({
         prenom: '',
-        nom: '',
-        email: '',
-        phone: '',
-        description:''
-    });
+        nom:  '',
+        email:  '',
+        numero:  '',
+        role: "Driver Account ",
+        about: '',
+        cin: ''
+        });
 
     // Get user ID from localStorage
     const userRetrieved = localStorage.getItem('user');
@@ -49,10 +51,11 @@ export default function DrPersonalInfo() {
                     prenom: userData.prenom || '',
                     nom: userData.nom || '',
                     email: userData.email || '',
-                    phone: userData.numero|| '',
-                    role: "حساب سائق",
-                    avatar: userData.imgUrl || '../../../../public/alt_img.webp',
-                    description:userData.description|| ''
+                    numero: userData.numero|| '',
+                    role: "Driver Account ",
+                    imgUrl: userData.imgUrl || '../../../../public/alt_img.webp',
+                    about:userData.livreurProfile.about|| '',
+                    cin:userData.livreurProfile.cin || '',
                 };
                 
                 setUser(fetchedData);
@@ -60,8 +63,9 @@ export default function DrPersonalInfo() {
                     prenom: fetchedData.prenom,
                     nom: fetchedData.nom,
                     email: fetchedData.email,
-                    phone: fetchedData.phone,
-                    description:fetchedData.description
+                    numero: fetchedData.numero,
+                    about:fetchedData.about,
+                    cin:fetchedData.cin,
                 });
                 setError(null);
             } catch (err) {
@@ -84,7 +88,7 @@ export default function DrPersonalInfo() {
             };
             
             // Send update to API
-             await axios.put(`${API_URL}api/user/${id}`, formData);
+             await axios.put(`${API_URL}api/profile/driver/${id}`, formData);
              
             // Update local state
             setUser(updatedUser);
@@ -117,8 +121,8 @@ export default function DrPersonalInfo() {
             prenom: user.prenom,
             nom: user.nom,
             email: user.email,
-            phone: user.phone,
-            description:user.description
+            numero: user.numero,
+            about:user.about
         });
         setEdit(false);
     };
@@ -139,16 +143,32 @@ export default function DrPersonalInfo() {
     }
 
     return (
-        <div className="profile-page-wrapper" dir="rtl">
+        <div className="profile-page-wrapper" >
             <div className="profile-card">
                 <div className="profile-header">
-                    <img src={user.avatar} alt="Profile" className="profile-avatar" />
+                    <img src={user.imgUrl} alt="Profile" className="profile-avatar" />
                     <div className="role-badge">{user.role}</div>
                 </div>
 
                 <div className="profile-form">
                     <div className="input-group">
-                        <label>الاسم</label>
+                        <label>CIN</label>
+                        {!edit ? (
+                            <div className="read-only-input" >{user.cin || '---'}</div>
+                        ) : (
+                            <input
+                                type="text"
+                                name="cin"
+                                className="form-input"
+                                value={formData.cin}
+                                placeholder='Enter your CIN'
+                                onChange={handleInputChange}
+                            />
+                        )}
+                    </div>
+
+                    <div className="input-group">
+                        <label>First name</label>
                         {!edit ? (
                             <div className="read-only-input">{user.prenom}</div>
                         ) : (
@@ -163,7 +183,7 @@ export default function DrPersonalInfo() {
                     </div>
 
                     <div className="input-group">
-                        <label>النسب</label>
+                        <label>Last name</label>
                         {!edit ? (
                             <div className="read-only-input">{user.nom}</div>
                         ) : (
@@ -178,7 +198,7 @@ export default function DrPersonalInfo() {
                     </div>
 
                     <div className="input-group">
-                        <label>البريد الإلكتروني</label>
+                        <label> Email</label>
                         {!edit ? (
                             <div className="read-only-input">{user.email}</div>
                         ) : (
@@ -193,31 +213,31 @@ export default function DrPersonalInfo() {
                     </div>
 
                     <div className="input-group">
-                        <label>رقم الهاتف</label>
+                        <label> numero number</label>
                         {!edit ? (
-                            <div className="read-only-input" dir="ltr">{user.phone}</div>
+                            <div className="read-only-input" dir="ltr">{user.numero}</div>
                         ) : (
                             <input
                                 type="tel"
-                                name="phone"
+                                name="numero"
                                 className="form-input"
-                                value={formData.phone}
+                                value={formData.numero}
                                 onChange={handleInputChange}
                             />
                         )}
                     </div>
                      <div className="input-group">
-                        <label> خانة الوصف</label>
+                        <label>  about</label>
                         {!edit ? (
-                            <div style={{minHeight:'14vh'}} className="read-only-input" dir="ltr">{user.description}</div>
+                            <div style={{minHeight:'14vh'}} className="read-only-input" dir="ltr">{user.about || 'No description provided.'}</div>
                         ) : (
                             <textarea
-                                name="description"
+                                name="about"
                                 className="form-input"
-                                value={formData.description}
+                                value={formData.about}
                                 onChange={handleInputChange}
                                 rows={4} 
-                                placeholder=" ... Enter description"
+                                placeholder=" Enter about..."
                             />
                         )}
                     </div>
@@ -226,15 +246,15 @@ export default function DrPersonalInfo() {
                 <div className="profile-footer">
                     {!edit ? (
                         <button className="edit-btn" onClick={() => setEdit(true)}>
-                            تعديل الملف الشخصي
+                             Edit profile
                         </button>
                     ) : (
                         <div style={{ display: 'flex', gap: '10px' }}>
                             <button className="edit-btn" onClick={handleSave}>
-                                حفظ
+                                Save
                             </button>
                             <button className="edit-btn" onClick={handleCancel}>
-                                إلغاء
+                                Cancel
                             </button>
                         </div>
                     )}

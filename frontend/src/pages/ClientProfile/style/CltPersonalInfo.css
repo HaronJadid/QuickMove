@@ -61,7 +61,7 @@
 /* --- FORM --- */
 .input-group {
   margin-bottom: 25px;
-  text-align: right; /* Ensure Right Alignment for Arabic */
+  text-align: left; 
 }
 
 .input-group label {

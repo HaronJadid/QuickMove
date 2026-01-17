@@ -1,0 +1,16 @@
+.bookings-list-container {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* This centers the 80% wide cards */
+    padding: 20px 0;
+    gap: 10px; /* Space between each card */
+}
+
+.status-text {
+    text-align: center;
+    color: white; /* Contrast against the red dashboard background */
+    margin-top: 50px;
+    font-size: 18px;
+    font-weight: bold;
+}

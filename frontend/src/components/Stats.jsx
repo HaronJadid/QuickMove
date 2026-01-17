@@ -107,7 +107,7 @@ export default function Stats() {
           <h3 className="stat-value text-green">{statistics.confirmed}</h3>
         </div>):
         (<div className="stat-card">
-          <span className="stat-label">Total Pending Trips</span>
+          <span className="stat-label">Total Requests</span>
           <h3 className="stat-value text-green">{statistics.totalPendingTrips}</h3>
         </div>)}
 

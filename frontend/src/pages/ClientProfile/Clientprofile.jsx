@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../../features/Authentication/components/Authprovider'
 import Stats from '../../components/Stats'
 import { useState } from 'react'
+import MyBookings from './components/MyBookings'
 
 export default function Clientprofile(){
     const navigate=useNavigate()
@@ -44,7 +45,7 @@ export default function Clientprofile(){
                 </div>
             </div>
            {selectedTab=='myprofile' &&<CltPersonalInfo />}
-           {selectedTab=='mybookings' &&<CltPersonalInfo />}
+           {selectedTab=='mybookings' &&<MyBookings />}
             <div className='logout-ctn' >
               <button onClick={logoutfct} className='logout'>Log out</button>
             </div>

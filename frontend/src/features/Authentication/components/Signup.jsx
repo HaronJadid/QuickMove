@@ -66,7 +66,7 @@ export default function Signup() {
       try{
         if(!email.trim() || !pwd.trim() ||!prenom.trim() || !nom.trim() || !tel.trim()){
           setError(true)
-          setErrmsg(' الرجاء ملء جميع الحقول !')
+          setErrmsg(' You have to fill all fields !! ')
           return
         }
         
@@ -117,65 +117,65 @@ export default function Signup() {
 
 
   return (
-    <div className="auth-container" dir="rtl">
+    <div className="auth-container" >
       
       <div className="auth-card">
 
         <Link to='/' className="brand-logo">🚚 MoveMorocco</Link>
         { (!isdriver)?
-          <h3 className="auth-title">إنشاء حساب جديد</h3>
+          <h3 className="auth-title">  Create a new account</h3>
         :
-        <h3 className="auth-title"> سجل الآن كسائق وابدأ باستقبال الطلبات</h3>
+        <h3 className="auth-title"> Sign up now as a driver and start receiving requests ! </h3>
 }
 
         <div className="form-content fade-in">
           <form onSubmit={trysignup}>
             <div className="input-group">
-              <label>الاسم</label>
-              <input type="text" placeholder="الاسم " className="auth-input" value={prenom} onChange={prenomInput} />
+              <label>First name</label>
+              <input type="text" placeholder="First name " className="auth-input" value={prenom} onChange={prenomInput} />
             </div>
              <div className="input-group">
-              <label>النسب</label>
-              <input type="text" placeholder="النسب" className="auth-input" value={nom} onChange={nomInput} />
+              <label>Last name</label>
+              <input type="text" placeholder="Last name" className="auth-input" value={nom} onChange={nomInput} />
             </div>
 
             <div className="input-group">
-              <label>البريد الإلكتروني</label>
+              <label> Email</label>
               <input type="email" placeholder="example@mail.com" className="auth-input" value={email} onChange={emailInput} />
             </div>
 
             <div className="input-group">
-              <label>رقم الهاتف</label>
+              <label>Phone number </label>
               <input type="tel" placeholder="06XXXXXXXX" className="auth-input" value={tel} onChange={telInput} />
             </div>
 
             <div className="input-group">
-              <label>كلمة المرور</label>
+              <label>Password </label>
               <input type="password"  placeholder="••••••••" className="auth-input" value={pwd} onChange={pwdInput} pattern="(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}"
-                title="كلمة المرور يجب أن تحتوي على 8 أحرف على الأقل، حرف كبير، حرف صغير، رقم، ورمز خاص"
+                title="Password must contain at least 8 characters, 1 majuscule, 1 minuscule, a number and a special character"
                 />
             </div>
             <div className="input-group">
-              <label> ادخل صورة ملفك الشخصي</label>
+              <label> Insert your profile picture </label>
               <input type="file" className="auth-input"  accept="image/*" onChange={fileInput} />
             </div>
 
-            <button className="auth-btn" >إنشاء حساب</button>
+            <button className="auth-btn" >Create account </button>
           </form>
           {error && (<div className='errmessage'>{errmsg}</div>)}
 
          { (isdriver)? ( <div className="auth-footer">
-            <span>لديك حساب بالفعل؟ </span>
+            <span>Already have an account ?  </span>
             <Link to='/login'  className="link-btn">
-              تسجيل الدخول
+              Login 
             </Link>
              
            </div>)
            :
             (<div className="auth-footer">
-            <span>هل تريد التسجيل كسائق ؟ </span>
+            <span>Do you want to sign up as a driver ? </span>
             <button onClick={()=>setIsdriver(true)}  className="link-btn">
-              انقر هنا
+               Click here
             </button>
              
             </div>)
