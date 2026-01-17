@@ -1,26 +1,27 @@
 import React, { useState } from 'react';
-import '../style/auth.css';
+import '../style/auth.css'; 
 import { Link, useNavigate } from 'react-router-dom';
-import { useAuth } from './Authprovider';
+import {useAuth} from './Authprovider'
 import axios from 'axios';
-import { useTranslation } from 'react-i18next';
-import LanguageSwitcher from '../../../components/LanguageSwitcher';
 
 export default function Login() {
   const API_URL = import.meta.env.VITE_API_URL;
 
 
-  let [email, setEmail] = useState('');
-  let [pwd, setPwd] = useState('');
+  const navigate=useNavigate()
+  const {login}=useAuth()
 
-  let [error, setError] = useState(false);
-  let [errmsg, setErrmsg] = useState('');
+  let [email,setEmail]=useState('')
+  let [pwd,setPwd]=useState('')
 
-  const emailInput = (event) => {
-    setEmail(event.target.value);
+  let [error,setError]=useState(false)
+  let [errmsg,setErrmsg]=useState('')
+
+  const emailInput=(event)=>{
+    setEmail(event.target.value)
   }
-  const pwdInput = (event) => {
-    setPwd(event.target.value);
+  const pwdInput=(event)=>{
+    setPwd(event.target.value)
   }
 
 
@@ -36,15 +37,20 @@ export default function Login() {
       setError(false)
       const res=await axios.post(`${API_URL}api/auth/login`,{email,password:pwd})
 
-      if (res.status == 200) {
-        const userdata = res.data;
-        login(userdata);
-        if (userdata.role == 'client') {
-          navigate('/clientprofile');
-        } else {
-          navigate('/driverprofile');
+      if(res.status==200){
+
+        const userdata=res.data
+        
+        login(userdata)
+        if(userdata.role=='client'){
+           navigate('/clientprofile')
+        }else{
+           navigate('/driverprofile')
         }
-        return;
+       
+
+
+        return
       }
 
      
@@ -54,12 +60,17 @@ export default function Login() {
       setErrmsg( '!! Error logging in ')
       console.log(' !! Error logging in ',err)
     }
+
+
+
   }
+
 
   return (
     <div className="auth-container" dir="ltr">
       
       <div className="auth-card">
+        
         <Link to='/' className="brand-logo">🚚 MoveMorocco</Link>
         <h3 className="auth-title">Login</h3>
 
@@ -69,7 +80,7 @@ export default function Login() {
               <label>Email Address</label>
               <input type="email" placeholder="example@mail.com" className="auth-input" value={email} onChange={emailInput} />
             </div>
-
+            
             <div className="input-group">
               <label>Password</label>
               <input type="password"  placeholder="••••••••" className="auth-input" value={pwd} onChange={pwdInput}  pattern="(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}"
