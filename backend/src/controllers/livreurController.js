@@ -16,7 +16,7 @@ exports.findLivreursByCity = async (req, res) => {
             message: "Le paramètre 'ville' est obligatoire pour la recherche."
         });
     }
-    
+
     try {
         // 2. Recherche de l'ID de la Ville
         // Le modèle Ville définit le champ `nom`, pas `nom_ville`.
@@ -25,7 +25,7 @@ exports.findLivreursByCity = async (req, res) => {
                 nom: { [Op.iLike]: `%${cityName.trim()}%` }
             }
         });
-        console.log(' ville:',ville)
+        console.log(' ville:', ville)
 
         if (!ville) {
             return res.status(404).json({
@@ -55,14 +55,14 @@ exports.findLivreursByCity = async (req, res) => {
                 {
                     model: db.Vehicule,
                     as: 'vehicules',
-                    attributes: ['id_vehicule','nom', 'imgUrl', 'capacite']
+                    attributes: ['id_vehicule', 'nom', 'imgUrl', 'capacite']
                 }
             ],
             // Attributs exposés du Livreur
             attributes: ['id_livreur', 'cin', 'about']
         });
-      
-        
+
+
 
         if (livreurs.length === 0) {
             return res.status(200).json({
@@ -70,9 +70,9 @@ exports.findLivreursByCity = async (req, res) => {
                 livreurs: []
             });
         }
-        
-        console.log('livreurs',livreurs)
-        
+
+        console.log('livreurs', livreurs)
+
 
         // 4. Formatage pour une réponse plus claire
         const formatted = livreurs.map(l => {
@@ -316,7 +316,7 @@ exports.updateDemandStatus = async (req, res) => {
     const demandeId = req.params.demandeId;
     const { status } = req.body;
 
-    const validStatuses = ['PENDING', 'CONFIRMED', 'COMPLETED'];
+    const validStatuses = ['PENDING', 'CONFIRMED', 'COMPLETED', 'REJECTED'];
     if (!validStatuses.includes(status)) {
         return res.status(400).json({ message: `Statut invalide. Valeurs permises: ${validStatuses.join(', ')}` });
     }
@@ -375,7 +375,7 @@ exports.getDriverStatistics = async (req, res) => {
 
         const totalCompletedTrips = demands.filter(d => d.status === 'COMPLETED').length;
         const totalPendingTrips = demands.filter(d => d.status === 'PENDING').length;
-        
+
         // Calculate Total Earnings (only form COMPLETED trips)
         const totalEarnings = demands
             .filter(d => d.status === 'COMPLETED')

@@ -9,13 +9,15 @@
 .booking-card-horizontal {
     background: white;
     border-radius: 30px;
-    width: 80%; /* Takes 80% of the dashboard width */
-    min-width: 750px; /* Crucial: Prevents the "crushed" vertical look */
+    width: 80%;
+    /* Takes 80% of the dashboard width */
+    min-width: 750px;
+    /* Crucial: Prevents the "crushed" vertical look */
     display: flex;
     flex-direction: row;
     padding: 25px;
     gap: 30px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
     align-items: center;
     box-sizing: border-box;
 }
@@ -39,14 +41,15 @@
 .v-check {
     position: absolute;
     bottom: -5px;
-    right: -5px; /* Since we are in LTR, put it on bottom-right */
+    right: -5px;
+    /* Since we are in LTR, put it on bottom-right */
     background: white;
     border-radius: 50%;
 }
 
 /* 2. Middle Content expanding */
 .booking-details-main {
-    flex: 1; 
+    flex: 1;
     display: flex;
     flex-direction: column;
     gap: 15px;
@@ -68,8 +71,14 @@
     margin-top: 5px;
 }
 
-.count { color: #aaa; }
-.v-type { color: #888; margin-left: 5px; }
+.count {
+    color: #aaa;
+}
+
+.v-type {
+    color: #888;
+    margin-left: 5px;
+}
 
 .route-row-grid {
     display: flex;
@@ -90,21 +99,30 @@
 .price-status-action {
     display: flex;
     flex-direction: column;
-    align-items: flex-end; /* Align elements to the right edge */
+    align-items: flex-end;
+    /* Align elements to the right edge */
     justify-content: space-between;
     height: 110px;
     min-width: 160px;
-    border-left: 1px solid #f0f0f0; /* Use left border for LTR */
+    border-left: 1px solid #f0f0f0;
+    /* Use left border for LTR */
     padding-left: 25px;
 }
 
 .price-display {
-    color: #cf3445; /* Your MoveMorocco Red */
+    color: #cf3445;
+    /* Your MoveMorocco Red */
     font-weight: 900;
 }
 
-.price-display .amount { font-size: 32px; }
-.price-display .curr { font-size: 14px; margin-left: 5px; }
+.price-display .amount {
+    font-size: 32px;
+}
+
+.price-display .curr {
+    font-size: 14px;
+    margin-left: 5px;
+}
 
 .side-status {
     padding: 4px 15px;
@@ -114,9 +132,27 @@
     text-transform: uppercase;
 }
 
-.status-completed { background: #e9f7ef; color: #27ae60; }
-.status-pending { background: #fff5e6; color: #f39c12; }
-.status-confirmed { background: #e3f2fd; color: #1976d2; }
+.status-completed {
+    background: #e9f7ef;
+    color: #27ae60;
+}
+
+.status-pending {
+    background: #fff5e6;
+    color: #f39c12;
+}
+
+.status-confirmed {
+    background: #e3f2fd;
+    color: #1976d2;
+}
+
+.status-rejected {
+    background: #fee2e2;
+    color: #dc2626;
+}
+
+/* Add Rejected Red */
 
 .rebook-btn-new {
     background: #ffffff;
@@ -147,6 +183,7 @@
         text-align: center;
         gap: 20px;
     }
+
     .price-status-action {
         border-left: none;
         padding-left: 0;
@@ -154,6 +191,7 @@
         height: auto;
         gap: 15px;
     }
+
     .route-row-grid {
         justify-content: center;
         flex-wrap: wrap;

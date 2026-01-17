@@ -59,7 +59,7 @@ async function initializeApp() {
         console.log('✅ Connexion à la base de données (Sequelize) établie avec succès.');
 
         // 2. (Optionnel en Production, mais important pour les migrations)
-        // await db.sequelize.sync({ alter: true }); 
+        await db.sequelize.sync({ alter: true });
 
         // 3. Lancer le serveur
         app.listen(PORT, () => {
