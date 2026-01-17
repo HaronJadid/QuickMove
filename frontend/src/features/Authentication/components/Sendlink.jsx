@@ -10,6 +10,7 @@ export default function Sendlink() {
     setEmail(event.target.value)
   }
 
+  const API_URL = import.meta.env.VITE_API_URL;
  
   const [error, setError] = useState('');
 
@@ -21,18 +22,18 @@ export default function Sendlink() {
 
     setError('');
     try{
-        const res=await axios.post('http://localhost:3000/api/auth/forgot-password',{email})
+        const res=await axios.post(`${API_URL}api/auth/forgot-password`,{email})
 
         if(res.status==200){
-            alert('تم ارسال الرابط بنجاح! ✅');
+            alert('Link sent successfully ✅');
 
         }
 
         
 
     }catch(err){
-        setError(err.response?.data || ' !! password reset failed ');
-        console.log(' !! password reset failed ',err)
+        setError(err.response?.data || ' password reset failed !! ');
+        console.log('  password reset failed !!',err)
 
     }
     
@@ -40,18 +41,18 @@ export default function Sendlink() {
 
   return (
    
-    <div className="auth-container" dir="rtl">
+    <div className="auth-container" >
       
       <div className="auth-card">
         
         <Link to='/' className="brand-logo">🚚 MoveMorocco</Link>
-        <h3 className="auth-title">تغيير كلمة المرور</h3>
+        <h3 className="auth-title">Change password  </h3>
 
         <div className="form-content fade-in">
           <form onSubmit={handleSubmit}>
 
              <div className="input-group">
-              <label>البريد الإلكتروني</label>
+              <label>Email </label>
               <input type="email" placeholder="example@mail.com" className="auth-input" value={email} onChange={emailInput} />
             </div>
             
@@ -62,14 +63,14 @@ export default function Sendlink() {
             {error && <p className="error-msg">{error}</p>}
 
             <button type="submit" className="auth-btn">
-              ارسال الرابط 
+              Send link  
             </button>
           </form>
 
           <div className="auth-footer">
-            <span>تذكرت كلمة المرور؟ </span>
+            <span> Remembered your password ?   </span>
             <Link to='/login' className="link-btn">
-              تسجيل الدخول
+              Login
             </Link>
           </div>
         </div>

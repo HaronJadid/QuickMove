@@ -1,33 +1,32 @@
-import Header from "../Header"
 import '../headerComponentsStyle/Aboutus.css'
 
 function Aboutus(){
     return (
         <div >
-            <Header/>
-            <div className="container" align='right'>
+            <div className="container" >
                                 
-                 MoveMorocco تطبيق 
+                 <b> MoveMorocco App</b>
                 <br/>
-                 هو بوابتك الأولى لخدمات النقل واللوجستيك في جميع أنحاء المملكة. نهدف إلى تسهيل عملية نقل الأثاث والبضائع من خلال ربط العملاء مباشرة بشبكة واسعة من السائقين المعتمدين والموثوقين 
+                
+              
+                Is your primary gateway to transportation and logistics services across the Kingdom. We aim to facilitate the process of moving furniture and goods by directly connecting customers with a wide network of certified and reliable drivers.
                 <br/>
-                MoveMorocco ؟ لماذا تختار 
+                 Why Choose MoveMorocco?
+                 <br/>
+                Customized Search: Choose your departure and arrival city, and select the appropriate vehicle type for your needs (truck, moving van, Honda...). Complete Transparency: Browse driver profiles, view their photos, and read reviews from previous customers (such as star ratings and comments) before booking. Competitive Prices: Compare driver offers and choose the price that fits your budget, starting from economical rates. Safety and Reliability: We only work with certified drivers (Verified Drivers) to ensure your belongings arrive safely.
                 <br/>
-                بحث مخصص: اختر مدينة المغادرة والوصول، وحدد نوع المركبة المناسبة لاحتياجاتك (شاحنة، عربة نقل، هوندا...).
-                شفافية تامة: تصفح ملفات السائقين، شاهد صورهم، واقرأ تقييمات العملاء السابقين (مثل النجوم والتعليقات) قبل الحجز.
-                أسعار تنافسية: قارن بين عروض السائقين واختر السعر الذي يناسب ميزانيتك، ابتداءً من الأسعار الاقتصادية.
-                أمان وموثوقية: نتعامل فقط مع سائقين معتمدين (Verified Drivers) لضمان وصول منقولاتك بأمان.
+                <br/>
+                <b> Do you own a moving vehicle? Are you looking to increase your monthly income?</b>
+                <br/>
+                MoveMorocco app gives you the opportunity to be your own boss.
+                Increased Income: Get continuous booking requests leading to over 30% increase in profits.
+                Work Flexibility: Choose the schedules that suit you and accept the trips you want.
+                Secure System: We guarantee your financial rights and provide you with a professional work environment.
+                Register now as a driver and start receiving requests!
+            
+            
             </div>
-            <div className="container" align='right'>
-                                
-                هل تمتلك مركبة نقل؟ هل تبحث عن زيادة دخلك الشهري؟
-                تطبيق MoveMorocco يمنحك الفرصة لتكون مدير نفسك.
-                زيادة في الدخل: احصل على طلبات حجز مستمرة تصل إلى أكثر من 30% زيادة في الأرباح.
-                مرونة في العمل: اختر المواعيد التي تناسبك واقبل الرحلات التي تريدها.
-                نظام آمن: نضمن لك حقوقك المالية ونوفر لك بيئة عمل احترافية.
-                سجل الآن كسائق وابدأ استقبال الطلبات!
-
-            </div>
+            
 
         </div>
     )

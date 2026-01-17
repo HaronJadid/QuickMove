@@ -1,0 +1,162 @@
+/* Center the list items in the dashboard */
+.history-list-item-container {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
+.booking-card-horizontal {
+    background: white;
+    border-radius: 30px;
+    width: 80%; /* Takes 80% of the dashboard width */
+    min-width: 750px; /* Crucial: Prevents the "crushed" vertical look */
+    display: flex;
+    flex-direction: row;
+    padding: 25px;
+    gap: 30px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+    align-items: center;
+    box-sizing: border-box;
+}
+
+/* 1. Image box on the left */
+.driver-avatar-box {
+    position: relative;
+    width: 110px;
+    height: 110px;
+    flex-shrink: 0;
+}
+
+.driver-avatar-box img {
+    width: 100%;
+    height: 100%;
+    border-radius: 20px;
+    object-fit: cover;
+    background: #f0f0f0;
+}
+
+.v-check {
+    position: absolute;
+    bottom: -5px;
+    right: -5px; /* Since we are in LTR, put it on bottom-right */
+    background: white;
+    border-radius: 50%;
+}
+
+/* 2. Middle Content expanding */
+.booking-details-main {
+    flex: 1; 
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.driver-name {
+    margin: 0;
+    font-size: 20px;
+    font-weight: 800;
+    color: #1a1a1a;
+}
+
+.rating-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    color: #333;
+    margin-top: 5px;
+}
+
+.count { color: #aaa; }
+.v-type { color: #888; margin-left: 5px; }
+
+.route-row-grid {
+    display: flex;
+    gap: 30px;
+    border-top: 1px solid #f5f5f5;
+    padding-top: 15px;
+}
+
+.route-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    color: #64748b;
+}
+
+/* 3. Right Side (Price, Status, Button) */
+.price-status-action {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end; /* Align elements to the right edge */
+    justify-content: space-between;
+    height: 110px;
+    min-width: 160px;
+    border-left: 1px solid #f0f0f0; /* Use left border for LTR */
+    padding-left: 25px;
+}
+
+.price-display {
+    color: #cf3445; /* Your MoveMorocco Red */
+    font-weight: 900;
+}
+
+.price-display .amount { font-size: 32px; }
+.price-display .curr { font-size: 14px; margin-left: 5px; }
+
+.side-status {
+    padding: 4px 15px;
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: 800;
+    text-transform: uppercase;
+}
+
+.status-completed { background: #e9f7ef; color: #27ae60; }
+.status-pending { background: #fff5e6; color: #f39c12; }
+.status-confirmed { background: #e3f2fd; color: #1976d2; }
+
+.rebook-btn-new {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    padding: 8px 15px;
+    border-radius: 12px;
+    font-size: 13px;
+    font-weight: bold;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #444;
+}
+
+.rebook-btn-new:hover {
+    border-color: #cf3445;
+    color: #cf3445;
+    background-color: #fdf2f3;
+}
+
+/* Handle smaller screens so they don't look crushed */
+@media (max-width: 900px) {
+    .booking-card-horizontal {
+        width: 95%;
+        min-width: 0;
+        flex-direction: column;
+        text-align: center;
+        gap: 20px;
+    }
+    .price-status-action {
+        border-left: none;
+        padding-left: 0;
+        align-items: center;
+        height: auto;
+        gap: 15px;
+    }
+    .route-row-grid {
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 15px;
+    }
+}

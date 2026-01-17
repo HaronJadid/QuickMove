@@ -7,28 +7,28 @@ export default function Joinus() {
   const { t } = useTranslation();
 
   return (
-    <section className="cta-section">
-
+    <section className="cta-section" >
+      
       <div className="cta-container">
 
         <div className="cta-tag">
-          <span>⚡</span> {t('home.joinus.tag')}
+          <span>⚡</span>  Start now
         </div>
 
         <h1 className="cta-title">
-          {t('home.joinus.title')} <br />
-          {t('home.joinus.title_sub')}
+         Are you a driver ? <br />
+          Join our plateform and start earning
         </h1>
         <p className="cta-desc">
-          {t('home.joinus.desc')}
+         Sign up as a qualified driver and get requests from hundreds of clients all over Morocco. 
         </p>
 
         <div className="cta-buttons">
           <Link to='/aboutus' className="btn-outline">
-            <span>ⓘ</span> {t('home.joinus.learn_more')}
+            <span>ⓘ</span> Learn more 
           </Link>
           <Link to='/driversignup' className="btn-green">
-            <span>👤+</span> {t('home.joinus.register_driver')}
+            <span>👤+</span> Sign up as a driver 
           </Link>
         </div>
 
@@ -36,20 +36,20 @@ export default function Joinus() {
 
           <div className="glass-card">
             <div className="card-icon">📈</div>
-            <h3>{t('home.joinus.income_title')}</h3>
-            <p>{t('home.joinus.income_desc')}</p>
+            <h3>30٪ +</h3>
+            <p> Increase your income </p>
           </div>
 
           <div className="glass-card">
             <div className="card-icon">📅</div>
-            <h3>{t('home.joinus.flexibility_title')}</h3>
-            <p>{t('home.joinus.flexibility_desc')}</p>
+            <h3>Flexibility</h3>
+            <p>Choose your own working time </p>
           </div>
 
           <div className="glass-card">
             <div className="card-icon">🛡️</div>
-            <h3>{t('home.joinus.security_title')}</h3>
-            <p>{t('home.joinus.security_desc')}</p>
+            <h3>Security</h3>
+            <p> Guaranteed Payment  </p>
           </div>
 
         </div>

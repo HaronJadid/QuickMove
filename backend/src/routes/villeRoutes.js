@@ -27,4 +27,7 @@ router.put('/:villeId', villeController.updateVille);
 // Delete ville
 router.delete('/:villeId', villeController.deleteVille);
 
+// DELETE route for removing city from driver's service zones
+router.delete('/:villeId/driver/:driverId', villeController.removeVilleFromDriver);
+
 module.exports = router;

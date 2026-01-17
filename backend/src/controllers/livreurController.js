@@ -8,7 +8,6 @@ const { Op } = require('sequelize'); // Importe l'opérateur Sequelize pour les 
  * * NOTE : La ville est passée dans les paramètres de requête (ex: ?ville=Casablanca).
  */
 exports.findLivreursByCity = async (req, res) => {
-    console.log('callled  1')
     // 1. Récupération du paramètre de la ville (ville de départ)
     const cityName = req.query.ville; // Récupère 'ville' depuis l'URL: /api/livreurs?ville=Casablanca
     console.log(cityName)
@@ -17,7 +16,7 @@ exports.findLivreursByCity = async (req, res) => {
             message: "Le paramètre 'ville' est obligatoire pour la recherche."
         });
     }
-
+    
     try {
         // 2. Recherche de l'ID de la Ville
         // Le modèle Ville définit le champ `nom`, pas `nom_ville`.
@@ -56,12 +55,14 @@ exports.findLivreursByCity = async (req, res) => {
                 {
                     model: db.Vehicule,
                     as: 'vehicules',
-                    attributes: ['nom', 'imgUrl', 'capacite']
+                    attributes: ['id_vehicule','nom', 'imgUrl', 'capacite']
                 }
             ],
             // Attributs exposés du Livreur
             attributes: ['id_livreur', 'cin', 'about']
         });
+      
+        
 
         if (livreurs.length === 0) {
             return res.status(200).json({
@@ -69,7 +70,9 @@ exports.findLivreursByCity = async (req, res) => {
                 livreurs: []
             });
         }
+        
         console.log('livreurs',livreurs)
+        
 
         // 4. Formatage pour une réponse plus claire
         const formatted = livreurs.map(l => {
@@ -84,7 +87,6 @@ exports.findLivreursByCity = async (req, res) => {
                 id: v.id_ville || null,
                 nom: v.nom || null
             }));
-            console.log('callled  2')
 
             return {
                 id: l.id_livreur,

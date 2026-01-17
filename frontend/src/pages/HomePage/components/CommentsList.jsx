@@ -8,14 +8,14 @@ export default function CommentsList() {
     return (
         <div>
             <div className='text1' align='center'>
-                {t('home.comments.label')}
+                Customer Opinions
             </div>
-            <div className='text2' align='center'>{t('home.comments.title')}</div>
-            <div className='text3' align='center'>{t('home.comments.subtitle')}</div>
+            <div className='text2' align='center'> What Our Clients Say </div>
+            <div className='text3' align='center'>Real experiences from clients who used our platform to move their furniture </div>
             <div className='list'>
-                <CommentComponent name="سارة بنعلي" location="الرباط" />
-                <CommentComponent name="كريم التازي" location="الرباط" />
-                <CommentComponent name="محمد العلمي" location="طنجة" />
+                <CommentComponent name=" Sara Benali" location="Rabat" />
+                <CommentComponent name="Kareem Tazi " location="Rabat" />
+                <CommentComponent name="Mohamed Alami " location="Tanger" />
 
             </div>
         </div>

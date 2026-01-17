@@ -1,0 +1,139 @@
+.booking-card {
+    background: white;
+    border-radius: 15px;
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    font-family: 'Inter', sans-serif;
+    border: 1px solid #f0f0f0;
+    width: 100%;
+}
+
+.card-main-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+/* Client Section */
+.client-section {
+    display: flex;
+    gap: 15px;
+    flex: 2;
+}
+
+.client-avatar {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.client-name {
+    margin: 0 0 8px 0;
+    font-size: 1.1rem;
+    font-weight: 800;
+    color: #1a1a1a;
+}
+
+.info-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 5px 20px;
+}
+
+.info-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    color: #888;
+}
+
+.icon-red { color: #ff4d4d; }
+.icon-green { color: #2ecc71; }
+
+/* Vehicle Section */
+.vehicle-section {
+    flex: 1;
+    text-align: center;
+}
+
+.vehicle-name {
+    color: #5e5955; /* Brownish color from image */
+    font-size: 1.2rem;
+    font-weight: 700;
+}
+.comment-box{
+    flex: 1;
+}
+.comment{
+  color: #575554; /* Brownish color from image */
+    font-size: 1.1rem;
+    font-weight: 700;
+    text-decoration: underline;
+}
+
+/* Price Section */
+.price-section {
+    flex: 1;
+    text-align: right;
+}
+
+.price-text {
+    color: #ff0000;
+    font-size: 1.5rem;
+    font-weight: 800;
+    margin: 0;
+}
+
+/* Buttons */
+.card-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+}
+
+.btn-accept {
+    background-color: #1aff66; /* Bright neon green */
+    color: white;
+    border: none;
+    padding: 10px 25px;
+    border-radius: 10px;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    transition: opacity 0.2s;
+}
+
+.btn-reject {
+    background-color: #ff3333; /* Bright red */
+    color: white;
+    border: none;
+    padding: 10px 25px;
+    border-radius: 10px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: opacity 0.2s;
+}
+
+.btn-accept:hover, .btn-reject:hover {
+    opacity: 0.9;
+}
+
+/* Responsive adjustment for small screens */
+@media (max-width: 768px) {
+    .card-main-row {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 20px;
+    }
+    .price-section { text-align: left; }
+    .card-actions { width: 100%; }
+    .btn-accept, .btn-reject { flex: 1; justify-content: center; }
+}

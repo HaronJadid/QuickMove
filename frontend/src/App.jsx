@@ -13,35 +13,39 @@ import { useLocation } from "react-router-dom";
 import Header from './layout/Header/Header.jsx'
 import SearchResult from './pages/SearchResult/SearchResult.jsx'
 import Sendlink from './features/Authentication/components/Sendlink.jsx'
-import MyDeliveries from './pages/ClientProfile/MyDeliveries.jsx' // We will create this
+import DriverProfileClientSide  from './pages/SearchResult/components/DriverProfileClientSide.jsx'
+import Bookings from './pages/DriverProfile/components/Bookings.jsx'
 
 function App() {
   const { pathname } = useLocation()
 
   return (
     <>
-      {pathname !== '/' && pathname !== '/signup' && pathname !== '/driversignup' && pathname !== '/login' && pathname !== '/resetpwd' && pathname !== '/sendlink' && <Header />}
+        {pathname!== '/' && pathname!== '/signup' && pathname!== '/driversignup' && pathname!== '/login' && pathname!== '/resetpwd' && pathname!== '/sendlink' && <Header />}
+        
+        <Routes>
+          <Route path='/' element={<HomePage  />} />
+          <Route path='/aboutus' element={<Aboutus/>} />
+          <Route path='/signup' element={<Signup/>} />
+          <Route path='/driversignup' element={<Signup/>} />
+          <Route path='/login' element={<Login/>} />
+          <Route path='/resetpwd' element={<Resetpwd />}  />
+          <Route path='/sendlink' element={<Sendlink />}  />
+          <Route path='/searchresult' element={<SearchResult />} />
+          <Route path='/lookupdriverprofile' element={<DriverProfileClientSide />} />
+          <Route path='/bookings' element={<Bookings/>} />
 
-      <Routes>
-        <Route path='/' element={<HomePage />} />
-        <Route path='/aboutus' element={<Aboutus />} />
-        <Route path='/signup' element={<Signup />} />
-        <Route path='/login' element={<Login />} />
-        <Route path='/resetpwd' element={<Resetpwd />} />
-        <Route path='/sendlink' element={<Sendlink />} />
-        <Route path='/searchresult' element={<SearchResult />} />
+          {/* <Route element={<Privateroute />}> */}
+            <Route path='/driverprofile' element={<Driverprofile />} />
+            <Route path='/clientprofile' element={<Clientprofile />} />
+          
 
-        {/* Private Routes (simulated) */}
-        <Route path='/driverprofile' element={<Driverprofile />} />
-        <Route path='/clientprofile' element={<Clientprofile />} />
+  {/*         </Route>
+  */}        <Route path='*' element={<div>Page not found !! </div>} />
+        </Routes>
 
-        {/* New Route for Rating Feature */}
-        <Route path='/my-deliveries' element={<MyDeliveries />} />
-
-        <Route path='*' element={<div>Page not found !! </div>} />
-      </Routes>
-
-      <Footer />
+        <Footer/>
+        
     </>
   )
 }

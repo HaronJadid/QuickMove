@@ -215,7 +215,8 @@
 .text{
     font-size: 40px;
     font-weight: 900;
-    
+     direction: ltr;
+     text-align: left !important;
 }
 
 

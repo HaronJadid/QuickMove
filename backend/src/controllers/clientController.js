@@ -361,4 +361,3 @@ exports.deleteRating = async (req, res) => {
     return res.status(500).json({ message: 'Erreur serveur.', details: error.message });
   }
 };
-

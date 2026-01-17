@@ -7,9 +7,8 @@ import { useTranslation } from 'react-i18next';
 import LanguageSwitcher from '../../../components/LanguageSwitcher';
 
 export default function Login() {
-  const { t } = useTranslation();
-  const navigate = useNavigate();
-  const { login } = useAuth();
+  const API_URL = import.meta.env.VITE_API_URL;
+
 
   let [email, setEmail] = useState('');
   let [pwd, setPwd] = useState('');
@@ -24,16 +23,18 @@ export default function Login() {
     setPwd(event.target.value);
   }
 
-  const trylogin = async (e) => {
-    e.preventDefault();
-    try {
-      if (!email || !pwd) {
-        setError(true);
-        setErrmsg(t('auth.fill_all_fields'));
-        return;
+
+  const trylogin=async(e)=>{
+     e.preventDefault();
+    try{
+  
+      if(!email.trim() || !pwd.trim()){
+        setError(true)
+        setErrmsg('Both fields must be filled!')
+        return
       }
-      setError(false);
-      const res = await axios.post('http://localhost:3000/api/auth/login', { email, password: pwd });
+      setError(false)
+      const res=await axios.post(`${API_URL}api/auth/login`,{email,password:pwd})
 
       if (res.status == 200) {
         const userdata = res.data;
@@ -46,52 +47,48 @@ export default function Login() {
         return;
       }
 
-    } catch (err) {
-      setError(true);
-      setErrmsg(err.response?.data?.message || t('auth.login_error'));
-      console.log(' !! Error logging in ', err);
+     
+
+    }catch(err){
+      setError(true)
+      setErrmsg( '!! Error logging in ')
+      console.log(' !! Error logging in ',err)
     }
   }
 
   return (
-    <div className="auth-container">
-      {/* Absolute positioning for top controls */}
-      <div style={{ position: 'absolute', top: '20px', right: '20px', display: 'flex', gap: '15px' }}>
-        <LanguageSwitcher />
-        <Link to="/" className="return-home-btn" style={{ textDecoration: 'none', color: '#333', fontWeight: 'bold' }}>
-          🏠 {t('auth.return_home')}
-        </Link>
-      </div>
-
+    <div className="auth-container" dir="ltr">
+      
       <div className="auth-card">
         <Link to='/' className="brand-logo">🚚 MoveMorocco</Link>
-        <h3 className="auth-title">{t('auth.login_title')}</h3>
+        <h3 className="auth-title">Login</h3>
 
         <div className="form-content fade-in">
           <form onSubmit={trylogin}>
             <div className="input-group">
-              <label>{t('auth.email')}</label>
+              <label>Email Address</label>
               <input type="email" placeholder="example@mail.com" className="auth-input" value={email} onChange={emailInput} />
             </div>
 
             <div className="input-group">
-              <label>{t('auth.password')}</label>
-              <input type="password" placeholder="••••••••" className="auth-input" value={pwd} onChange={pwdInput}
-              />
+              <label>Password</label>
+              <input type="password"  placeholder="••••••••" className="auth-input" value={pwd} onChange={pwdInput}  pattern="(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}"
+  title="Password must contain at least 8 characters, one uppercase, one lowercase, one number, and one special character"
+   />
             </div>
 
             <div className="forgot-password">
-              <Link to='/sendlink'>{t('auth.forgot_password')}</Link>
+              <Link to='/sendlink'>Forgot your password?</Link>
             </div>
 
-            <button className="auth-btn">{t('auth.login_btn')}</button>
+            <button className="auth-btn" >Login</button>
           </form>
           {error && (<div className='errmessage'>{errmsg}</div>)}
 
           <div className="auth-footer">
-            <span>{t('auth.no_account')} </span>
+            <span>Don't have an account? </span>
             <Link to='/signup' className="link-btn">
-              {t('auth.create_account')}
+              Create account now
             </Link>
           </div>
         </div>

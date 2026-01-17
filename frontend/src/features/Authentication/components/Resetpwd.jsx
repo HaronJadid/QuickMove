@@ -1,29 +1,28 @@
 import React, { useState } from 'react';
 import '../style/auth.css';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import axios from 'axios';
-import { useLocation } from "react-router-dom";
-
-
 
 export default function ResetPassword() {
-  
+  const API_URL = import.meta.env.VITE_API_URL;
 
   const [pwd, setPwd] = useState('');
   const [confirmpwd, setConfirmpwd] = useState('');
-  const pwdInput=(event)=>{
-    setPwd(event.target.value)
-  }
-  const confirmpwdInput=(event)=>{
-    setConfirmpwd(event.target.value)
-  }
   const [error, setError] = useState('');
+  const [message, setMessage] = useState('');
+
+  const pwdInput = (event) => {
+    setPwd(event.target.value);
+  };
+  const confirmpwdInput = (event) => {
+    setConfirmpwd(event.target.value);
+  };
 
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
   const token = queryParams.get("token");
 
-  const handleSubmit =async (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault(); 
      if (!token) {
       setMessage("Token missing !");
@@ -31,50 +30,41 @@ export default function ResetPassword() {
     }
 
     if (!pwd || !confirmpwd) {
-      setError('المرجو ملء جميع الخانات');
+      setError('Please fill in all fields');
       return;
     }
 
     if (pwd !== confirmpwd) {
-      setError('كلمات المرور غير متطابقة ❌');
+      setError('Passwords do not match ❌');
       return;
     }
 
     setError('');
-    try{
-        const res=await axios.post('http://localhost:3000/api/auth/reset-password',{token,newPassword:pwd})
+    try {
+        const res = await axios.post(`${API_URL}api/auth/reset-password`, { token, newPassword: pwd });
 
-        if(res.status==200){
-            alert('تم تغيير كلمة المرور بنجاح! ✅');
-
+        if (res.status == 200) {
+            alert('Password changed successfully! ✅');
         }
 
-        
-
-    }catch(err){
+    } catch (err) {
         setError(err.response?.data || ' !! password reset failed ');
-        console.log(' !! password reset failed ',err)
-
+        console.log(' !! password reset failed ', err);
     }
-    
   };
 
   return (
-   
-    <div className="auth-container" dir="rtl">
-      
+    <div className="auth-container" dir="ltr">
       <div className="auth-card">
         
         <Link to='/' className="brand-logo">🚚 MoveMorocco</Link>
-        <h3 className="auth-title">تغيير كلمة المرور</h3>
+        <h3 className="auth-title">Reset Password</h3>
 
         <div className="form-content fade-in">
           <form onSubmit={handleSubmit}>
-
-            
             
             <div className="input-group">
-              <label>كلمة المرور الجديدة</label>
+              <label>New Password</label>
               <input 
                 type="password" 
                 placeholder="••••••••" 
@@ -82,13 +72,12 @@ export default function ResetPassword() {
                 value={pwd}
                 onChange={pwdInput}
                 pattern="(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}"
-                title="كلمة المرور يجب أن تحتوي على 8 أحرف على الأقل، حرف كبير، حرف صغير، رقم، ورمز خاص"
-                
+                title="Password must contain at least 8 characters, one uppercase, one lowercase, one number, and one special character"
               />
             </div>
 
             <div className="input-group">
-              <label>تأكيد كلمة المرور</label>
+              <label>Confirm Password</label>
               <input 
                 type="password" 
                 placeholder="••••••••" 
@@ -96,22 +85,22 @@ export default function ResetPassword() {
                 value={confirmpwd}
                 onChange={confirmpwdInput}
                 pattern="(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}"
-                title="كلمة المرور يجب أن تحتوي على 8 أحرف على الأقل، حرف كبير، حرف صغير، رقم، ورمز خاص"
-            
+                title="Password must contain at least 8 characters, one uppercase, one lowercase, one number, and one special character"
               />
             </div>
 
             {error && <p className="error-msg">{error}</p>}
+            {message && <p className="error-msg">{message}</p>}
 
             <button type="submit" className="auth-btn">
-              تحديث كلمة المرور
+              Update Password
             </button>
           </form>
 
           <div className="auth-footer">
-            <span>تذكرت كلمة المرور؟ </span>
+            <span>Remembered your password? </span>
             <Link to='/login' className="link-btn">
-              تسجيل الدخول
+              Login
             </Link>
           </div>
         </div>
