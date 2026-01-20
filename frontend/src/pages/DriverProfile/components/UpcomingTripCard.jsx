@@ -48,6 +48,9 @@ const UpcomingTripCard = ({ req, onFinish }) => {
                 <Calendar size={14} />Expected arrival date : 
                 <span>{data.arrivaldate}</span>
               </div>
+              <div className="info-item">
+                <span>★ Vehicule : {data.vehicle_name}</span>
+              </div>
             </div>
           </div>
         </div>

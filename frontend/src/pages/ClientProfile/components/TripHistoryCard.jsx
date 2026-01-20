@@ -1,9 +1,11 @@
 import React from 'react';
 import { MapPin, Calendar, Star, RotateCcw, CheckCircle } from 'lucide-react';
 import '../style/TripHistoryCard.css';
+import { useNavigate } from 'react-router-dom';
 
 const TripHistoryCard = ({ booking }) => {
   console.log(booking)
+  const navigation=useNavigate()
   const price = parseFloat(booking?.prix || 0).toFixed(0);
   const date = booking?.dateDepartExacte ? booking.dateDepartExacte.split('T')[0] : '2024-01-01';
   const status = booking?.status || 'COMPLETED';
@@ -25,27 +27,36 @@ const TripHistoryCard = ({ booking }) => {
 
   const statusInfo = getStatusInfo(status);
 
+  const lookupdriver=()=>{
+    localStorage.setItem('driverID',booking.driver.id_livreur)
+    navigation('/lookupdriverprofile',{ state: { driverData: booking.driver } })
+
+  }
+
   return (
     <div className="history-list-item-container">
       <div className="booking-card-horizontal" dir="ltr">
 
-        {/* 1. Image Section (Left) */}
-        <div className="driver-avatar-box">
-          <img src={booking?.livreur?.imgUrl || "/alt_img.webp"} alt="driver" />
-          <div className="v-check"><CheckCircle size={14} fill="#2ecc71" color="white" /></div>
-        </div>
+        
 
-        {/* 2. Middle Info Section */}
-        <div className="booking-details-main">
-          <div className="top-info">
-            <h3 className="driver-name">{driverName}</h3>
-            <div className="rating-row">
-              <Star size={14} fill="#f1c40f" color="#f1c40f" />
-              <span>4.6</span>
-              <span className="count">(0 reviews)</span>
-              <span className="v-type">| {vehicle}</span>
-            </div>
+          {/* 1. Image Section (Left) */}
+          <div className="driver-avatar-box" style={{cursor:'pointer'}} onClick={lookupdriver}>
+            <img src={booking?.livreur?.imgUrl || "/alt_img.webp"} alt="driver" />
+            <div className="v-check"><CheckCircle size={14} fill="#2ecc71" color="white" /></div>
           </div>
+
+          {/* 2. Middle Info Section */}
+          <div className="booking-details-main">
+            <div className="top-info">
+              <h3 className="driver-name"  style={{cursor:'pointer'}} onClick={lookupdriver}>{driverName}</h3>
+              <div className="rating-row">
+                <Star size={14} fill="#f1c40f" color="#f1c40f" />
+                <span>4.6</span>
+                <span className="count">(0 reviews)</span>
+                <span className="v-type">| {vehicle}</span>
+              </div>
+            </div>
+         
 
           <div className="route-row-grid">
             <div className="route-item">

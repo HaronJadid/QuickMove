@@ -1,14 +1,15 @@
 import React, { useState } from 'react';
 import '../style/auth.css';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
 
-export default function Sendlink() {
-  const [email,setEmail]=useState('')
-  const emailInput=(event)=>{
-    setEmail(event.target.value)
+export default function Sendcode() {
+  const [code,setCode]=useState('')
+  const codeInput=(event)=>{
+    setCode(event.target.value)
   }
+  const navigation=useNavigate()
 
   const API_URL = import.meta.env.VITE_API_URL;
  
@@ -22,18 +23,19 @@ export default function Sendlink() {
 
     setError('');
     try{
-        const res=await axios.post(`${API_URL}api/auth/forgot-password`,{email})
+        const res=await axios.post(`${API_URL}api/auth/verifyCode`,{code})
 
         if(res.status==200){
-            alert('Link sent successfully ✅');
+            alert('Code sent successfully ✅');
+            navigation('/resetpwd')
 
         }
 
         
 
     }catch(err){
-        setError(err.response?.data || ' password reset failed !! ');
-        console.log('  password reset failed !!',err)
+        setError(err.response?.data || ' Code verification failed !! ');
+        console.log('  Code verification failed !!',err)
 
     }
     
@@ -46,14 +48,14 @@ export default function Sendlink() {
       <div className="auth-card">
         
         <Link to='/' className="brand-logo">🚚 MoveMorocco</Link>
-        <h3 className="auth-title">Change password  </h3>
+        <h3 className="auth-title"> Verify code  </h3>
 
         <div className="form-content fade-in">
           <form onSubmit={handleSubmit}>
 
              <div className="input-group">
-              <label>Email </label>
-              <input type="email" placeholder="example@mail.com" className="auth-input" value={email} onChange={emailInput} />
+              <label>Enter the email verification code : </label>
+              <input type="" placeholder="Enter code" className="auth-input" value={code} onChange={codeInput} />
             </div>
             
            
@@ -63,7 +65,7 @@ export default function Sendlink() {
             {error && <p className="error-msg">{error}</p>}
 
             <button type="submit" className="auth-btn">
-              Send link  
+              Verify  
             </button>
           </form>
 
