@@ -37,11 +37,12 @@ function App() {
           <Route path='/verifyCode' element={<VerifyCode /> } />
           <Route path='/searchresult' element={<SearchResult />} />
           <Route path='/lookupdriverprofile' element={<DriverProfileClientSide />} />
-          <Route path='/bookings' element={<Bookings/>} />
+
 
            <Route element={<Privateroute />}> 
             <Route path='/driverprofile' element={<Driverprofile />} />
             <Route path='/clientprofile' element={<Clientprofile />} />
+            <Route path='/bookings' element={<Bookings/>} />    
           
 
            </Route>

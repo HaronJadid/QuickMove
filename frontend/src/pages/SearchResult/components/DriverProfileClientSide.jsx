@@ -85,6 +85,10 @@ const DriverProfileClientSide = () => {
   const handleBooking = async (e) => {
     e.preventDefault();
     try {
+      if(!id){
+        alert('You have to log in to make a request !')
+        return
+      }
       const dep = new Date(bookingData.dateDepartExacte);
       const arr = new Date(bookingData.dateArriveeExacte);
       const now = new Date();
