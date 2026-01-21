@@ -13,15 +13,15 @@ module.exports = (sequelize) => {
     static associate(models) {
       // Les associations seront définies ici plus tard,
       // notamment les relations d'héritage vers Client et Livreur.
-      models.User.hasOne(models.Client, { 
-          foreignKey: 'id_client',
-          as: 'clientProfile',
-          onDelete: 'CASCADE' 
+      models.User.hasOne(models.Client, {
+        foreignKey: 'id_client',
+        as: 'clientProfile',
+        onDelete: 'CASCADE'
       });
-      models.User.hasOne(models.Livreur, { 
-          foreignKey: 'id_livreur',
-          as: 'livreurProfile',
-          onDelete: 'CASCADE' 
+      models.User.hasOne(models.Livreur, {
+        foreignKey: 'id_livreur',
+        as: 'livreurProfile',
+        onDelete: 'CASCADE'
       });
     }
   }
@@ -61,6 +61,14 @@ module.exports = (sequelize) => {
       type: DataTypes.ENUM('client', 'driver'),
       allowNull: false,
       defaultValue: 'client'
+    },
+    resetCode: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
+    resetCodeExpires: {
+      type: DataTypes.DATE,
+      allowNull: true,
     },
   }, {
     sequelize,

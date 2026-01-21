@@ -39,8 +39,8 @@ exports.registerUser = async (req, res) => {
 
         // 6️⃣ Build image URL (if file exists)
         const imgUrl = file
-        ? `/uploads/avatars/${file.filename}`
-        : null;
+            ? `/uploads/avatars/${file.filename}`
+            : null;
 
 
         try {
@@ -65,11 +65,11 @@ exports.registerUser = async (req, res) => {
             return res.status(201).json({
                 message: "Inscription réussie.",
                 userId: newUser.id,
-                nom:newUser.nom,
-                prenom:newUser.prenom,
+                nom: newUser.nom,
+                prenom: newUser.prenom,
                 email: newUser.email,
                 role: newUser.role,
-                imgUrl:newUser.imgUrl
+                imgUrl: newUser.imgUrl
             });
 
         } catch (error) {
@@ -140,9 +140,9 @@ exports.login = async (req, res) => {
             message: "Connexion réussie.",
             userId: user.id,
             role: user.role,
-            imgUrl:user.imgUrl,
-            nom:user.nom,
-            prenom:user.prenom,
+            imgUrl: user.imgUrl,
+            nom: user.nom,
+            prenom: user.prenom,
             clientId: user.role === 'client' ? roleId : null,
             driverId: (user.role === 'driver' || user.role === 'livreur') ? roleId : null,
             accessToken,
@@ -170,7 +170,7 @@ const transporter = nodemailer.createTransport({
 });
 
 /**
- * Forgot Password: Vérifie l'email et envoie un lien de réinitialisation
+ * Forgot Password: Vérifie l'email et envoie un CODE de réinitialisation
  * POST /api/auth/forgot-password
  */
 exports.forgotPassword = async (req, res) => {
@@ -186,37 +186,32 @@ exports.forgotPassword = async (req, res) => {
             return res.status(404).json({ message: "Aucun utilisateur trouvé avec cet email." });
         }
 
-        // Générer un token de réinitialisation (valide 15 minutes)
-        // On utilise un secret différent ou concaténé avec le hash du pwd pour plus de sécurité (optionnel mais recommandé)
-        // Ici simple JWT pour la démo
-        const resetToken = jwt.sign(
-            { id: user.id },
-            process.env.JWT_RESET_SECRET || 'secret_reset_key',
-            { expiresIn: '15m' }
-        );
+        // Générer un code à 6 chiffres
+        const resetCode = Math.floor(100000 + Math.random() * 900000).toString();
+        // Expire dans 15 minutes
+        const resetCodeExpires = new Date(Date.now() + 15 * 60000);
 
-        // Lien de réinitialisation (Frontend URL en réalité, mais pour l'API on renvoie le lien)
-        // Supposons que le frontend tourne sur localhost:3000 ou que c'est une route API directe
-        const resetLink = `http://localhost:3000/reset-password?token=${resetToken}`;
+        user.resetCode = resetCode;
+        user.resetCodeExpires = resetCodeExpires;
+        await user.save();
 
         // Envoyer l'email
         const mailOptions = {
             from: '"QuickMove Support" <no-reply@quickmove.com>',
             to: email,
-            subject: 'Réinitialisation de votre mot de passe',
-            text: `Bonjour ${user.prenom},\n\nVous avez demandé la réinitialisation de votre mot de passe. Cliquez sur le lien suivant :\n\n${resetLink}\n\nCe lien expire dans 15 minutes.\n\nSi vous n'avez pas demandé cela, ignorez cet email.`
+            subject: 'Code de réinitialisation de mot de passe',
+            text: `Bonjour ${user.prenom},\n\nVoici votre code de réinitialisation : ${resetCode}\n\nCe code expire dans 15 minutes.\n\nSi vous n'avez pas demandé cela, ignorez cet email.`
         };
 
-        // NOTE: En dev, si pas de SMTP configuré, ceci peut échouer. On loggue le lien pour tester.
-        console.log(`[DEV MODE] Password Reset Link for ${email}: ${resetLink}`);
+        console.log(`[DEV MODE] Password Reset Code for ${email}: ${resetCode}`);
 
-        // Tentative d'envoi réel (peut être commenté si pas d'internet/SMTP)
+        // Tentative d'envoi réel
         // await transporter.sendMail(mailOptions); 
 
         return res.status(200).json({
-            message: "Si l'email existe, un lien de réinitialisation a été envoyé.",
-            // Pour le débuggage/démo, on renvoie le lien (A RETIRER EN PROD)
-            debugLink: resetLink
+            message: "Un code de réinitialisation a été envoyé à votre email.",
+            // Pour le débuggage
+            debugCode: resetCode
         });
 
     } catch (error) {
@@ -226,39 +221,75 @@ exports.forgotPassword = async (req, res) => {
 };
 
 /**
- * Reset Password: Met à jour le mot de passe avec le token
- * POST /api/auth/reset-password
+ * Verify Code: Vérifie si le code est correct AVANT de demander le nouveau mot de passe
+ * POST /api/auth/verify-code
  */
-exports.resetPassword = async (req, res) => {
-    const { token, newPassword } = req.body;
+exports.verifyCode = async (req, res) => {
+    const { email, code } = req.body;
 
-    if (!token || !newPassword) {
-        return res.status(400).json({ message: "Token et nouveau mot de passe requis." });
+    if (!email || !code) {
+        return res.status(400).json({ message: "Email et code requis." });
     }
 
     try {
-        // Vérifier le token
-        const decoded = jwt.verify(token, process.env.JWT_RESET_SECRET || 'secret_reset_key');
-
-        const user = await db.User.findByPk(decoded.id);
+        const user = await db.User.findOne({ where: { email } });
         if (!user) {
-            return res.status(404).json({ message: "Utilisateur introuvable." });
+            return res.status(404).json({ message: "Utilisateur non trouvé." });
         }
 
-        // Hasher le nouveau mot de passe (IMPORTANT: le hook beforeUpdate le fera si on utilise user.save/update et changed('password'))
-        // Mais ici, on peut assigner directement et laisser le hook faire, ou hasher manuellement.
-        // Le hook `beforeUpdate` dans user.js gère le hashage si password est changé.
+        if (user.resetCode !== code) {
+            return res.status(400).json({ message: "Code invalide." });
+        }
 
+        if (new Date() > user.resetCodeExpires) {
+            return res.status(400).json({ message: "Le code a expiré." });
+        }
+
+        return res.status(200).json({ message: "Code valide. Vous pouvez réinitialiser votre mot de passe." });
+
+    } catch (error) {
+        console.error("Erreur verifyCode:", error);
+        return res.status(500).json({ message: "Erreur serveur.", details: error.message });
+    }
+};
+
+/**
+ * Reset Password: Met à jour le mot de passe avec le code vérifié
+ * POST /api/auth/reset-password
+ */
+exports.resetPassword = async (req, res) => {
+    const { email, code, newPassword } = req.body;
+
+    if (!email || !code || !newPassword) {
+        return res.status(400).json({ message: "Email, code et nouveau mot de passe requis." });
+    }
+
+    try {
+        const user = await db.User.findOne({ where: { email } });
+        if (!user) {
+            return res.status(404).json({ message: "Utilisateur non trouvé." });
+        }
+
+        if (user.resetCode !== code) {
+            return res.status(400).json({ message: "Code invalide." });
+        }
+
+        if (new Date() > user.resetCodeExpires) {
+            return res.status(400).json({ message: "Le code a expiré." });
+        }
+
+        // Mise à jour du mot de passe (le hook beforeUpdate le hachera)
         user.password = newPassword;
-        await user.save(); // Déclenche beforeUpdate
+        // Effacer le code après usage
+        user.resetCode = null;
+        user.resetCodeExpires = null;
+
+        await user.save();
 
         return res.status(200).json({ message: "Mot de passe mis à jour avec succès. Vous pouvez vous connecter." });
 
     } catch (error) {
         console.error("Erreur resetPassword:", error);
-        if (error.name === 'TokenExpiredError') {
-            return res.status(400).json({ message: "Le lien a expiré." });
-        }
-        return res.status(400).json({ message: "Lien invalide ou expiré.", details: error.message });
+        return res.status(500).json({ message: "Erreur serveur.", details: error.message });
     }
 };
