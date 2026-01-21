@@ -1,113 +1,99 @@
-
-a{
-    color: black;
-    cursor: pointer;
-}
-a:hover{
-    color:rgba(196, 30, 58, 1);
-}
-
-img{
-  width: 33px;
-  height: 33px;
-}
-.linktohome{
-  text-decoration: none;
-
-}
-
-
 /* HEADER CONTAINER */
 .header {
   width: 100%;
-  height: 90px;
-  background-color: #ffffff;
-  
+  height: 80px;
+  background-color: var(--surface-color, #ffffff);
+  backdrop-filter: blur(10px);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+
   /* Flexbox Layout */
   display: flex;
-  align-items: center; 
+  align-items: center;
   justify-content: space-between;
-  
+
   /* Spacing */
-  padding: 0 30px; /* Reduced slightly to give more room */
-  box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+  padding: 0 40px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
   box-sizing: border-box;
 }
 
-/* --- LEFT: LOGO FIX --- */
+/* --- LOGO --- */
 .header-left {
   flex: 1;
-  display: flex; /* Ensures the H4 container behaves */
-  align-items: center;
-}
-
-.websitelogo {
-  /* FIXES THE CUT-OFF TRUCK */
-  margin: 0; 
-  padding: 0;
-  line-height: 1; /* Tightens the text height */
-  
-  font-size: 1.2rem;
-  font-weight: 800;
-  color: #000;
-  
-  /* Keeps the truck and text on one line */
-  white-space: nowrap; 
   display: flex;
   align-items: center;
-  gap: 8px;
 }
 
-/* --- CENTER: NAV FIX --- */
+.logo-container {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  text-decoration: none;
+}
+
+.logo-img {
+  width: 40px;
+  height: 40px;
+  object-fit: contain;
+}
+
+.logo-text {
+  font-family: 'Cairo', sans-serif;
+  font-size: 1.4rem;
+  font-weight: 800;
+  color: #1e293b;
+  letter-spacing: -0.5px;
+}
+
+/* --- NAV --- */
 .header-center {
   flex: 2;
   display: flex;
   justify-content: center;
-  gap: 30px; /* Space between links */
+  gap: 40px;
+  align-items: center;
 }
 
 .nav-item {
-  color: #555;
+  color: #64748b;
   text-decoration: none;
   font-size: 0.95rem;
-  font-weight: 500;
+  font-weight: 600;
   cursor: pointer;
-  
-  /* FIXES "Search Transport" WRAPPING */
-  white-space: nowrap; 
-  
   display: flex;
   align-items: center;
   gap: 8px;
-  transition: color 0.2s;
-  position: relative;
+  transition: all 0.2s ease;
+  padding: 8px 12px;
+  border-radius: 8px;
 }
-
 
 .nav-item:hover {
-  color: #c46363;
-}
-.nav-item:active {
-  color: #804141;
+  color: var(--primary-color, #6366f1);
+  background-color: rgba(99, 102, 241, 0.05);
 }
 
-.contactuselement{
-   position: relative;
-   display: flex;
-   align-items: center
+/* Contact dropdown positioning */
+.contactuselement {
+  position: relative;
+  display: flex;
+  align-items: center;
 }
 
-.contactusComponent{
+.contactusComponent {
   position: absolute;
-  top: 0;
-  left: 00; 
-  transform: translateX(20%);
-  margin-top: 10px;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  margin-top: 15px;
   z-index: 800;
-  min-width: 00px
+  min-width: 320px;
 }
 
-/* --- RIGHT: LOGIN FIX --- */
+/* --- RIGHT: LOGIN / PROFILE --- */
 .header-right {
   flex: 1;
   display: flex;
@@ -115,114 +101,179 @@ img{
   align-items: center;
 }
 
-.login-btn {
-  font-weight: 700;
-  font-size: 0.95rem;
-  cursor: pointer;
-  white-space: nowrap; 
-  text-decoration: none;
-}
-
-.contactus{
-   font-family: 'Cairo', sans-serif;
-  background-color: #fff;
-  border: 1px solid #f0f0f0;
-  border-radius: 12px;
-  padding: 24px;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03);
-  max-width: 400px; 
-  width: 100%;
-  margin: 10px;
-  transition: transform 0.2s ease;
-}
-
-.not-bell{
-  font-size: 25px;
-  cursor: pointer;
-  border-radius: 80%;
-  margin-right: 25px;
-
-
-}
-.not-bell:hover{
-   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.06);
-}
- 
-
-
-/* =========================================
-   MOBILE RESPONSIVENESS (Add to bottom)
-   ========================================= */
-
-@media screen and (max-width: 768px) {
-  
-  /* 1. Reset Header Layout */
-  .header {
-    height: auto;         /* Remove fixed 80px height to let content fit */
-    flex-direction: column; /* Stack Logo, Nav, and Login vertically */
-    padding: 15px 10px;   /* Reduce side padding */
-    gap: 15px;            /* Add space between the stacked sections */
-  }
-
-  /* 2. Center all Header Sections */
-  .header-left, 
-  .header-center, 
-  .header-right {
-    flex: initial;        /* Reset flex ratios */
-    width: 100%;          /* Take up full width */
-    justify-content: center; /* Center align everything */
-  }
-
-  /* 3. Adjust Navigation Links */
-  .header-center {
-    flex-wrap: wrap;      /* Allow links to drop to a second line if needed */
-    gap: 15px;            /* Reduce gap from 30px to 15px to save space */
-  }
-
-  /* 4. Text Size Adjustments for small screens */
-  .nav-item {
-    font-size: 0.9rem;    /* Slightly smaller text */
-    white-space: normal;  /* Allow text to wrap if screen is very tiny */
-    text-align: center;
-  }
-
-  .websitelogo {
-    font-size: 1.1rem;
-  }
-  
-  /* 5. Adjust Contact Us Card */
-  .contactus {
-    margin: 10px auto;    /* Center the card horizontally */
-    width: 90%;           /* Ensure it doesn't touch the screen edges */
-    padding: 20px;        /* Slightly reduce padding */
-  }
-}
-
-.prf{
+.login-btn-header {
   display: flex;
-  flex-direction: column;
   align-items: center;
-  gap: 0px;
-   border: 2px solid #fff;
-  box-shadow: 0 1px 6px rgba(179, 177, 177, 0.1);
-  padding: 8px;
-  width: 70px;
-  cursor: pointer;
+  gap: 8px;
+  background: var(--primary-color, #6366f1);
+  color: white;
+  padding: 10px 20px;
+  border-radius: 30px;
   text-decoration: none;
-  margin-right: 50px;
+  font-weight: 700;
+  font-size: 0.9rem;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 6px rgba(99, 102, 241, 0.2);
 }
+
+.login-btn-header:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 15px rgba(99, 102, 241, 0.3);
+  background: var(--primary-hover, #4f46e5);
+}
+
+/* PROFILE DROPDOWN */
+.profile-dropdown-container {
+  position: relative;
+}
+
+.profile-trigger {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+  padding: 6px 12px;
+  border-radius: 30px;
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  background: rgba(255, 255, 255, 0.8);
+  transition: all 0.2s ease;
+}
+
+.profile-trigger:hover {
+  background: white;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
 .user-avatar {
   width: 36px;
   height: 36px;
-  border-radius: 50%; /* Perfect circle */
-  object-fit: cover; /* Prevents image stretching */
-  border: 2px solid #fff; /* White ring */
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid white;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
-.user-name {
-  font-size: 0.9rem;
+.user-name-header {
+  font-size: 0.95rem;
   font-weight: 700;
-  color: #333;
-  white-space: nowrap;
-  margin: 20px;
+  color: #334155;
+}
+
+.dropdown-arrow {
+  color: #94a3b8;
+  transition: transform 0.2s;
+}
+
+.dropdown-arrow.open {
+  transform: rotate(180deg);
+}
+
+/* MENU */
+.dropdown-menu {
+  position: absolute;
+  top: 120%;
+  right: 0;
+  width: 220px;
+  background: white;
+  border-radius: 16px;
+  box-shadow:
+    0 20px 25px -5px rgba(0, 0, 0, 0.1),
+    0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  padding: 8px;
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  animation: slideDown 0.2s ease-out;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.dropdown-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  color: #475569;
+  text-decoration: none;
+  font-size: 0.95rem;
+  font-weight: 600;
+  border-radius: 10px;
+  transition: all 0.2s;
+  cursor: pointer;
+  background: transparent;
+  border: none;
+  width: 100%;
+  text-align: left;
+}
+
+.dropdown-item:hover {
+  background: #f1f5f9;
+  color: var(--primary-color, #6366f1);
+}
+
+.dropdown-divider {
+  height: 1px;
+  background: #f1f5f9;
+  margin: 6px 0;
+}
+
+.logout-btn {
+  color: #ef4444;
+  /* Red */
+}
+
+.logout-btn:hover {
+  background: #fef2f2;
+  color: #dc2626;
+}
+
+/* =========================================
+   MOBILE RESPONSIVENESS
+   ========================================= */
+
+@media screen and (max-width: 900px) {
+
+  .header {
+    height: auto;
+    flex-wrap: wrap;
+    padding: 15px 20px;
+    gap: 15px;
+  }
+
+  .header-left,
+  .header-right {
+    flex: 1;
+  }
+
+  .header-center {
+    order: 3;
+    /* Move nav to bottom on mobile */
+    flex: 0 0 100%;
+    justify-content: flex-start;
+    overflow-x: auto;
+    /* Scrollable if needed */
+    gap: 20px;
+    padding-top: 10px;
+    border-top: 1px solid #f1f5f9;
+  }
+
+  .nav-item {
+    font-size: 0.9rem;
+    white-space: nowrap;
+  }
+
+  /* Adjust dropdown menu position for mobile */
+  .contactusComponent {
+    left: 0;
+    transform: none;
+    width: 280px;
+  }
 }

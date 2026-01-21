@@ -1,233 +1,237 @@
+/* Filter Group */
 .filter-group {
     position: relative;
-    min-width: 180px;
-    margin: 20px;
-    align-self: start;
+    min-width: 200px;
+    margin: 0 0 30px 0;
+    align-self: flex-start;
+    width: 100%;
+    max-width: 300px;
 }
 
 .request-filter-dropdown {
     width: 100%;
-    padding: 10px 15px;
-    font-size: 14px;
+    padding: 12px 16px;
+    font-size: 1rem;
     font-weight: 600;
-    color: #1a1a1a;
-    background-color: #d7d3d3;
-    border: 1px solid #eee;
-    border-radius: 12px; /* Matches your other dashboard inputs */
+    color: #1e293b;
+    background-color: white;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
     cursor: pointer;
-    appearance: none; /* Removes default browser arrow */
+    appearance: none;
     outline: none;
     transition: all 0.2s ease;
-    
-    /* Adding a custom arrow icon */
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23cf3445' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+    font-family: inherit;
+    /* Custom Arrow */
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='%236366f1' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
     background-repeat: no-repeat;
-    background-position: right 12px center;
-    background-size: 16px;
-    padding-right: 40px;
+    background-position: right 15px center;
+    background-size: 20px;
+    padding-right: 45px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
 }
 
 .request-filter-dropdown:hover {
-    border-color: #cf3445;
-    background-color: #ffffff;
-    box-shadow: 0 4px 10px rgba(207, 52, 69, 0.1);
+    border-color: #6366f1;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 15px -3px rgba(99, 102, 241, 0.15);
 }
 
 .request-filter-dropdown:focus {
-    border-color: #cf3445;
-    box-shadow: 0 0 0 3px rgba(207, 52, 69, 0.15);
+    border-color: #6366f1;
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
 }
-option{
-    font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif
+
+option {
+    font-family: inherit;
+    padding: 10px;
 }
+
 /* Badges */
 .card-badge {
     position: absolute;
-    top: 15px;
+    top: 20px;
     right: 20px;
-    padding: 4px 12px;
-    border-radius: 20px;
-    font-size: 11px;
-    font-weight: 800;
+    padding: 6px 14px;
+    border-radius: 50px;
+    font-size: 0.85rem;
+    font-weight: 700;
     text-transform: uppercase;
-    
+    letter-spacing: 0.5px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
 }
-.confirmed { background: #e3f2fd; color: #1976d2; }
-.done { background: #f5f5f5; color: #757575; }
 
+.confirmed {
+    background: #e0f2fe;
+    color: #0284c7;
+    border: 1px solid #bae6fd;
+}
 
-/*/////////////////////////////////////*/
-/* Upcoming Specifics */
+.done {
+    background: #f1f5f9;
+    color: #64748b;
+    border: 1px solid #e2e8f0;
+}
 
-/* Container for Badge + Price */
+/* Upcoming Layout */
 .price-status-container {
     display: flex;
     flex-direction: column;
-    align-items: flex-end; /* Align to the right */
+    align-items: flex-end;
     justify-content: flex-start;
-    gap: 10px; /* Creates space between the badge and the price */
+    gap: 8px;
     min-width: 150px;
 }
 
-/* Remove 'position: absolute' from the badge styles */
-.status-badge {
-    padding: 4px 12px;
-    border-radius: 20px;
-    font-size: 11px;
-    font-weight: 800;
+.status-badge,
+.upcoming-badge {
+    padding: 6px 14px;
+    border-radius: 50px;
+    font-size: 0.85rem;
+    font-weight: 700;
     letter-spacing: 0.5px;
     display: inline-block;
+    background-color: #eff6ff;
+    color: #2563eb;
+    border: 1px solid #dbeafe;
 }
 
-.upcoming-badge {
-    background-color: #e0f2fe;
-    color: #0369a1;
-}
-
-/* Updated Price Styling */
 .price-text-large {
-    color: #ff0000;
-    font-size: 32px; /* Large as in your screenshot */
+    background: linear-gradient(135deg, #6366f1 0%, #ec4899 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-size: 2rem;
     font-weight: 900;
-    margin: 0;
+    margin: 5px 0 0 0;
     line-height: 1;
     text-align: right;
 }
 
-/* Fix for the contact box spacing */
+/* Contact Box */
 .contact-details-box {
     background: #f8fafc;
-    padding: 12px;
+    padding: 16px;
     border-radius: 12px;
     display: flex;
     flex-direction: column;
-    gap: 6px;
-    min-width: 180px;
+    gap: 8px;
+    min-width: 200px;
+    border: 1px solid #f1f5f9;
 }
 
 .contact-item {
     display: flex;
     align-items: center;
-    gap: 8px;
-    font-size: 13px;
+    gap: 10px;
+    font-size: 0.95rem;
     color: #475569;
+    font-weight: 500;
 }
 
-/* Space for the comment section */
+/* Comments */
 .comment-section {
-    margin-top: 15px;
+    margin-top: 20px;
     padding-top: 15px;
     border-top: 1px solid #f1f5f9;
 }
 
 .comment-title {
-    font-size: 16px;
-    text-decoration: underline;
-    color: #334155;
+    font-size: 1rem;
+    font-weight: 700;
+    color: #64748b;
     margin-bottom: 8px;
+    text-decoration: none;
 }
 
 .comment-body {
-    font-size: 15px;
-    color: #1e293b;
+    font-size: 0.95rem;
+    color: #334155;
     margin: 0;
+    font-style: italic;
 }
 
 .card-actions-row {
     display: flex;
     justify-content: flex-end;
-    margin-top: 15px;
+    margin-top: 20px;
 }
 
 .btn-finish-action {
-    background-color: #22c55e;
+    background: linear-gradient(135deg, #10b981 0%, #34d399 100%);
     color: white;
     border: none;
-    padding: 10px 24px;
+    padding: 12px 24px;
     border-radius: 12px;
-    font-weight: bold;
+    font-weight: 700;
     cursor: pointer;
     display: flex;
     align-items: center;
     gap: 8px;
-    transition: background 0.2s;
+    transition: all 0.2s;
+    font-family: inherit;
+    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2);
 }
 
 .btn-finish-action:hover {
-    background-color: #16a34a;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 16px rgba(16, 185, 129, 0.3);
 }
 
-/*/////////////////////////////////////*/
-
-/* Completed Specifics */
-/* Base Card Adjustments */
+/* Completed Card Specifics */
 .booking-card {
-    position: relative;
-    background: white;
-    border-radius: 25px;
-    padding: 25px;
-    margin-bottom: 20px;
-    display: flex;
-    flex-direction: column;
+    /* Styles are mostly in BookingRequestCard.css, but this class is used for layout */
+    margin-bottom: 25px;
 }
 
-/* Fix for the overlapping Badge */
 .done-badge {
     position: absolute;
-    top: 15px;
+    top: 20px;
     right: 20px;
-    background: #f0f0f0;
-    color: #777;
-    padding: 4px 12px;
-    border-radius: 20px;
-    font-size: 10px;
-    font-weight: 800;
-    letter-spacing: 0.5px;
+    background: #f1f5f9;
+    color: #64748b;
+    padding: 6px 14px;
+    border-radius: 50px;
+    font-size: 0.85rem;
+    font-weight: 700;
+    border: 1px solid #e2e8f0;
 }
 
-/* Completed Card Specific look */
 .completed-card {
-    background-color: #fafafa;
-    border: 1px solid #eee;
+    background-color: #fcfcfc;
+    border: 1px solid #eaecf0;
+    opacity: 0.9;
 }
 
 .muted-section {
-    opacity: 0.8;
+    opacity: 0.7;
 }
 
 .grayscale-img {
     filter: grayscale(1);
-    opacity: 0.7;
+    opacity: 0.8;
 }
 
 .trip-route-summary {
     display: flex;
     align-items: center;
-    gap: 5px;
-    color: #666;
-    font-size: 14px;
-    font-weight: 600;
-    margin-top: 5px;
-}
-
-/* Muted contact box for completed trips */
-.muted-contact {
-    background: #f1f1f1 !important;
-    border: 1px solid #e5e5e5;
-    color: #777 !important;
-}
-
-.contact-item {
-    display: flex;
-    align-items: center;
     gap: 8px;
-    margin-bottom: 4px;
+    color: #64748b;
+    font-size: 0.95rem;
+    font-weight: 600;
+    margin-top: 8px;
 }
 
-/* Price Section */
+.muted-contact {
+    background: #f1f5f9 !important;
+    border: 1px solid #e2e8f0;
+    color: #94a3b8 !important;
+}
+
 .gray-price {
-    color: #555 !important;
-    margin-top: 15px; /* Added space to avoid badge overlap */
+    background: none;
+    -webkit-text-fill-color: #64748b;
+    color: #64748b !important;
+    font-size: 1.5rem;
 }
 
 .success-status {
@@ -235,12 +239,62 @@ option{
     align-items: center;
     justify-content: flex-end;
     gap: 6px;
-    color: #27ae60;
-    font-weight: bold;
-    font-size: 13px;
+    color: #10b981;
+    font-weight: 700;
+    font-size: 0.9rem;
     margin-top: 5px;
 }
 
-.text-right {
-    text-align: right;
+/* Empty State */
+.empty-state-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 60px 20px;
+    background: white;
+    border-radius: 20px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+    text-align: center;
+    margin-top: 20px;
+    animation: fadeIn 0.5s ease;
+    border: 1px dashed #e2e8f0;
+}
+
+.empty-state-icon-wrapper {
+    background: #f1f5f9;
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #94a3b8;
+    margin-bottom: 20px;
+}
+
+.empty-state-container h3 {
+    margin: 0 0 10px 0;
+    color: #1e293b;
+    font-size: 1.25rem;
+    font-weight: 800;
+}
+
+.empty-state-container p {
+    margin: 0;
+    color: #64748b;
+    font-size: 1rem;
+    max-width: 300px;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }

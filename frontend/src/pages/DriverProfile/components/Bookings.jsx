@@ -2,6 +2,7 @@ import { useEffect, useState, useMemo } from "react";
 import axios from "axios";
 import BookingRequestCard from "./BookingRequestCard";
 import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { Inbox } from 'lucide-react';
 import '../style/bookings.css'
 import UpcomingTripCard from "./UpcomingTripCard";
 import CompletedTripCard from "./CompletedTripCard";
@@ -147,7 +148,13 @@ export default function Bookings() {
             return <CompletedTripCard key={req.id} req={req} />;
           })
         ) : (
-          <div className="empty-state">No {filterReq} found.</div>
+          <div className="empty-state-container">
+            <div className="empty-state-icon-wrapper">
+              <Inbox size={48} strokeWidth={1.5} />
+            </div>
+            <h3>No {filterReq} found</h3>
+            <p>Your list is currently empty. Check back later!</p>
+          </div>
         )}
       </div>
 

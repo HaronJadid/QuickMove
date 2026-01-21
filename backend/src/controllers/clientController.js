@@ -123,6 +123,7 @@ exports.getBookingsByClient = async (req, res) => {
       if (d.VehiculeUtilise && d.VehiculeUtilise.proprietaire && d.VehiculeUtilise.proprietaire.User) {
         const u = d.VehiculeUtilise.proprietaire.User;
         driverInfo = {
+          id: d.VehiculeUtilise.proprietaire.id_livreur,
           nom: u.nom,
           prenom: u.prenom,
           fullName: `${u.prenom} ${u.nom}`

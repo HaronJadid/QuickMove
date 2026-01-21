@@ -2,81 +2,111 @@
 
 .dashboard-section {
   font-family: 'Cairo', sans-serif;
-  /* The Red/Pink Gradient Background */
-  background: linear-gradient(135deg, #d64c5e 0%, #c41e3a 100%);
-  padding: 40px;
   width: 100%;
   box-sizing: border-box;
+  animation: fadeIn 0.5s ease-out;
 }
 
 /* --- STATS GRID --- */
 .stats-grid {
-  display: flex;
-  gap: 20px;
-  justify-content: space-between;
-  flex-wrap: wrap; /* Allows wrapping on mobile */
-  margin-bottom: 30px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 25px;
+  margin-bottom: 40px;
 }
 
 .stat-card {
-  background-color: white;
-  border-radius: 12px;
-  padding: 20px 25px;
-  flex: 1; /* Makes all cards same width */
-  min-width: 180px; /* Prevents them from getting too small */
-  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+  background: white;
+  border-radius: 20px;
+  padding: 25px 30px;
+  box-shadow:
+    0 4px 6px -1px rgba(0, 0, 0, 0.05),
+    0 2px 4px -1px rgba(0, 0, 0, 0.03);
+  border: 1px solid rgba(0, 0, 0, 0.05);
   display: flex;
   flex-direction: column;
   justify-content: center;
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  position: relative;
+  overflow: hidden;
+}
+
+.stat-card:hover {
+  transform: translateY(-5px);
+  box-shadow:
+    0 20px 25px -5px rgba(0, 0, 0, 0.1),
+    0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  border-color: rgba(99, 102, 241, 0.2);
+}
+
+/* Decorative background circle */
+.stat-card::before {
+  content: '';
+  position: absolute;
+  top: -20px;
+  right: -20px;
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--primary-color, #6366f1) 0%, transparent 80%);
+  opacity: 0.1;
+  transition: all 0.3s ease;
+}
+
+.stat-card:hover::before {
+  transform: scale(1.2);
+  opacity: 0.15;
 }
 
 .stat-label {
-  font-size: 0.85rem;
+  font-size: 0.9rem;
   font-weight: 700;
-  color: #333;
-  margin-bottom: 5px;
-  display: block;
+  color: #64748b;
+  margin-bottom: 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
 .stat-value {
-  font-size: 1.8rem;
+  font-size: 2.5rem;
   font-weight: 800;
   margin: 0;
-  line-height: 1.2;
+  line-height: 1.1;
+  background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 
-/* Text Colors */
-.text-red { color: #ff4757; }
-.text-black { color: #000000; }
-.text-green { color: #2ed573; }
-.text-blue { color: #1e90ff; }
+/* Text Colors for specific stats */
+.text-red {
+  background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
 
+.text-green {
+  background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
 
+.text-blue {
+  background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.text-black {
+  color: #1e293b;
+}
 
 /* --- MOBILE RESPONSIVENESS --- */
 @media screen and (max-width: 768px) {
-  .dashboard-section {
-    padding: 20px;
-  }
-  
   .stats-grid {
+    grid-template-columns: 1fr;
     gap: 15px;
-  }
-
-  /* Make cards 2 per row on mobile */
-  .stat-card {
-    min-width: 45%; 
-  }
-  
-  .tabs-container {
-    width: 100%;
-    justify-content: space-between;
-    overflow-x: auto; /* Allow scroll if screen is too small */
-  }
-  
-  .tab-item {
-    padding: 10px 15px;
-    font-size: 0.8rem;
-    white-space: nowrap;
   }
 }

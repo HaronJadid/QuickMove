@@ -1,0 +1,133 @@
+/* DriverRatings.css */
+.driver-ratings-container {
+    padding: 20px;
+    max-width: 900px;
+    margin: 0 auto;
+    font-family: 'Cairo', sans-serif;
+    animation: fadeIn 0.5s ease-out;
+}
+
+.glass-panel {
+    background: rgba(255, 255, 255, 0.9);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    border-radius: 16px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+    padding: 24px;
+    margin-bottom: 20px;
+}
+
+/* Summary Section */
+.ratings-summary {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: linear-gradient(135deg, #fff 0%, #f8fafc 100%);
+}
+
+.average-score {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.score-value {
+    font-size: 3rem;
+    font-weight: 800;
+    color: #1e293b;
+    line-height: 1;
+}
+
+.stars-display {
+    display: flex;
+    gap: 4px;
+}
+
+.total-reviews {
+    font-size: 1.1rem;
+    color: #64748b;
+}
+
+/* Reviews List */
+.reviews-list {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.review-card {
+    transition: transform 0.2s;
+}
+
+.review-card:hover {
+    transform: translateY(-2px);
+}
+
+.review-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 15px;
+}
+
+.reviewer-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.avatar-placeholder {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #6366f1 0%, #818cf8 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 10px rgba(99, 102, 241, 0.2);
+}
+
+.client-name {
+    margin: 0;
+    font-size: 1rem;
+    font-weight: 700;
+    color: #1e293b;
+}
+
+.review-date {
+    font-size: 0.8rem;
+    color: #94a3b8;
+    display: flex;
+    align-items: center;
+}
+
+.review-rating {
+    display: flex;
+    gap: 2px;
+}
+
+.review-body {
+    background: #f8fafc;
+    padding: 15px;
+    border-radius: 12px;
+    border: 1px solid #f1f5f9;
+}
+
+.review-body p {
+    margin: 0;
+    color: #475569;
+    font-style: italic;
+    line-height: 1.5;
+}
+
+.loading-state,
+.error-container,
+.empty-state {
+    text-align: center;
+    padding: 60px;
+    color: #64748b;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+}

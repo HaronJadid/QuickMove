@@ -4,7 +4,7 @@ import axios from 'axios';
 
 export default function CltPersonalInfo() {
     const API_URL = import.meta.env.VITE_API_URL;
-    
+
     // Core States
     const [user, setUser] = useState(null);
     const [edit, setEdit] = useState(false);
@@ -38,9 +38,9 @@ export default function CltPersonalInfo() {
             try {
                 setLoading(true);
                 const res = await axios.get(`${API_URL}api/user/${id}`);
-                
+
                 const userData = res.data.userInfo;
-                
+
                 // Map API data to our local state
                 const fetchedData = {
                     prenom: userData.prenom || '',
@@ -48,11 +48,13 @@ export default function CltPersonalInfo() {
                     email: userData.email || '',
                     numero: userData.numero || '',
                     role: "Customer Account",
-                    imgUrl: userData.imgUrl || '../../../../public/alt_img.webp',
+                    imgUrl: userData.imgUrl
+                        ? (userData.imgUrl.startsWith('http') ? userData.imgUrl : `${API_URL}${userData.imgUrl.startsWith('/') ? userData.imgUrl.slice(1) : userData.imgUrl}`)
+                        : '../../../../public/alt_img.webp',
                     // Accessing nested livreurProfile fields
                     cin: userData.clientProfile?.cin || '',
                 };
-                
+
                 setUser(fetchedData);
                 setFormData({
                     prenom: fetchedData.prenom,
@@ -68,7 +70,7 @@ export default function CltPersonalInfo() {
                 setLoading(false);
             }
         };
-        
+
         getinfo();
     }, [id, API_URL]);
 
@@ -76,12 +78,12 @@ export default function CltPersonalInfo() {
         try {
             // Send update to the driver profile specific route
             await axios.put(`${API_URL}api/profile/client/${id}`, formData);
-             
+
             // Sync the display user state with the form data
             setUser(prev => ({ ...prev, ...formData }));
             setEdit(false);
             alert('Profile updated successfully! ✅');
-            
+
         } catch (err) {
             console.error('Error saving changes:', err);
             alert('Failed to save changes. Please check your connection.');
@@ -109,13 +111,13 @@ export default function CltPersonalInfo() {
         setEdit(false);
     };
 
-    if (loading) return <div style={{textAlign: 'center', marginTop: '50px'}}>Loading...</div>;
-    if (error) return <div style={{textAlign: 'center', marginTop: '50px', color: 'red'}}>{error}</div>;
+    if (loading) return <div style={{ textAlign: 'center', marginTop: '50px' }}>Loading...</div>;
+    if (error) return <div style={{ textAlign: 'center', marginTop: '50px', color: 'red' }}>{error}</div>;
 
     return (
         <div className="profile-page-wrapper" dir="ltr">
             <div className="profile-card">
-                
+
                 <div className="profile-header">
                     <img src={user.imgUrl} alt="Profile" className="profile-avatar" />
                     <div className="role-badge">{user.role}</div>
@@ -131,7 +133,7 @@ export default function CltPersonalInfo() {
                             <input
                                 type="text"
                                 name="cin"
-                                className="read-only-input" 
+                                className="read-only-input"
                                 value={formData.cin}
                                 onChange={handleInputChange}
                             />
@@ -202,13 +204,13 @@ export default function CltPersonalInfo() {
                         )}
                     </div>
 
-                    
+
                 </div>
 
                 <div className="profile-footer">
                     {!edit ? (
                         <button className="edit-btn" onClick={() => setEdit(true)}>
-                             Update profile
+                            Update profile
                         </button>
                     ) : (
                         <div style={{ display: 'flex', gap: '10px' }}>
