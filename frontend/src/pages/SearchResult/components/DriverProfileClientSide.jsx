@@ -1,312 +1,274 @@
-import '../style/csdp.css'
+import '../style/csdp.css';
 import { useLocation } from 'react-router-dom';
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { Mail, Phone, MapPin, CheckCircle, Aperture } from 'lucide-react';
+import { Mail, Phone, MapPin, CheckCircle, Calendar, Clock } from 'lucide-react';
 
-
-const DriverProfileClientSide= () => {
+const DriverProfileClientSide = () => {
   const location = useLocation();
+  const API_URL = import.meta.env.VITE_API_URL;
 
-  let [villes,setVilles]=useState(null)
-  let [driverVilles,setDriverVilles]=useState(null)
+  // 1. Initial Data Setup
+  const [frombookings, setFrombookings] = useState(false);
+  const [villes, setVilles] = useState([]);
+  const [driverVilles, setDriverVilles] = useState([]);
+  const [ville_depart, setVille_depart] = useState('');
+  const [ville_arrivee, setVille_arrivee] = useState('');
+  const [nbrTotalTrips, setNbrTotalTrips] = useState(null);
+  const [showModal, setShowModal] = useState(false);
 
-  const driver = location.state?.driverData;
-  console.log(driver)
+  // Parse Driver Data
+  let rawDriver = location.state?.driverData;
+  const [driver, setDriver] = useState(null);
+
+  const [vehicles, setVehicles] = useState([]);
+  
   const userRetrieved = localStorage.getItem('user');
   const userParsed = userRetrieved ? JSON.parse(userRetrieved) : null;
   const id = userParsed?.userId;
-  let ville_depart= localStorage.getItem('ville_depart')
-  let ville_arrivee=localStorage.getItem('ville_arrivee')
 
-
-  const [showModal, setShowModal] = useState(false);
   const [bookingData, setBookingData] = useState({
-      prix: driver.prix_base || '',
-      comment: '',
-      dateDepartExacte: '',
-      dateArriveeExacte: '',
-      vehicule_id: ''
-    });
-  
+    prix: '',
+    comment: '',
+    dateDepartExacte: '',
+    dateArriveeExacte: '',
+    vehicule_id: ''
+  });
 
-  const API_URL = import.meta.env.VITE_API_URL;
-
-  let [nbrTotalTrips,setNbrTotalTrips]=useState(null)
-  useEffect(()=>{
-
-    const getstats=async()=>{
-      try{
-      const response = await axios.get(`${API_URL}api/livreur/${driver.id}/statistics`);
-      setNbrTotalTrips( response.data.statistics.totalCompletedTrips)
-
-      const res=await axios.get(`${API_URL}api/ville/driver/${driver.id}`)
-      setDriverVilles(res.data.villes)
-      }catch(err){
-        console.error('Error while fetching stats:',err)
+  // 2. Logic to handle where the data came from (Search vs Bookings)
+  useEffect(() => {
+    if (rawDriver) {
+      if (!rawDriver.user) {
+        // Came from History/Bookings
+        setFrombookings(true);
+        setDriver({
+          ...rawDriver,
+          id: rawDriver.id || rawDriver.id_livreur,
+          user: rawDriver // Mapping the root object to user for consistency
+        });
+      } else {
+        // Came from Search Results
+        setFrombookings(false);
+        setDriver(rawDriver);
+        setVille_depart(localStorage.getItem('ville_depart_name') || ''); // Use names for backend compatibility
+        setVille_arrivee(localStorage.getItem('ville_arrivee_name') || '');
       }
-      
     }
-     let fetchvilles=async()=>{
-       const res= await axios.get(`${API_URL}api/ville/`)
-        setVilles(res.data.villes)
-        console.log(res.data)
-        console.log(villes)
-        
+  }, [rawDriver]);
+  console.log(driver)
+
+  // 3. Fetch Stats and Cities
+  useEffect(() => {
+    if (!driver?.id) return;
+
+    const fetchData = async () => {
+      try {
+        const statsRes = await axios.get(`${API_URL}api/livreur/${driver.id}/statistics`);
+        setNbrTotalTrips(statsRes.data.statistics.totalCompletedTrips);
+
+        const driverVillesRes = await axios.get(`${API_URL}api/ville/driver/${driver.id}`);
+        setDriverVilles(driverVillesRes.data.villes);
+
+        const res = await axios.get(`${API_URL}api/vehicule/driver/${driver.id}`);
+        setVehicles(res.data.vehicules);
+        console.log(res.data.vehicules)
+
+        const allVillesRes = await axios.get(`${API_URL}api/ville/`);
+        setVilles(allVillesRes.data.villes);
+      } catch (err) {
+        console.error('Error fetching data:', err);
       }
+    };
+    fetchData();
+  }, [driver?.id, API_URL]);
 
-    fetchvilles()
-    getstats()
-  },[driver.id])
-
-   const handleBooking =async (e) => {
+  const handleBooking = async (e) => {
     e.preventDefault();
-    console.log("Booking Submitted:", bookingData);
-    try{
-        const dep = new Date(bookingData.dateDepartExacte);
-        const arr = new Date(bookingData.dateArriveeExacte);
-        const now = new Date();
+    try {
+      const dep = new Date(bookingData.dateDepartExacte);
+      const arr = new Date(bookingData.dateArriveeExacte);
+      const now = new Date();
 
-        // 1. Check if Departure is in the past
-        if (dep < now) {
-          alert("Departure date cannot be in the past!");
-          return;
-        }
+      if (dep < now) return alert("Departure date cannot be in the past!");
+      if (bookingData.dateArriveeExacte && arr <= dep) return alert("Arrival must be after departure!");
+      if (!ville_depart || !ville_arrivee) return alert("Please specify both cities!");
 
-        // 2. Check if Arrival is before Departure
-        if (arr <= dep) {
-          alert("The expected date of arrival should be later than the departure date!");
-          return;
-        }
-     
-    const res=await axios.post(`${API_URL}api/client/${id}/book`,{ ville_depart,
-    ville_arrivee,
-    prix:bookingData.prix,
-    comment:bookingData.comment,
-    dateDepartExacte:bookingData.dateDepartExacte,
-    dateArriveeExacte:bookingData.dateArriveeExacte,
-    vehicule_id:bookingData.vehicule_id,
-    livreur_id:driver.id})
-    
+      await axios.post(`${API_URL}api/client/${id}/book`, {
+        ville_depart, 
+        ville_arrivee,
+        prix: bookingData.prix,
+        comment: bookingData.comment,
+        dateDepartExacte: bookingData.dateDepartExacte,
+        dateArriveeExacte: bookingData.dateArriveeExacte,
+        vehicule_id: bookingData.vehicule_id,
+        livreur_id: driver.id
+      });
 
-   
       setShowModal(false);
       alert("Request sent to driver!");
-    
+    } catch (err) {
+      alert('Error occurred while making request!!');
+    }
+  };
   
 
-    }catch(err){
-      alert('Error occured while making request!!')
-      console.error('error:',err)
-    }
-   
-    
-    
-  };
-
   const getMinDateTime = () => {
-  const now = new Date();
-  // Adjust to local timezone string format
-  now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
-  return now.toISOString().slice(0, 16);
+    const now = new Date();
+    now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
+    return now.toISOString().slice(0, 16);
   };
-   
 
-   
-
-  // Safety check to handle missing data
   if (!driver) return <div className="loading-state">Loading driver profile...</div>;
 
   return (
     <div className="profile-detail-page">
       <div className="profile-layout-grid">
-        
-        {/* LEFT COLUMN: Main Information */}
+        {/* Main Content (Left) */}
         <div className="profile-main-column">
-          
-          {/* Header Card */}
           <div className="detail-card header-section">
             <div className="cover-bg"></div>
             <div className="header-content">
-              <img 
-                src={driver.user.imgUrl || '../../../../public/alt_img.webp'} 
-                alt={driver.user.nom} 
-                className="profile-big-avatar" 
-              />
+              <img src={driver.user.imgUrl || '/alt_img.webp'} alt="" className="profile-big-avatar" />
               <div className="header-text-info">
                 <div className="name-verified-row">
-                  <h3>{driver.user.prenom + ' '+driver.user.nom}</h3>
+                  <h3>{driver.user.prenom} {driver.user.nom}</h3>
                   <span className="verified-pill">Verified</span>
                 </div>
                 <div className="header-substats">
                   <span className="star-icon">★</span> 
                   <strong>{driver.user.rating || '5.0'}</strong> 
-                  <span className="muted-text"> 
-                    ({driver.Reviews?.length || 0} reviews) •
-                  </span>
                 </div>
               </div>
             </div>
           </div>
 
-          {/* About Section */}
           <div className="detail-card">
             <h4 className="section-heading">About</h4>
-            <p className="about-paragraph">
-              {driver.about || "This driver specializes in safe and reliable transport across Morocco."}
-            </p>
+            <p className="about-paragraph">{driver.about || "Professional driver available for transport."}</p>
           </div>
 
-          {/* Available Vehicles */}
           <div className="detail-card">
-            <div className="heading-with-icon">
-                <span className="icon">🚚</span>
-                <h4 className="section-heading">Available Vehicles</h4>
-            </div>
+            <h4 className="section-heading">🚚 Available Vehicles</h4>
             <div className="tags-flex">
-              {driver.vehicules?.map((v, index) => (
-                <span key={v.id || index} className="yellow-tag">{v.nom +'  '+v.capacite+ ' '+'Kg'}</span>
+              {vehicles?.map((v) => (
+                <span key={v.id} className="yellow-tag">{v.nom} ({v.capacite} Kg)</span>
               ))}
             </div>
           </div>
 
-          {/* Working Cities */}
           <div className="detail-card">
-            <div className="heading-with-icon">
-                <span className="icon">📍</span>
-                <h4 className="section-heading">Working Cities</h4>
-            </div>
+            <h4 className="section-heading">📍 Working Cities</h4>
             <div className="tags-flex">
               {driverVilles?.map((city, index) => (
-                <span key={index} className="yellow-tag">{city.nom }</span>
+                <span key={index} className="yellow-tag">{city.nom}</span>
               ))}
-            </div>
-          </div>
-
-          {/* Reviews Section */}
-          <div className="detail-card">
-            <div className="heading-with-icon">
-                <span className="icon">⭐</span>
-                <h4 className="section-heading">Reviews ({driver.Reviews?.length || 0})</h4>
-            </div>
-            <div className="reviews-container">
-              {driver.Reviews && driver.Reviews.length > 0 ? (
-                driver.Reviews.map((rev, index) => (
-                  <div key={index} className="review-item">
-                    <div className="review-meta">
-                      <div className="stars">{'★'.repeat(rev.rating || 5)}</div>
-                      <span className="review-date">{rev.date || 'Jan 1, 2026'}</span>
-                    </div>
-                    <p className="review-comment">"{rev.comment || rev.text}"</p>
-                  </div>
-                ))
-              ) : (
-                <p className="muted-text">No reviews yet.</p>
-              )}
             </div>
           </div>
         </div>
 
-        {/* RIGHT COLUMN: Sidebar Actions */}
+        {/* Sidebar (Right) */}
         <div className="profile-sidebar-column">
           <div className="detail-card sidebar-sticky">
             <h4 className="sidebar-heading">Book This Driver</h4>
-            
             <button className="book-now-large-btn" onClick={() => setShowModal(true)}>
                 <span className="calendar-icon">📅</span> Book now
             </button>
-
             <hr className="sidebar-divider" />
-
             <div className="contact-info-box">
-              <h5 className="sub-title">Contact Information</h5>
-              <div className="locked-field"><Mail size={12} /> Email : {driver.user.email}</div>
-              <div className="locked-field"><Phone size={12} /> Phone number: {driver.user.numero} </div>
-            </div>
-
-            <hr className="sidebar-divider" />
-
-            <div className="quick-stats-box">
-              <h5 className="sub-title">Quick Stats</h5>
-              <div className="stats-mini-grid">
-                <div className="stat-square">
-                  <span className="stat-num">{nbrTotalTrips || 0}</span>
-                  <span className="stat-label">Trips</span>
-                </div>
-                <div className="stat-square">
-                  <span className="stat-num">{driver.rating || '5.0'}</span>
-                  <span className="stat-label">Rating</span>
-                </div>
-              </div>
+              <div className="locked-field"><Mail size={12} /> Email: {driver.user.email}</div>
+              <div className="locked-field"><Phone size={12} /> Phone: {driver.user.numero}</div>
             </div>
           </div>
         </div>
-
       </div>
 
-       {/* --- BOOKING MODAL --- */}
+      {/* --- BOOKING MODAL --- */}
       {showModal && (
         <div className="modal-overlay">
           <div className="modal-content">
             <div className="modal-header">
-              <h3>  Confirm booking with : <span style={{color:'red'}}> {driver.user.prenom +' '+ driver.user.nom} </span></h3>
+              <h3>Confirm booking with: <span style={{color:'red'}}>{driver.user.prenom} {driver.user.nom}</span></h3>
               <button className="close-x" onClick={() => setShowModal(false)}>×</button>
             </div>
             
             <form onSubmit={handleBooking} className="booking-form">
               <div className="form-grid">
+                
+                {/* --- CONDITIONAL CITY SELECTS --- */}
+                {frombookings && (
+                  <>
+                    <div className="form-group">
+                      <label>City of departure <span className="required">*</span></label>
+                      <select 
+                        className="form-input" 
+                        required 
+                        value={ville_depart} 
+                        onChange={(e) => setVille_depart(e.target.value)}
+                      >
+                        <option value="" disabled>Choose city of departure</option>
+                        {villes.map((v) => <option key={v.id} value={v.nom}>{v.nom}</option>)}
+                      </select>
+                    </div>
+
+                    <div className="form-group">
+                      <label>City of arrival <span className="required">*</span></label>
+                      <select 
+                        className="form-input" 
+                        required 
+                        value={ville_arrivee} 
+                        onChange={(e) => setVille_arrivee(e.target.value)}
+                      >
+                        <option value="" disabled>Choose city of arrival</option>
+                        {villes.map((v) => <option key={v.id} value={v.nom}>{v.nom}</option>)}
+                      </select>
+                    </div>
+                  </>
+                )}
+
                 <div className="form-group">
-                  <label> The suggested price (DH) <span className="required">*</span></label>
+                  <label>Suggested price (DH) <span className="required">*</span></label>
                   <input type="number" required value={bookingData.prix} 
                     onChange={(e) => setBookingData({...bookingData, prix: e.target.value})} />
                 </div>
 
                 <div className="form-group">
-                  <label>Choose vehicule <span className="required">*</span></label>
+                  <label>Choose vehicle <span className="required">*</span></label>
                   <select required value={bookingData.vehicule_id}
-                    onChange={(e) =>setBookingData({...bookingData, vehicule_id: e.target.value})}>
-                   
-                    <option value=""> Choose from the driver´s vehicules  </option>
-                    {driver.vehicules?.map(v => (
-                      <option key={v.id} value={v.id}>{v.nom} ({v.capacite}kg)</option>
+                    onChange={(e) => setBookingData({...bookingData, vehicule_id: e.target.value})}>
+                    <option value="">Choose from driver's vehicles</option>
+                    {vehicles?.map(v => (
+                      <option key={v.id_vehicule} value={v.id_vehicule}>{v.nom} ({v.capacite}kg)</option>
                     ))}
                   </select>
                 </div>
 
-               
-
-               
-
-
                 <div className="form-group">
-                  <label> Date and time of departure <span className="required">*</span></label>
-                  <input type="datetime-local" required 
-                   min={getMinDateTime()} // Prevents picking past dates
-                   value={bookingData.dateDepartExacte}
+                  <label>Date and time of departure <span className="required">*</span></label>
+                  <input type="datetime-local" required min={getMinDateTime()}
+                    value={bookingData.dateDepartExacte}
                     onChange={(e) => setBookingData({...bookingData, dateDepartExacte: e.target.value})} />
                 </div>
 
                 <div className="form-group">
-                  <label>Expected Date and time of arrival   </label>
-                  <input type="datetime-local" 
-                   min={bookingData.dateDepartExacte || getMinDateTime()} 
-                   value={bookingData.dateArriveeExacte}
+                  <label>Expected Date and time of arrival</label>
+                  <input type="datetime-local" min={bookingData.dateDepartExacte || getMinDateTime()} 
+                    value={bookingData.dateArriveeExacte}
                     onChange={(e) => setBookingData({...bookingData, dateArriveeExacte: e.target.value})} />
                 </div>
 
                 <div className="form-group full-width">
-                  <label> Additionnal comments </label>
-                  <textarea rows="3" placeholder="  Add comments about the trip ..."
+                  <label>Additional comments</label>
+                  <textarea rows="3" placeholder="Add comments about the trip..."
+                    value={bookingData.comment}
                     onChange={(e) => setBookingData({...bookingData, comment: e.target.value})}></textarea>
                 </div>
               </div>
 
-              <button type="submit" className="confirm-booking-btn"> Send request</button>
+              <button type="submit" className="confirm-booking-btn">Send request</button>
             </form>
           </div>
         </div>
       )}
-
     </div>
   );
 };

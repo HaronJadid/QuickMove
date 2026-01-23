@@ -6,6 +6,7 @@ const jwt = require('jsonwebtoken');
 
 
 
+
 // Définissez le nombre de tours de hachage (salt rounds)
 const SALT_ROUNDS = 10;
 

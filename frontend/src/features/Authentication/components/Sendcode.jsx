@@ -1,14 +1,15 @@
 import React, { useState } from 'react';
 import '../style/auth.css';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
 
-export default function Sendlink() {
+export default function Sendcode() {
   const [email,setEmail]=useState('')
   const emailInput=(event)=>{
     setEmail(event.target.value)
   }
+  const navigation=useNavigate()
 
   const API_URL = import.meta.env.VITE_API_URL;
  
@@ -25,7 +26,9 @@ export default function Sendlink() {
         const res=await axios.post(`${API_URL}api/auth/forgot-password`,{email})
 
         if(res.status==200){
-            alert('Link sent successfully ✅');
+            localStorage.setItem('email',email)
+            alert('Code sent successfully ✅');
+            navigation('/verifyCode')
 
         }
 
@@ -63,7 +66,7 @@ export default function Sendlink() {
             {error && <p className="error-msg">{error}</p>}
 
             <button type="submit" className="auth-btn">
-              Send link  
+              Send Code  
             </button>
           </form>
 

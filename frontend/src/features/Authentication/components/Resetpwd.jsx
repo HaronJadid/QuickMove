@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
 import '../style/auth.css';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
 export default function ResetPassword() {
   const API_URL = import.meta.env.VITE_API_URL;
 
+  const navigation=useNavigate()
   const [pwd, setPwd] = useState('');
   const [confirmpwd, setConfirmpwd] = useState('');
   const [error, setError] = useState('');
@@ -41,15 +42,20 @@ export default function ResetPassword() {
 
     setError('');
     try {
-        const res = await axios.post(`${API_URL}api/auth/reset-password`, { token, newPassword: pwd });
+        const emailStored=localStorage.getItem('email')
+        const email= emailStored ? JSON.parse(emailStored) : null;
+        const codeStored=localStorage.getItem('code')
+        const code=codeStored ? JSON.parse(codeStored) : null;
+        const res = await axios.post(`${API_URL}api/auth/reset-password`, { email,code, newPassword: pwd });
 
         if (res.status == 200) {
             alert('Password changed successfully! ✅');
+            navigation('/login')
         }
 
     } catch (err) {
-        setError(err.response?.data || ' !! password reset failed ');
-        console.log(' !! password reset failed ', err);
+        setError(err.response?.data || '  password reset failed !!');
+        console.log('  password reset failed !!', err);
     }
   };
 

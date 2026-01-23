@@ -80,7 +80,7 @@ exports.createBooking = async (req, res) => {
 };
 
 /**
- * Récupère toutes les demandes (bookings) liées à un client
+ * Récupère toutes les demandes (bookings) liées à un client avec les détails complets du chauffeur
  * GET /api/client/:id/bookings
  */
 exports.getBookingsByClient = async (req, res) => {
@@ -98,34 +98,58 @@ exports.getBookingsByClient = async (req, res) => {
             {
               model: db.Vehicule,
               as: 'VehiculeUtilise',
-              attributes: ['id_vehicule', 'nom', 'imgUrl', 'capacite'],
               include: [
                 {
                   model: db.Livreur,
                   as: 'proprietaire',
-                  include: [{
-                    model: db.User,
-                    attributes: ['nom', 'prenom']
-                  }]
+                  include: [
+                    {
+                      model: db.User,
+                      // We remove the attribute restriction to get the whole User object
+                      attributes: { exclude: ['password'] } 
+                    },
+                    {
+                      model: db.Evaluation,
+                      as: 'evaluationsRecues',
+                      attributes: ['rate']
+                    }
+                  ]
                 }
               ]
             }
           ]
         }
-      ]
+      ],
+      order: [[{ model: db.Demande, as: 'demandesFaites' }, 'createdAt', 'DESC']]
     });
 
     if (!client) return res.status(404).json({ message: `Client id=${clientId} introuvable.` });
 
     const demandes = (client.demandesFaites || []).map(d => {
-      // Extract driver info safely
-      let driverInfo = null;
-      if (d.VehiculeUtilise && d.VehiculeUtilise.proprietaire && d.VehiculeUtilise.proprietaire.User) {
-        const u = d.VehiculeUtilise.proprietaire.User;
-        driverInfo = {
-          nom: u.nom,
-          prenom: u.prenom,
-          fullName: `${u.prenom} ${u.nom}`
+      let driverDetails = null;
+
+      if (d.VehiculeUtilise && d.VehiculeUtilise.proprietaire) {
+        const livreur = d.VehiculeUtilise.proprietaire;
+        const user = livreur.User;
+
+        // Calculate average rating locally if needed
+        const ratings = livreur.evaluationsRecues || [];
+        const avgRating = ratings.length > 0 
+          ? (ratings.reduce((sum, r) => sum + r.rate, 0) / ratings.length).toFixed(1) 
+          : "5.0";
+
+        driverDetails = {
+          id_livreur: livreur.id_livreur,
+          nom: user?.nom,
+          prenom: user?.prenom,
+          email: user?.email,
+          numero: user?.numero,
+          imgUrl: user?.imgUrl,
+          rating: avgRating,
+          reviewCount: ratings.length,
+          // Add any other specific livreur fields here
+          cin: livreur.cin,
+          disponibilite: livreur.disponibilite
         };
       }
 
@@ -136,21 +160,30 @@ exports.getBookingsByClient = async (req, res) => {
         comment: d.comment,
         dateDepartExacte: d.dateDepartExacte,
         dateArriveeExacte: d.dateArriveeExacte,
+        createdAt: d.createdAt,
         villeDepart: d.VilleDepart ? { id: d.VilleDepart.id_ville, nom: d.VilleDepart.nom } : null,
         villeArrivee: d.VilleArrivee ? { id: d.VilleArrivee.id_ville, nom: d.VilleArrivee.nom } : null,
-        vehicule: d.VehiculeUtilise ? { id: d.VehiculeUtilise.id_vehicule, nom: d.VehiculeUtilise.nom, capacite: d.VehiculeUtilise.capacite } : null,
-        driver: driverInfo,
-        createdAt: d.createdAt,
-        updatedAt: d.updatedAt
+        vehicule: d.VehiculeUtilise ? { 
+          id: d.VehiculeUtilise.id_vehicule, 
+          nom: d.VehiculeUtilise.nom, 
+          imgUrl: d.VehiculeUtilise.imgUrl,
+          capacite: d.VehiculeUtilise.capacite 
+        } : null,
+        driver: driverDetails // This now contains the full driver/user object
       };
     });
 
-    return res.status(200).json({ message: 'Bookings du client', count: demandes.length, demandes });
+    return res.status(200).json({ 
+      message: 'Bookings du client', 
+      count: demandes.length, 
+      demandes 
+    });
   } catch (error) {
     console.error('Erreur getBookingsByClient:', error);
     return res.status(500).json({ message: 'Erreur serveur.', details: error.message });
   }
 };
+    
 
 /**
  * Get client statistics
