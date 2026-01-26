@@ -1,0 +1,192 @@
+@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap');
+
+.booking-card {
+    background: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(12px);
+    border-radius: 24px;
+    padding: 30px;
+    margin-bottom: 25px;
+    box-shadow:
+        0 4px 20px rgba(0, 0, 0, 0.02),
+        inset 0 0 0 1px rgba(255, 255, 255, 0.6);
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    font-family: 'Cairo', sans-serif;
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    width: 100%;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.booking-card:hover {
+    transform: translateY(-5px);
+    box-shadow:
+        0 15px 30px -5px rgba(99, 102, 241, 0.1),
+        0 8px 10px -5px rgba(0, 0, 0, 0.02);
+}
+
+.card-main-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 15px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+/* Client Section */
+.client-section {
+    display: flex;
+    gap: 20px;
+    flex: 2;
+    align-items: center;
+}
+
+.client-avatar {
+    width: 65px;
+    height: 65px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid white;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.client-name {
+    margin: 0 0 8px 0;
+    font-size: 1.2rem;
+    font-weight: 800;
+    color: #1e293b;
+}
+
+.info-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px 25px;
+}
+
+.info-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.9rem;
+    color: #64748b;
+    font-weight: 500;
+}
+
+.icon-red {
+    color: #ec4899;
+}
+
+.icon-green {
+    color: #10b981;
+}
+
+/* Vehicle Section */
+.vehicle-section {
+    flex: 1;
+    text-align: center;
+}
+
+.vehicle-name {
+    color: #475569;
+    font-size: 1.1rem;
+    font-weight: 700;
+    margin-bottom: 5px;
+}
+
+.comment-box {
+    flex: 1;
+}
+
+.comment {
+    color: #64748b;
+    font-size: 1rem;
+    font-weight: 500;
+    font-style: italic;
+    text-decoration: none;
+}
+
+/* Price Section */
+.price-section {
+    flex: 1;
+    text-align: right;
+}
+
+.price-text {
+    background: linear-gradient(135deg, #6366f1 0%, #ec4899 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-size: 1.8rem;
+    font-weight: 900;
+    margin: 0;
+}
+
+/* Buttons */
+.card-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 15px;
+    margin-top: 5px;
+}
+
+.btn-accept {
+    background: linear-gradient(135deg, #10b981 0%, #34d399 100%);
+    color: white;
+    border: none;
+    padding: 12px 30px;
+    border-radius: 12px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-family: inherit;
+    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2);
+}
+
+.btn-reject {
+    background: white;
+    color: #ef4444;
+    border: 2px solid #fee2e2;
+    padding: 12px 30px;
+    border-radius: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-family: inherit;
+}
+
+.btn-accept:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 16px rgba(16, 185, 129, 0.3);
+}
+
+.btn-reject:hover {
+    background-color: #fef2f2;
+    border-color: #fecaca;
+    color: #dc2626;
+}
+
+/* Responsive adjustment for small screens */
+@media (max-width: 768px) {
+    .card-main-row {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 20px;
+    }
+
+    .price-section {
+        text-align: left;
+    }
+
+    .card-actions {
+        width: 100%;
+        justify-content: space-between;
+    }
+
+    .btn-accept,
+    .btn-reject {
+        flex: 1;
+        justify-content: center;
+    }
+}

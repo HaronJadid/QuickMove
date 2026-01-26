@@ -1,63 +1,156 @@
-import { useState, useRef } from "react";
-import { Link } from "react-router-dom";
+import { useState, useEffect, useRef } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import SearchFormContainer from "../../pages/HomePage/components/SearchFormContainer";
-import Contactus from "./headerComponents/Contactus";
+
 import { useAuth } from '../../features/Authentication/components/Authprovider';
-import { useTranslation } from 'react-i18next';
-import LanguageSwitcher from '../../components/LanguageSwitcher';
 import { useOnClickOutside } from "../../useOnClickOutside";
 import './header.css';
+import { Search, Info, Mail, LogIn, User, Settings, LogOut, LayoutDashboard, ChevronDown } from 'lucide-react';
 
 export default function Header({ scrollToSearchForm }) {
-    const { t } = useTranslation();
-    const { user, logout } = useAuth(); // Use context
 
-    let [isContactUsOpen, setisContactUsOpen] = useState(false)
-    const ref1 = useRef()
-    useOnClickOutside(ref1, () => { setisContactUsOpen(false) })
+    const [isProfileDropdownOpen, setIsProfileDropdownOpen] = useState(false);
+
+    const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000/';
+
+
+    const profileRef = useRef();
+
+    const [role, setRole] = useState(null);
+    const [username, setUsername] = useState(null);
+    const [pic, setPic] = useState(null);
+    const [userId, setUserId] = useState(null);
+
+    const { logout } = useAuth();
+    const navigate = useNavigate();
+
+
+    useOnClickOutside(profileRef, () => setIsProfileDropdownOpen(false));
+
+    // Get user info from localStorage
+    useEffect(() => {
+        const getUserInfo = () => {
+            try {
+                const userFetched = localStorage.getItem('user');
+
+                if (userFetched) {
+                    const user = JSON.parse(userFetched);
+
+                    setUserId(user.userId);
+                    setUsername(`${user.prenom || ''} ${user.nom || ''}`);
+                    setRole(user.role);
+
+                    const startUrl = user.imgUrl;
+                    const finalUrl = startUrl
+                        ? (startUrl.startsWith('http') ? startUrl : `${API_URL}${startUrl.startsWith('/') ? startUrl.slice(1) : startUrl}`)
+                        : null;
+                    setPic(finalUrl);
+                } else {
+                    setUserId(null);
+                    setUsername(null);
+                    setRole(null);
+                    setPic(null);
+                }
+            } catch (error) {
+                console.error('Error parsing user data:', error);
+                setUserId(null);
+                setUsername(null);
+                setRole(null);
+                setPic(null);
+            }
+        };
+
+        getUserInfo();
+
+        const handleStorageChange = (e) => {
+            if (e.key === 'user') {
+                getUserInfo();
+            }
+        };
+
+        window.addEventListener('storage', handleStorageChange);
+
+        return () => {
+            window.removeEventListener('storage', handleStorageChange);
+        };
+    }, []);
+
+    const profileURL = role === 'client' ? '/clientprofile' :
+        role === 'driver' ? '/driverprofile' :
+            '/login';
+
+    const handleLogout = () => {
+        logout();
+        navigate('/');
+        setIsProfileDropdownOpen(false);
+        // Force state update since localStorage change might not trigger immediately in same tab
+        setRole(null);
+        setUserId(null);
+    };
 
     return (
         <div className="header">
             <div className="header-left">
-                <h4 className="websitelogo">
-                    <span><img src="../../public/logo.jpg" alt="Logo" /></span>
-                    <Link to='/' className="linktohome"><span>MoveMorocco</span> </Link>
-                </h4>
+                <Link to='/' className="logo-container">
+                    <img src="/logo_new.png" alt="Logo" className="logo-img" />
+                    <span className="logo-text">QuickMove</span>
+                </Link>
             </div>
 
-            <nav className="header-center">
-                <Link to='/' className="nav-item" onClick={scrollToSearchForm}>🔍︎ {t('header.search')}</Link>
-                <Link to='/aboutus' className="nav-item">
-                    <i className="icon">👤</i> {t('header.about')}
-                </Link>
-                <div className="contactuselement" ref={ref1} >
-                    <Link className="nav-item" onClick={() => setisContactUsOpen((i) => !i)}>✉ {t('header.contact')}
+            {(!role || role === 'client') && (
+                <nav className="header-center">
+                    <Link to='/' className="nav-item" onClick={scrollToSearchForm}>
+                        <Search size={18} />
+                        <span>Search Transport</span>
                     </Link>
-                    {isContactUsOpen && (<div className='contactusComponent'> <Contactus />   </div>)}
-                </div>
-
-                {/* My Deliveries Link - Only for Clients */}
-                {user && user.role === 'client' && (
-                    <Link to='/my-deliveries' className="nav-item">📦 {t('my_deliveries.title', 'My Deliveries')}</Link>
-                )}
-
-                <div>
-                    {user && <Link to='/' className="nav-item">▥ {t('header.dashboard')}</Link>}
-                </div>
-            </nav>
+                    <Link to='/aboutus' className="nav-item">
+                        <Info size={18} />
+                        <span>About us</span>
+                    </Link>
+                    <Link to='/contactus' className="nav-item">
+                        <Mail size={18} />
+                        <span>Contact us</span>
+                    </Link>
+                </nav>
+            )}
 
             <div className="header-right">
-                <LanguageSwitcher />
-                {user && <div className="not-bell">🔔︎</div>}
+                {role ? (
+                    <div className="profile-dropdown-container" ref={profileRef}>
+                        <div
+                            className="profile-trigger"
+                            onClick={() => setIsProfileDropdownOpen(!isProfileDropdownOpen)}
+                        >
+                            <img
+                                alt="Profile"
+                                className="user-avatar"
+                                src={pic || '/alt_img.webp'}
+                            />
+                            <span className="user-name-header">
+                                {username || 'User'}
+                            </span>
+                            <ChevronDown size={16} className={`dropdown-arrow ${isProfileDropdownOpen ? 'open' : ''}`} />
+                        </div>
 
-                {user ? (
-                    <Link to='/clientprofile' className="prf">
-                        {/* Fallback image logic can be improved */}
-                        <img alt="Profile picture" className="user-avatar" src={user.imgUrl || user.pic || '../../../public/alt_img.webp'} />
-                        <span className="user-name">{user.prenom} {user.nom}</span>
-                    </Link>
+                        {isProfileDropdownOpen && (
+                            <div className="dropdown-menu">
+                                <Link to={profileURL} className="dropdown-item" onClick={() => setIsProfileDropdownOpen(false)}>
+                                    <LayoutDashboard size={18} />
+                                    <span>Dashboard</span>
+                                </Link>
+                                <div className="dropdown-divider"></div>
+                                <button className="dropdown-item logout-btn" onClick={handleLogout}>
+                                    <LogOut size={18} />
+                                    <span>Log Out</span>
+                                </button>
+                            </div>
+                        )}
+                    </div>
                 ) : (
-                    <Link to='/login' className="login-btn">{t('header.login_signup')}</Link>
+                    <Link to='/login' className="login-btn-header">
+                        <LogIn size={18} />
+                        <span>Login | Sign up</span>
+                    </Link>
                 )}
             </div>
         </div>

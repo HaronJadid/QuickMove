@@ -2,12 +2,11 @@ import React from 'react';
 import '../style/comment.css'
 import { useTranslation } from 'react-i18next';
 
-
-export default function ReviewCard({
-  name = "سارة بنعلي",
-  location = "فاس",
-  date = "2025/11/20",
-  text,
+export default function ReviewCard({ 
+  name = "Sara Benali ", 
+  location = "Fes", 
+  date = "2025/11/20", 
+  text = " I used it twice, and the service was excellent everytime. The drivers are professional and the prices are reasonable. ", 
   rating = 5,
   image = "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80"
 }) {
@@ -18,7 +17,7 @@ export default function ReviewCard({
 
   return (
     <div className="review-card" >
-
+      
       {/* 1. STAR RATING */}
       <div className="review-stars">
         {[...Array(5)].map((_, i) => (

@@ -1,9 +1,9 @@
 // server.js (Version adaptée à Sequelize et Neon)
 
-// Use the dotenv path from origin/main as it seems more specific, or fallback to root
+// Load environment variables
 require('dotenv').config({ path: './database/.env' });
-// If that file doesn't exist, it might fall back to standard .env or process env. 
-// Given the previous setup, let's keep it simple.
+require('dotenv').config(); // Load root .env
+
 
 const express = require('express');
 const cors = require('cors');
@@ -17,6 +17,7 @@ const PORT = process.env.PORT || 3000;
 // Middleware
 app.use(cors());
 app.use(express.json());
+app.use('/uploads', express.static('uploads')); // Serve uploaded files statically
 
 // --- ROUTES ---
 
@@ -59,7 +60,7 @@ async function initializeApp() {
         console.log('✅ Connexion à la base de données (Sequelize) établie avec succès.');
 
         // 2. (Optionnel en Production, mais important pour les migrations)
-        // await db.sequelize.sync({ alter: true }); 
+        await db.sequelize.sync({ alter: true });
 
         // 3. Lancer le serveur
         app.listen(PORT, () => {

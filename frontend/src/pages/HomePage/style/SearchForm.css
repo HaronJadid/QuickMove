@@ -2,56 +2,78 @@
 @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap');
 
 
-.sfc{
-   margin-bottom: 90px;
+.sfc {
+  margin-bottom: 90px;
 }
 
 
-/* CARD CONTAINER */
+/* CARD CONTAINER - 3D GLASS STYLE */
 .search-card-container {
-  font-family: 'Cairo', sans-serif; /* The font used in the image */
-  background-color: white;
-  width: 100%;
-  max-width: 900px; /* Adjust based on your layout preference */
+  font-family: 'Cairo', sans-serif;
+  background: rgba(255, 255, 255, 0.85);
+  /* Glass Background */
+  backdrop-filter: blur(12px);
+  width: 90%;
+  max-width: 900px;
   margin: 40px auto;
-  padding: 30px;
-  border-radius: 12px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
-  border: 1px solid #f0f0f0;
- 
+  padding: 40px;
+  border-radius: 20px;
+
+  /* 3D Floating Effect */
+  box-shadow:
+    0 20px 25px -5px rgba(0, 0, 0, 0.1),
+    0 10px 10px -5px rgba(0, 0, 0, 0.04),
+    0 -2px 6px 0 rgba(255, 255, 255, 0.8) inset;
+  /* Top highlight */
+  border: 1px solid rgba(255, 255, 255, 0.6);
+
+  transform: translateY(0);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  animation: fadeIn 0.8s ease-out;
+}
+
+.search-card-container:hover {
+  transform: translateY(-5px);
+  box-shadow:
+    0 25px 50px -12px rgba(99, 102, 241, 0.15),
+    0 -2px 6px 0 rgba(255, 255, 255, 0.8) inset;
 }
 
 /* HEADER */
 .card-header {
   margin-bottom: 25px;
-  border-bottom: 1px solid #eee;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
   padding-bottom: 15px;
 }
 
 .header-title {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 12px;
 }
 
 .header-title h2 {
   margin: 0;
-  font-size: 1.5rem;
-  color: #333;
-  font-weight: 700;
+  font-size: 1.6rem;
+  color: #1e293b;
+  font-weight: 800;
+  letter-spacing: -0.5px;
 }
 
 .search-icon-red {
-  color: #D66F7A; /* The pinkish-red color from the image */
-  font-size: 1.4rem;
-  font-weight: bold;
+  color: var(--secondary-color, #ec4899);
+  /* Use pink variable */
+  font-size: 1.6rem;
+  filter: drop-shadow(0 2px 4px rgba(236, 72, 153, 0.3));
 }
 
 /* FORM GRID */
 .form-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr; /* 2 Columns */
-  gap: 20px;
+  grid-template-columns: 1fr 1fr;
+  /* 2 Columns */
+  gap: 25px;
+  /* Increased gap */
   margin-bottom: 30px;
 }
 
@@ -66,100 +88,134 @@
 .input-group {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 10px;
   text-align: right;
 }
 
 .input-group label {
   font-size: 0.95rem;
-  font-weight: 600;
-  color: #444;
+  font-weight: 700;
+  color: #334155;
 }
 
 .required {
-  color: #D66F7A;
+  color: var(--secondary-color, #ec4899);
   margin-right: 4px;
 }
 
 .form-input {
-  padding: 12px 15px;
-  border: 1px solid #ddd;
-  border-radius: 6px;
+  padding: 14px 18px;
+  border: 2px solid transparent;
+  /* Prepare for focus border */
+  border-radius: 12px;
   font-family: 'Cairo', sans-serif;
-  font-size: 0.9rem;
-  color: #555;
+  font-size: 0.95rem;
+  color: #334155;
   outline: none;
-  background-color: #fff;
-  transition: border-color 0.2s;
+  background-color: #f1f5f9;
+  /* Light gray background */
+  transition: all 0.2s ease;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.03);
 }
 
 .form-input:focus {
-  border-color: #D66F7A;
+  background-color: #fff;
+  border-color: var(--primary-color, #6366f1);
+  box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1);
 }
 
 /* Placeholder styling */
 ::placeholder {
-  color: #aaa;
+  color: #94a3b8;
 }
 
 /* SUBMIT BUTTON */
 .submit-btn {
   width: 100%;
-  padding: 15px;
-  background-color: #E08490; /* The exact soft pink color */
+  padding: 20px;
+  background: linear-gradient(135deg, var(--secondary-color, #ec4899) 0%, #be185d 100%);
   color: white;
   border: none;
-  border-radius: 8px;
+  border-radius: 12px;
   font-family: 'Cairo', sans-serif;
-  font-size: 1.1rem;
+  font-size: 1.15rem;
   font-weight: 700;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 10px;
-  transition: background-color 0.2s;
+  gap: 12px;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 6px -1px rgba(236, 72, 153, 0.3);
+  position: relative;
+  overflow: hidden;
 }
 
 .submit-btn:hover {
-  background-color: #d16b7a;
+  transform: translateY(-2px);
+  box-shadow: 0 10px 15px -3px rgba(236, 72, 153, 0.4);
+  filter: brightness(1.1);
+}
+
+.submit-btn:active {
+  transform: translateY(0);
 }
 
 .btn-icon {
-  font-size: 1.2rem;
-  transform: scaleX(-1); /* Flips the search icon to match Arabic direction if needed */
+  font-size: 1.3rem;
+  transform: scaleX(-1);
 }
 
-.text{
-  margin: 40px;
+/* HERO TITLES */
+.text {
+  margin: 60px 40px;
+  text-align: center;
+  position: relative;
+  color: #333;
 }
-.text1{
-  font-size: 13px;
-  align-self: center;
-  color: rgb(194, 194, 155);
-  margin-bottom: 20px;
 
+.text2 {
+  font-size: 60px;
+  font-weight: 900;
+  /* Gradient Text */
+  background: linear-gradient(to right, #be185d, var(--secondary-color, #ec4899));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  display: block;
+  margin-bottom: 10px;
+  animation: fadeIn 1s ease-out;
 }
-.text2{
+
+.text3 {
   font-size: 50px;
   font-weight: 900;
-  color: rgba(196, 30, 58, 1);
-}
-.text3{
-  font-size: 50px;
-  font-weight: 900;
+  color: #1e293b;
   margin-bottom: 30px;
+  display: block;
+  opacity: 0;
+  animation: fadeIn 1s ease-out 0.3s forwards;
+  /* Delay + FadeIn */
+}
 
+.text4 {
+  font-size: 1.1rem;
+  color: #64748b;
+  max-width: 600px;
+  margin: 0 auto;
+  line-height: 1.6;
 }
-.text4{
-  font-size: 13px;
-  align-self: center;
-  color: #555;
-}
-.minit{
-  display: inline;
-  margin-left: 70px;
-  color: rgba(107, 114, 128, 1);
+
+.minit {
+  display: inline-block;
+  /* Changed for better control */
+  color: var(--primary-color, #6366f1);
+  font-weight: 700;
+  margin-top: 20px;
+  margin-left: 0;
+  /* Reset */
+  padding: 8px 16px;
+  background: rgba(99, 102, 241, 0.1);
+  border-radius: 20px;
 }
 
 
@@ -171,43 +227,32 @@
 @media screen and (max-width: 768px) {
 
   /* 1. Resize the Huge Titles */
-  .text2, .text3 {
-    font-size: 2rem;       /* Reduced from 50px to ~32px */
-    line-height: 1.2;      /* tighter spacing */
-    text-align: center;    /* Center the text for mobile */
-    display: block;        /* Ensures they stack properly */
+  .text2,
+  .text3 {
+    font-size: 2.2rem;
+    line-height: 1.2;
   }
 
   /* 2. Adjust Text Container */
   .text {
-    margin: 20px 15px;     /* Reduce margin from 40px */
-    text-align: center;    /* Center all text content */
+    margin: 30px 15px;
   }
 
-  /* 3. Fix the "minit" Element */
-  .minit {
-    display: block;        /* Stack it on its own line */
-    margin-left: 0;        /* Remove the 70px left margin */
-    margin-top: 10px;      /* Add a little top space */
-    text-align: center;
-  }
-
-  /* 4. Adjust Search Card */
+  /* 3. Adjust Search Card */
   .search-card-container {
-    padding: 20px;         /* Reduce internal padding */
-    margin: 20px auto;     /* Reduce outer margin */
-    width: 95%;            /* Prevent it from touching edges */
-    box-sizing: border-box;
+    padding: 25px;
+    margin: 20px auto;
+    width: 92%;
   }
 
-  /* 5. Force Form to 1 Column (Overrides the 600px rule if needed) */
+  /* 4. Force Form to 1 Column */
   .form-grid {
     grid-template-columns: 1fr;
     gap: 15px;
   }
 
-  /* 6. General Spacing */
+  /* 5. General Spacing */
   .sfc {
-    margin-bottom: 40px;   /* Reduce the large bottom gap */
+    margin-bottom: 50px;
   }
 }

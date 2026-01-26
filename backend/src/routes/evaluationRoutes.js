@@ -6,6 +6,9 @@ const authMiddleware = require('../middlewares/authMiddleware');
 // POST /api/evaluations - Create a rating (Protected)
 router.post('/', authMiddleware, evaluationController.createEvaluation);
 
+// GET /api/evaluations/latest - Get latest evaluations for home page
+router.get('/latest', evaluationController.getLatestEvaluations);
+
 // GET /api/drivers/:livreurId/evaluations - Get ratings for a driver
 // Public route (anyone can read ratings)
 router.get('/drivers/:livreurId', evaluationController.getDriverEvaluations);

@@ -1,122 +1,183 @@
-import React from 'react';
-import '../style/driversAvailable.css';
-import { useEffect } from 'react';
-import { useSearchparams } from './SearchparamsContext';
+import React, { useState } from 'react';
+import '../style/dc.css';
 import axios from 'axios';
-import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+
+const DriverCard = ({ driver }) => {
+  console.log(driver)
+  const navigation = useNavigate()
+
+  const API_URL = import.meta.env.VITE_API_URL;
+
+  const userRetrieved = localStorage.getItem('user');
+  const userParsed = userRetrieved ? JSON.parse(userRetrieved) : null;
+  const id = userParsed?.userId;
+  let ville_depart = localStorage.getItem('ville_depart')
+  let ville_arrivee = localStorage.getItem('ville_arrivee')
+
+  const [showModal, setShowModal] = useState(false);
+
+  // Booking Form State
+  const [bookingData, setBookingData] = useState({
+    prix: driver.prix_base || '',
+    comment: '',
+    dateDepartExacte: '',
+    dateArriveeExacte: '',
+    vehicule_id: ''
+  });
+
+  const handleBooking = async (e) => {
+    e.preventDefault();
+    console.log("Booking Submitted:", bookingData);
+    try {
+      const dep = new Date(bookingData.dateDepartExacte);
+      const arr = new Date(bookingData.dateArriveeExacte);
+      const now = new Date();
+
+      // 1. Check if Departure is in the past
+      if (dep < now) {
+        alert("Departure date cannot be in the past!");
+        return;
+      }
+
+      // 2. Check if Arrival is before Departure
+      if (arr <= dep) {
+        alert("The expected date of arrival should be later than the departure date!");
+        return;
+      }
+
+      const res = await axios.post(`${API_URL}api/client/${id}/book`, {
+        ville_depart,
+        ville_arrivee,
+        prix: bookingData.prix,
+        comment: bookingData.comment,
+        dateDepartExacte: bookingData.dateDepartExacte,
+        dateArriveeExacte: bookingData.dateArriveeExacte,
+        vehicule_id: bookingData.vehicule_id,
+        livreur_id: driver.id
+      })
 
 
-export default function DriverComponent() {
-  let {ville_depart}=useSearchparams()
-  let [livreurs,setLivreurs]=useState(null)
-  console.log('called1',ville_depart)
-  useEffect(()=>{
-    const fetchLivreurs=async()=>{
-       try{
-      const res=await axios.get(`http://localhost:3000/api/livreur?ville=${ville_depart}`)
-      const resList=res.data
-      setLivreurs(resList)
-      console.log(res)
-      console.log(livreurs)
 
-    }catch(err){
-      console.log('Error fetching results',err)
+      setShowModal(false);
+      alert("Request sent to driver!");
 
+
+
+    } catch (err) {
+      alert('Error occured while making request!!')
+      console.error('error:', err)
     }
 
 
-    }
-    fetchLivreurs()
-   
+
+  };
+  const lookupdriver = () => {
+    localStorage.setItem('driverID', driver.id)
+    navigation('/lookupdriverprofile', { state: { driverData: driver } })
+
   }
-,[])
-    
 
+  const getMinDateTime = () => {
+    const now = new Date();
+    // Adjust to local timezone string format
+    now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
+    return now.toISOString().slice(0, 16);
+  };
 
-
-
-    if (!livreurs) {
-      return <div style={{textAlign: 'center', marginTop: '50px'}}>... جاري التحميل</div>;
-    }
   return (
-    <div className="driver-card" dir="rtl">
-      
-      {/* IMAGE SECTION */}
-      <div className="card-image-wrapper">
-        <img 
-          src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" 
-          alt="Driver" 
-          className="driver-image" 
-        />
-        
-        {/* Top Badges */}
-        <div className="badge-featured">
-          <span className="crown-icon">👑</span> مميز
-        </div>
-        <div className="badge-verified">
-          <span>معتمد</span> <span className="check-icon">🛡️</span>
-        </div>
-      </div>
-
-      {/* CONTENT SECTION */}
-      <div className="card-content">
-        
-        {/* Header: Name & Rating */}
-        <div className="card-header-row">
-          <h2 className="driver-name">أحمد بنعلي</h2>
-          <div className="rating-box">
-            <span className="star-icon">⭐</span>
-            <span className="rating-score">3.9</span>
-          </div>
-        </div>
-
-        {/* Location */}
-        <div className="location-row">
-          <span className="icon-grey">📍</span>
-          <span className="location-text">الدار البيضاء - الرباط</span>
-        </div>
-
-        {/* Tags (Vehicle Types) */}
-        <div className="tags-row">
-          <span className="tag">كاميو</span>
-          <span className="tag">هوندا</span>
-        </div>
-
-        <hr className="divider" />
-
-        {/* Stats Row (Price & Trips) */}
-        <div className="stats-row">
-          <div className="price-section">
-            <span className="label-small">يبدأ من</span>
-            <div className="price-value">
-              350 <span className="currency">درهم</span>
+    <div className="search-result-wrapper">
+      {/* --- HORIZONTAL CARD --- */}
+      <div className="driver-horizontal-card">
+        <div className="card-left-section" style={{ cursor: 'pointer' }} onClick={lookupdriver}>
+          <img src={driver.imgUrl || '../../../../public/alt_img.webp'} alt="profile" className="mini-profile-pic" />
+          <div className="driver-info">
+            <div className="rating-stars">
+              {driver.rating ? (
+                <>
+                  {'★'.repeat(Math.floor(driver.rating))}
+                  <span className="rating-num">{driver.rating}</span>
+                </>
+              ) : (
+                <span className="rating-num" style={{ fontSize: '0.9rem', color: '#888' }}>New Driver</span>
+              )}
+            </div>
+            <h3 className="driver-username">{driver.user.prenom + ' ' + driver.user.nom}</h3>
+            <div className="available-tags">
+              {driver.vehicules?.map(v => (
+                <span key={v.id} className="v-tag">{v.nom}</span>
+              ))}
             </div>
           </div>
-          <div className="trips-section">
-            <span className="label-small">عدد الرحلات</span>
-            <div className="trips-value">234</div>
-          </div>
         </div>
 
-        {/* Info List (Availability & Reviews) */}
-        <div className="info-list">
-          <div className="info-item">
-            <span className="icon-clock">🕒</span>
-            <span>متاح: متاح اليوم</span>
-          </div>
-          <div className="info-item">
-            <span className="icon-chat">💬</span>
-            <span>156 تقييم</span>
-          </div>
+        <div className="card-right-section">
+
+          <button className="book-now-btn" onClick={() => setShowModal(true)}>
+            Book now ←
+          </button>
         </div>
-
-        {/* Action Button */}
-        <button className="view-profile-btn">
-          عرض الملف الشخصي
-          <span className="arrow-icon">←</span>
-        </button>
-
       </div>
+
+      {/* --- BOOKING MODAL --- */}
+      {showModal && (
+        <div className="modal-overlay">
+          <div className="modal-content">
+            <div className="modal-header">
+              <h3>  Confirm booking with  {driver.user.prenom + ' ' + driver.user.nom}</h3>
+              <button className="close-x" onClick={() => setShowModal(false)}>×</button>
+            </div>
+
+            <form onSubmit={handleBooking} className="booking-form">
+              <div className="form-grid">
+                <div className="form-group">
+                  <label> The suggested price (DH) <span className="required"> *</span> </label>
+                  <input type="number" required value={bookingData.prix}
+                    onChange={(e) => setBookingData({ ...bookingData, prix: e.target.value })} />
+                </div>
+
+                <div className="form-group">
+                  <label>Choose vehicule <span className="required"> *</span> </label>
+                  <select required value={bookingData.vehicule_id}
+                    onChange={(e) => setBookingData({ ...bookingData, vehicule_id: e.target.value })}>
+
+                    <option value=""> Choose from the driver´s vehicules  </option>
+                    {driver.vehicules?.map(v => (
+                      <option key={v.id} value={v.id}>{v.nom} ({v.capacite}kg)</option>
+                    ))}
+                  </select>
+                </div>
+
+                <div className="form-group">
+                  <label> Date and time of departure  <span className="required"> *</span></label>
+                  <input type="datetime-local" required
+                    min={getMinDateTime()}
+                    value={bookingData.dateDepartExacte}
+                    onChange={(e) => setBookingData({ ...bookingData, dateDepartExacte: e.target.value })} />
+                </div>
+
+                <div className="form-group">
+                  <label>Expected Date and time of arrival   </label>
+                  <input type="datetime-local"
+                    min={bookingData.dateDepartExacte || getMinDateTime()}
+                    value={bookingData.dateArriveeExacte}
+                    onChange={(e) => setBookingData({ ...bookingData, dateArriveeExacte: e.target.value })} />
+                </div>
+
+                <div className="form-group full-width">
+                  <label> Additionnal comments </label>
+                  <textarea rows="3" placeholder="  Add comments about the trip ..."
+                    onChange={(e) => setBookingData({ ...bookingData, comment: e.target.value })}></textarea>
+                </div>
+              </div>
+
+              <button type="submit" className="confirm-booking-btn"> Send request</button>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
-}
+};
+
+export default DriverCard;

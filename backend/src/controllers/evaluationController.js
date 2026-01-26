@@ -63,5 +63,45 @@ module.exports = {
             console.error('Error fetching driver evaluations:', error);
             res.status(500).json({ error: 'Internal Server Error' });
         }
+    },
+
+    // Get latest evaluations for home page
+    async getLatestEvaluations(req, res) {
+        try {
+            const evaluations = await Evaluation.findAll({
+                limit: 6,
+                order: [['createdAt', 'DESC']],
+                include: [
+                    {
+                        model: Client,
+                        as: 'evaluateur',
+                        include: [
+                            {
+                                model: require('../../database/models').User, // Lazy require to avoid circular dependency if needed, or use existing imports if safer
+                                attributes: ['nom', 'prenom', 'imgUrl']
+                            }
+                        ]
+                    }
+                ]
+            });
+
+            const formatted = evaluations.map(ev => {
+                const user = ev.evaluateur?.User;
+                return {
+                    id: ev.id,
+                    rating: ev.rate,
+                    text: ev.comment,
+                    date: ev.createdAt, // Or format it here 'YYYY/MM/DD'
+                    name: user ? `${user.prenom} ${user.nom}` : 'Anonymous',
+                    location: 'Morocco', // Default for now as Client doesn't have city directly usually
+                    image: user?.imgUrl
+                };
+            });
+
+            res.json(formatted);
+        } catch (error) {
+            console.error('Error fetching latest evaluations:', error);
+            res.status(500).json({ error: 'Internal Server Error' });
+        }
     }
 };

@@ -1,17 +1,26 @@
-@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 
 /* --- CARD CONTAINER --- */
 .driver-card {
-  font-family: 'Cairo', sans-serif;
-  background-color: #fff;
+  font-family: 'Inter', sans-serif;
+  background-color: #ffffff;
   width: 100%;
-  max-width: 380px; /* Matches the card aspect ratio */
-  border-radius: 16px;
-  box-shadow: 0 4px 20px rgba(0,0,0,0.08);
-  border: 1px solid #f0f0f0;
+  max-width: 360px;
+  /* Slightly narrower for modern look */
+  border-radius: 20px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+  border: 1px solid rgba(0, 0, 0, 0.04);
   overflow: hidden;
   margin: 20px auto;
   position: relative;
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  display: flex;
+  flex-direction: column;
+}
+
+.driver-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
 }
 
 /* --- IMAGE SECTION --- */
@@ -19,73 +28,98 @@
   position: relative;
   height: 220px;
   width: 100%;
+  overflow: hidden;
 }
 
 .driver-image {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  transition: transform 0.6s ease;
+}
+
+.driver-card:hover .driver-image {
+  transform: scale(1.08);
+  /* Smoother zoom */
 }
 
 /* Badges */
 .badge-featured {
   position: absolute;
-  top: 15px;
-  right: 15px; /* RTL flip: physically on the right (looks left in RTL) or adjust as needed */
-  background-color: #D4AF37; /* Gold Color */
-  color: #fff;
-  padding: 4px 12px;
+  top: 12px;
+  right: 12px;
+  background: rgba(251, 191, 36, 0.95);
+  /* Amber-400 */
+  color: #1e293b;
+  padding: 6px 12px;
   border-radius: 20px;
-  font-size: 0.85rem;
+  font-size: 0.75rem;
   font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
   display: flex;
   align-items: center;
-  gap: 5px;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+  gap: 6px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  z-index: 2;
+  backdrop-filter: blur(4px);
 }
 
 .badge-verified {
   position: absolute;
-  top: 15px;
-  left: 15px;
-  background-color: rgba(255, 255, 255, 0.9);
-  color: #D4AF37;
-  padding: 4px 10px;
-  border-radius: 8px;
-  font-size: 0.8rem;
+  top: 12px;
+  left: 12px;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(8px);
+  color: #059669;
+  /* Emerald-600 */
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 0.75rem;
   font-weight: 700;
   display: flex;
   align-items: center;
   gap: 5px;
+  z-index: 2;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
 }
 
 /* --- CONTENT SECTION --- */
 .card-content {
-  padding: 20px;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
 }
 
 /* Header Row */
 .card-header-row {
   display: flex;
   justify-content: space-between;
-  align-items: center;
-  margin-bottom: 8px;
+  align-items: flex-start;
+  margin-bottom: 6px;
 }
 
 .driver-name {
   margin: 0;
-  font-size: 1.4rem;
-  color: #222;
+  font-size: 1.25rem;
+  color: #0f172a;
+  /* Slate-900 */
   font-weight: 700;
+  line-height: 1.3;
 }
 
 .rating-box {
   display: flex;
   align-items: center;
   gap: 5px;
-  color: #D4AF37; /* Star Color */
-  font-weight: 700;
-  font-size: 1.1rem;
+  color: #f59e0b;
+  font-weight: 600;
+  font-size: 0.9rem;
+  background: #fffbeb;
+  padding: 4px 8px;
+  border-radius: 8px;
+  white-space: nowrap;
 }
 
 /* Location */
@@ -93,67 +127,98 @@
   display: flex;
   align-items: center;
   gap: 6px;
-  color: #777;
-  font-size: 0.95rem;
-  margin-bottom: 12px;
+  color: #64748b;
+  /* Slate-500 */
+  font-size: 0.85rem;
+  margin-bottom: 16px;
+  font-weight: 500;
+}
+
+.icon-grey {
+  color: #94a3b8;
 }
 
 /* Tags */
 .tags-row {
   display: flex;
-  gap: 10px;
-  margin-bottom: 15px;
+  gap: 8px;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
 }
 
 .tag {
-  background-color: #f3f4f6;
-  color: #444;
-  padding: 6px 16px;
-  border-radius: 20px;
-  font-size: 0.85rem;
+  background-color: #f1f5f9;
+  color: #475569;
+  padding: 5px 10px;
+  border-radius: 6px;
+  font-size: 0.75rem;
   font-weight: 600;
+  display: flex;
+  align-items: center;
+  transition: all 0.2s;
+}
+
+.driver-card:hover .tag {
+  background-color: #e2e8f0;
+  color: #334155;
 }
 
 /* Divider */
 .divider {
   border: 0;
   height: 1px;
-  background-color: #eee;
-  margin: 15px 0;
+  background: #e2e8f0;
+  margin: 0 0 20px 0;
+  width: 100%;
 }
 
 /* Stats Row */
 .stats-row {
   display: flex;
   justify-content: space-between;
-  align-items: flex-end; /* Aligns price bottom */
-  margin-bottom: 15px;
+  align-items: flex-start;
+  margin-bottom: 24px;
+}
+
+.price-section,
+.trips-section {
+  display: flex;
+  flex-direction: column;
+}
+
+.trips-section {
+  align-items: flex-end;
+  /* Right align trips */
 }
 
 .label-small {
-  display: block;
-  font-size: 0.8rem;
-  color: #888;
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #94a3b8;
+  font-weight: 700;
   margin-bottom: 4px;
 }
 
 .price-value {
-  color: #C41E3A; /* Deep Red */
-  font-size: 1.8rem;
+  color: #4f46e5;
+  /* Indigo-600 */
+  font-size: 1.4rem;
   font-weight: 800;
-  line-height: 1;
+  line-height: normal;
 }
 
 .currency {
-  font-size: 0.9rem;
-  font-weight: 400;
-  margin-right: 5px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #64748b;
+  margin-left: 2px;
 }
 
 .trips-value {
-  font-size: 1.2rem;
+  font-size: 1.1rem;
   font-weight: 700;
-  color: #333;
+  color: #334155;
 }
 
 /* Info List */
@@ -161,103 +226,93 @@
   display: flex;
   flex-direction: column;
   gap: 8px;
-  margin-bottom: 20px;
+  margin-bottom: 24px;
 }
 
 .info-item {
   display: flex;
   align-items: center;
-  gap: 8px;
-  font-size: 0.9rem;
-  color: #666;
+  gap: 10px;
+  font-size: 0.85rem;
+  color: #475569;
+  font-weight: 500;
+}
+
+.icon-clock,
+.icon-chat {
+  color: #cbd5e1;
+  /* Slate-300 */
 }
 
 /* Button */
 .view-profile-btn {
   width: 100%;
   padding: 14px;
-  background-color: #C41E3A; /* Brand Red */
+  background: linear-gradient(135deg, #4f46e5 0%, #4338ca 100%);
   color: white;
   border: none;
-  border-radius: 8px;
-  font-family: 'Cairo', sans-serif;
-  font-size: 1rem;
-  font-weight: 700;
+  border-radius: 12px;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.95rem;
+  font-weight: 600;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 10px;
-  transition: background-color 0.2s;
+  gap: 8px;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(79, 70, 229, 0.2);
+  margin-top: auto;
+  /* Push to bottom if container stretches */
 }
 
 .view-profile-btn:hover {
-  background-color: #a01830;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(79, 70, 229, 0.3);
+  background: linear-gradient(135deg, #4338ca 0%, #3730a3 100%);
 }
 
 .arrow-icon {
-  font-size: 1.2rem;
-  line-height: 1;
+  width: 18px;
+  height: 18px;
+  stroke-width: 2.5px;
+  transition: transform 0.2s;
 }
 
-
-.Driverslist{
-    display: grid;
-    grid-template-columns: repeat(3,1fr);
-    gap: 30px;
-    justify-items: center;
-    margin: 30px;
-
-
-
-
-}
-.text{
-    font-size: 40px;
-    font-weight: 900;
-    
+.view-profile-btn:hover .arrow-icon {
+  transform: translateX(4px);
 }
 
+/* LIST & TITLE STYLES REUSED IN PAGE */
+.Driverslist {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 40px;
+  padding: 40px 20px;
+  max-width: 1280px;
+  margin: 0 auto;
+}
 
-/* =========================================
-   MOBILE RESPONSIVENESS (Add to bottom)
-   ========================================= */
+.text {
+  font-size: 2.5rem;
+  font-weight: 800;
+  text-align: left;
+  margin-bottom: 20px;
+  color: #1e293b;
+  margin-left: 20px;
+}
 
+/* MOBILE */
 @media screen and (max-width: 768px) {
-  
-  /* 1. Change Grid to Single Column */
   .Driverslist {
-    grid-template-columns: 1fr; /* 1 card per row */
-    gap: 20px;                  /* Reduce space between cards */
-    margin: 15px;               /* Reduce outer margins */
-    padding: 0;
+    grid-template-columns: 1fr;
+    gap: 30px;
+    padding: 20px;
   }
 
-  /* 2. Fix the Header Title */
   .text {
-    font-size: 1.8rem;          /* Reduce from 40px to fit screen */
-    text-align: center;         /* Center the title */
-    display: block;
-    margin-bottom: 20px;
-  }
-
-  /* 3. Card Width Adjustments */
-  .driver-card {
-    max-width: 100%;            /* Let card fill the width of the phone */
-    margin: 0 auto;             /* Keep centered */
-  }
-
-  /* 4. Prevent Tags from being cut off */
-  .tags-row {
-    flex-wrap: wrap;            /* If there are many tags, move to next line */
-  }
-
-  /* 5. Slight Font Reductions */
-  .driver-name {
-    font-size: 1.25rem;
-  }
-  
-  .price-value {
-    font-size: 1.6rem;
+    font-size: 2rem;
+    text-align: center;
+    margin-left: 0;
   }
 }

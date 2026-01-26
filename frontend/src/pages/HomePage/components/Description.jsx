@@ -8,38 +8,38 @@ export default function Description() {
   const steps = [
     {
       id: 1,
-      title: t('home.steps.step1_title'),
-      desc: t('home.steps.step1_desc'),
+      title: "Look for a driver",
+      desc: " Choose the city of departure and arrival depending on your needs.  ",
       icon: ""
     },
     {
       id: 2,
-      title: t('home.steps.step2_title'),
-      desc: t('home.steps.step2_desc'),
+      title: "Compare and choose",
+      desc: "Look up  the drivers available, check the prices and the reviews.",
       icon: ""
     },
     {
       id: 3,
-      title: t('home.steps.step3_title'),
-      desc: t('home.steps.step3_desc'),
+      title: " Book your trip",
+      desc: "Choose the driver you want and fill the request form with the requested information.",
       icon: ""
     },
     {
       id: 4,
-      title: t('home.steps.step4_title'),
-      desc: t('home.steps.step4_desc'),
+      title: "Enjoy the service ",
+      desc: "The driver will arrive in the determined time to move your furniture ",
       icon: ""
     }
   ];
 
   return (
-    <div className="timeline-section">
-
+    <div className="timeline-section" >
+      
       {/* SECTION HEADER */}
       <div className="section-header">
-        <span className="subtitle">{t('home.steps.subtitle')}</span>
-        <h2 className="title">{t('home.steps.title')}</h2>
-        <p className="description">{t('home.steps.description')}</p>
+        <span className="subtitle">How It works💡</span>
+        <h2 className="title">Simple Steps </h2>
+        <p className="description"> A quick and easy booking procedure to get the best furniture moving service </p>
       </div>
 
       {/* TIMELINE CONTAINER */}

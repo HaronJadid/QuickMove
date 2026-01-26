@@ -103,10 +103,17 @@ exports.getBookingsByClient = async (req, res) => {
                 {
                   model: db.Livreur,
                   as: 'proprietaire',
-                  include: [{
-                    model: db.User,
-                    attributes: ['nom', 'prenom']
-                  }]
+                  include: [
+                    {
+                      model: db.User,
+                      attributes: ['nom', 'prenom']
+                    },
+                    {
+                      model: db.Evaluation,
+                      as: 'evaluationsRecues',
+                      attributes: ['rate']
+                    }
+                  ]
                 }
               ]
             }
@@ -122,10 +129,20 @@ exports.getBookingsByClient = async (req, res) => {
       let driverInfo = null;
       if (d.VehiculeUtilise && d.VehiculeUtilise.proprietaire && d.VehiculeUtilise.proprietaire.User) {
         const u = d.VehiculeUtilise.proprietaire.User;
+        const evals = d.VehiculeUtilise.proprietaire.evaluationsRecues || [];
+        const count = evals.length;
+        const sum = evals.reduce((acc, e) => acc + Number(e.rate), 0);
+        const avg = count > 0 ? (sum / count).toFixed(1) : "0.0";
+
+        console.log(`[DEBUG] Driver ${u.nom}: ${count} reviews, Sum: ${sum}, Avg: ${avg}`);
+
         driverInfo = {
+          id: d.VehiculeUtilise.proprietaire.id_livreur,
           nom: u.nom,
           prenom: u.prenom,
-          fullName: `${u.prenom} ${u.nom}`
+          fullName: `${u.prenom} ${u.nom}`,
+          rating: avg,
+          reviewsCount: count
         };
       }
 
@@ -361,4 +378,3 @@ exports.deleteRating = async (req, res) => {
     return res.status(500).json({ message: 'Erreur serveur.', details: error.message });
   }
 };
-

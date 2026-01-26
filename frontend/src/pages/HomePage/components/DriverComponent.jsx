@@ -1,28 +1,64 @@
 import React from 'react';
 import '../style/DriverComponent.css';
 import { useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router-dom';
+import {
+  Crown,
+  ShieldCheck,
+  Star,
+  MapPin,
+  Clock,
+  MessageSquare,
+  ArrowRight,
+  Truck
+} from 'lucide-react';
 
-
-export default function DriverComponent() {
+export default function DriverComponent({ driver }) {
   const { t } = useTranslation();
+  const navigate = useNavigate();
+
+  if (!driver) return null;
+
+  const { user, villes, vehicules } = driver;
+  const displayName = user ? `${user.prenom || ''} ${user.nom || ''} `.trim() : 'Unknown Driver';
+  // If we have locations, show distinct city names. If too many, truncate.
+  // Assuming 'villes' is an array of objects { id, nom }
+  const locationList = villes && villes.length > 0 ? villes.map(v => v.nom) : [];
+  const locationDisplay = locationList.length > 0
+    ? (locationList.length > 2 ? `${locationList[0]}, ${locationList[1]} +${locationList.length - 2} ` : locationList.join(' - '))
+    : 'Morocco';
+
+  const vehicleTags = vehicules ? vehicules.slice(0, 3) : [];
+  const imageUrl = user?.imgUrl || "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80";
+
+  // Use fetching rating or default to 'New' if 0/null
+  const ratingDisplay = driver.rating ? driver.rating : 'New';
+  const reviewCount = driver.reviewCount || (driver.Reviews ? driver.Reviews.length : 0);
+
+  const handleViewProfile = () => {
+    localStorage.setItem('driverID', driver.id);
+    navigate('/lookupdriverprofile', { state: { driverData: driver } });
+  };
 
   return (
     <div className="driver-card">
-
       {/* IMAGE SECTION */}
       <div className="card-image-wrapper">
         <img
-          src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
-          alt="Driver"
+          src={imageUrl}
+          alt={displayName}
           className="driver-image"
+          onError={(e) => { e.target.onerror = null; e.target.src = "https://via.placeholder.com/150?text=Driver"; }}
         />
 
         {/* Top Badges */}
         <div className="badge-featured">
-          <span className="crown-icon">👑</span> {t('home.drivers.badges.featured')}
+          <Crown size={14} fill="currentColor" />
+          <span>Excellent</span>
         </div>
         <div className="badge-verified">
-          <span>{t('home.drivers.badges.verified')}</span> <span className="check-icon">🛡️</span>
+          <span>Certified</span>
+          <ShieldCheck size={14} className="check-icon" />
         </div>
       </div>
 
@@ -31,60 +67,69 @@ export default function DriverComponent() {
 
         {/* Header: Name & Rating */}
         <div className="card-header-row">
-          <h2 className="driver-name">أحمد بنعلي</h2>
+          <h2 className="driver-name">{displayName}</h2>
           <div className="rating-box">
-            <span className="star-icon">⭐</span>
-            <span className="rating-score">3.9</span>
+            <Star size={16} fill="currentColor" strokeWidth={0} />
+            <span className="rating-score">{ratingDisplay}</span>
           </div>
         </div>
 
         {/* Location */}
         <div className="location-row">
-          <span className="icon-grey">📍</span>
-          <span className="location-text">الدار البيضاء - الرباط</span>
+          <MapPin size={16} className="icon-grey" />
+          <span className="location-text">{locationDisplay}</span>
         </div>
 
         {/* Tags (Vehicle Types) */}
         <div className="tags-row">
-          <span className="tag">كاميو</span>
-          <span className="tag">هوندا</span>
+          {vehicleTags.map((v, index) => (
+            <span key={index} className="tag">
+              <Truck size={12} style={{ marginRight: '6px' }} />
+              {v.nom}
+            </span>
+          ))}
+          {vehicleTags.length === 0 && <span className="tag">No Vehicle</span>}
         </div>
 
-        <hr className="divider" />
+        {/*<hr className="divider" />*/}
 
-        {/* Stats Row (Price & Trips) */}
+        {/* Stats Row (Price & Trips) 
         <div className="stats-row">
           <div className="price-section">
-            <span className="label-small">{t('home.drivers.card.starts_from')}</span>
+            <span className="label-small">Starting from</span>
             <div className="price-value">
-              350 <span className="currency">{t('home.drivers.card.currency')}</span>
+              -- <span className="currency">MAD</span>
             </div>
           </div>
           <div className="trips-section">
-            <span className="label-small">{t('home.drivers.card.trips')}</span>
-            <div className="trips-value">234</div>
+            
+            <span className="label-small">Number of Trips</span>
+            <div className="trips-value">--</div>
           </div>
         </div>
+        */}
+        
 
         {/* Info List (Availability & Reviews) */}
         <div className="info-list">
           <div className="info-item">
-            <span className="icon-clock">🕒</span>
-            <span>{t('home.drivers.card.available_today')}</span>
+            <Clock size={16} className="icon-clock" />
+            <span>Available: Check Profile</span>
           </div>
           <div className="info-item">
-            <span className="icon-chat">💬</span>
-            <span>156 {t('home.drivers.card.reviews')}</span>
+            <MessageSquare size={16} className="icon-chat" />
+            <span>{reviewCount} Reviews</span>
           </div>
         </div>
 
         {/* Action Button */}
-        <button className="view-profile-btn">
-          {t('home.drivers.card.view_profile')}
-          <span className="arrow-icon">←</span>
+        <button className="view-profile-btn" onClick={handleViewProfile}>
+          View Profile
+          <ArrowRight size={18} className="arrow-icon" />
         </button>
 
       </div>
+
     </div>
   );
 }

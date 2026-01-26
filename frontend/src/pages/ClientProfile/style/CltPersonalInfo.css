@@ -4,26 +4,34 @@
 .profile-page-wrapper {
   display: flex;
   justify-content: center;
-  padding-top: 50px;
-  padding-bottom: 50px;
-  background-color: #f9f9f9;
   font-family: 'Cairo', sans-serif;
+  width: 100%;
+  max-width: 800px;
+  margin: 0 auto;
+  animation: fadeIn 0.4s ease-out;
 }
 
-/* --- THE CARD (60% WIDTH) --- */
+/* --- THE CARD --- */
 .profile-card {
-  width: 60%; /* <--- HERE IS THE 60% LIMIT */
-  min-width: 350px; /* Prevents it from being too squished on mobile */
-  max-width: 900px;
-  
+  width: 100%;
   background: white;
-  border-radius: 12px;
-  box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+  border-radius: 20px;
+  box-shadow:
+    0 4px 6px -1px rgba(0, 0, 0, 0.05),
+    0 2px 4px -1px rgba(0, 0, 0, 0.03);
+  border: 1px solid rgba(0, 0, 0, 0.05);
   overflow: hidden;
-  
-  /* Red Top Border */
-  border-top: 10px solid #e04f5f; 
-  padding: 40px;
+  padding: 50px;
+  box-sizing: border-box;
+  position: relative;
+  transition: transform 0.3s ease;
+}
+
+.profile-card:hover {
+  transform: translateY(-5px);
+  box-shadow:
+    0 20px 25px -5px rgba(99, 102, 241, 0.1),
+    0 10px 10px -5px rgba(0, 0, 0, 0.04);
 }
 
 /* --- HEADER --- */
@@ -32,106 +40,106 @@
   flex-direction: column;
   align-items: center;
   margin-bottom: 40px;
+  position: relative;
 }
 
 .profile-avatar {
-  width: 100px;
-  height: 100px;
+  width: 120px;
+  height: 120px;
   border-radius: 50%;
   object-fit: cover;
   border: 4px solid white;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-  margin-bottom: 15px;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+  margin-bottom: 20px;
 }
 
 .role-badge {
-  background-color: #dcdcdc; /* Light Grey Badge */
-  color: #333;
+  background: linear-gradient(135deg, var(--primary-color, #6366f1) 0%, #818cf8 100%);
+  color: white;
   font-weight: 700;
   padding: 8px 30px;
   border-radius: 20px;
-  font-size: 1rem;
+  font-size: 0.9rem;
+  box-shadow: 0 4px 6px -1px rgba(99, 102, 241, 0.3);
 }
 
 /* --- FORM --- */
 .input-group {
   margin-bottom: 25px;
-  text-align: right; /* Ensure Right Alignment for Arabic */
+  text-align: left;
 }
 
 .input-group label {
   display: block;
   font-weight: 700;
-  color: #000;
-  margin-bottom: 8px;
-  font-size: 1rem;
+  color: #64748b;
+  margin-bottom: 10px;
+  font-size: 0.95rem;
+  letter-spacing: 0.5px;
 }
 
 .read-only-input {
   width: 100%;
-  background-color: #e0e0e0; /* Gray input background */
-  padding: 15px;
-  border-radius: 20px; /* Pill Shape */
+  background-color: #f8fafc;
+  padding: 16px;
+  border-radius: 12px;
+  border: 1px solid rgba(0, 0, 0, 0.05);
   font-weight: 600;
-  color: #333;
+  color: #334155;
   font-size: 1rem;
   box-sizing: border-box;
+  transition: all 0.2s;
+}
+
+.read-only-input:focus {
+  background: white;
+  border-color: var(--primary-color, #6366f1);
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
 }
 
 /* --- BUTTON --- */
 .profile-footer {
   display: flex;
-  justify-content: flex-end; /* Move button to left (in RTL context end is left) */
-  margin-top: 20px;
+  justify-content: flex-end;
+  margin-top: 30px;
+  padding-top: 20px;
+  border-top: 1px solid #f1f5f9;
 }
 
 .edit-btn {
-  background-color: #dc3545; /* Red */
+  background: linear-gradient(135deg, var(--secondary-color, #ec4899) 0%, #be185d 100%);
   color: white;
   border: none;
-  padding: 12px 30px;
-  border-radius: 8px;
+  padding: 14px 35px;
+  border-radius: 12px;
   font-weight: 700;
   font-size: 1rem;
   cursor: pointer;
   font-family: 'Cairo', sans-serif;
-  transition: background 0.2s;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 6px -1px rgba(236, 72, 153, 0.3);
 }
 
 .edit-btn:hover {
-  background-color: #bb2d3b;
+  transform: translateY(-2px);
+  box-shadow: 0 10px 15px -3px rgba(236, 72, 153, 0.4);
 }
 
 /* --- RESPONSIVE --- */
 @media (max-width: 768px) {
   .profile-card {
-    width: 90%; /* On small phones, let it be 90% */
+    padding: 30px 20px;
   }
 }
 
-.logout{
-   background-color: #a1303b; /* Red */
-  color: white;
-  margin: 30px;
-  margin-right: 100px;
-  border: none;
-  padding: 12px 30px;
-  border-radius: 8px;
-  font-weight: 700;
-  font-size: 1rem;
-  cursor: pointer;
-  font-family: 'Cairo', sans-serif;
-  transition: background 0.2s;
-
+/* --- TABS (Legacy, maybe moved to dashboard) --- */
+.tabs-wrapper {
+  display: none;
+  /* Hidden since we use sidebar now */
 }
-.logout:hover{
-  background-color: #d13c4b;
 
-}
-.logout-ctn{
-   flex: 1;
-  display: flex;
-  justify-content: flex-end;
-  align-items: center;
-
+/* Logout (Legacy) */
+.logout-ctn {
+  display: none;
+  /* Hidden since we use sidebar now */
 }
