@@ -1,3 +1,4 @@
+import { toast } from 'react-toastify';
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useTranslation } from 'react-i18next';
@@ -71,7 +72,7 @@ const MyRatings = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         if ((!selectedDriverId && !editingRatingId) || currentRate === 0) {
-            alert("Please select a driver and a star rating.");
+            toast.error("Please select a driver and a star rating.");
             return;
         }
 
@@ -83,7 +84,7 @@ const MyRatings = () => {
                     rate: currentRate,
                     comment: currentComment
                 }, { headers: { Authorization: `Bearer ${user.accessToken}` } });
-                alert("Rating updated successfully!");
+                toast.success("Rating updated successfully!");
                 setEditingRatingId(null);
             } else {
                 // CREATE New
@@ -92,7 +93,7 @@ const MyRatings = () => {
                     rate: currentRate,
                     comment: currentComment
                 }, { headers: { Authorization: `Bearer ${user.accessToken}` } });
-                alert("Rating submitted successfully!");
+                toast.success("Rating submitted successfully!");
             }
 
             // Reset and Reload
@@ -103,7 +104,7 @@ const MyRatings = () => {
 
         } catch (err) {
             console.error("Error submitting rating:", err);
-            alert(err.response?.data?.message || "Failed to submit rating.");
+            toast.error(err.response?.data?.message || "Failed to submit rating.");
         }
     };
 
@@ -114,10 +115,11 @@ const MyRatings = () => {
             await axios.delete(`${API_URL}api/client/${clientId}/ratings/${ratingId}`, {
                 headers: { Authorization: `Bearer ${user.accessToken}` }
             });
+            toast.success("Rating deleted successfully");
             fetchData();
         } catch (err) {
             console.error("Failed to delete", err);
-            alert("Failed to delete rating.");
+            toast.error("Failed to delete rating.");
         }
     };
 

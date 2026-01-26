@@ -1,19 +1,19 @@
 import { useState, useEffect, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import SearchFormContainer from "../../pages/HomePage/components/SearchFormContainer";
-import Contactus from "./headerComponents/Contactus";
+
 import { useAuth } from '../../features/Authentication/components/Authprovider';
 import { useOnClickOutside } from "../../useOnClickOutside";
 import './header.css';
 import { Search, Info, Mail, LogIn, User, Settings, LogOut, LayoutDashboard, ChevronDown } from 'lucide-react';
 
 export default function Header({ scrollToSearchForm }) {
-    const [isContactUsOpen, setIsContactUsOpen] = useState(false);
+
     const [isProfileDropdownOpen, setIsProfileDropdownOpen] = useState(false);
 
     const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000/';
 
-    const contactRef = useRef();
+
     const profileRef = useRef();
 
     const [role, setRole] = useState(null);
@@ -24,7 +24,7 @@ export default function Header({ scrollToSearchForm }) {
     const { logout } = useAuth();
     const navigate = useNavigate();
 
-    useOnClickOutside(contactRef, () => setIsContactUsOpen(false));
+
     useOnClickOutside(profileRef, () => setIsProfileDropdownOpen(false));
 
     // Get user info from localStorage
@@ -92,8 +92,8 @@ export default function Header({ scrollToSearchForm }) {
         <div className="header">
             <div className="header-left">
                 <Link to='/' className="logo-container">
-                    <img src="/logo.jpg" alt="Logo" className="logo-img" />
-                    <span className="logo-text">MoveMorocco</span>
+                    <img src="/logo_new.png" alt="Logo" className="logo-img" />
+                    <span className="logo-text">QuickMove</span>
                 </Link>
             </div>
 
@@ -107,20 +107,10 @@ export default function Header({ scrollToSearchForm }) {
                         <Info size={18} />
                         <span>About us</span>
                     </Link>
-                    <div className="contactuselement" ref={contactRef}>
-                        <div
-                            className="nav-item"
-                            onClick={() => setIsContactUsOpen(prev => !prev)}
-                        >
-                            <Mail size={18} />
-                            <span>Contact us</span>
-                        </div>
-                        {isContactUsOpen && (
-                            <div className='contactusComponent'>
-                                <Contactus />
-                            </div>
-                        )}
-                    </div>
+                    <Link to='/contactus' className="nav-item">
+                        <Mail size={18} />
+                        <span>Contact us</span>
+                    </Link>
                 </nav>
             )}
 

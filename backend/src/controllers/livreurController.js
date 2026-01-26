@@ -56,6 +56,16 @@ exports.findLivreursByCity = async (req, res) => {
                     model: db.Vehicule,
                     as: 'vehicules',
                     attributes: ['id_vehicule', 'nom', 'imgUrl', 'capacite']
+                },
+                {
+                    model: db.Evaluation,
+                    as: 'evaluationsRecues',
+                    required: false,
+                    include: [{
+                        model: db.Client,
+                        as: 'evaluateur',
+                        include: [{ model: db.User, attributes: ['nom', 'prenom'] }]
+                    }]
                 }
             ],
             // Attributs exposés du Livreur
@@ -88,6 +98,23 @@ exports.findLivreursByCity = async (req, res) => {
                 nom: v.nom || null
             }));
 
+            // Calculate Rating
+            const evals = l.evaluationsRecues || [];
+            let averageRating = 0;
+            if (evals.length > 0) {
+                const sum = evals.reduce((acc, curr) => acc + (curr.rate || 0), 0);
+                averageRating = (sum / evals.length).toFixed(1);
+            }
+
+            // Format Reviews for frontend
+            const reviewsFormatted = evals.map(e => ({
+                id: e.id,
+                rating: e.rate,
+                comment: e.comment,
+                date: e.date,
+                clientName: e.evaluateur && e.evaluateur.User ? `${e.evaluateur.User.prenom} ${e.evaluateur.User.nom}` : 'Client'
+            }));
+
             return {
                 id: l.id_livreur,
                 cin: l.cin,
@@ -100,7 +127,10 @@ exports.findLivreursByCity = async (req, res) => {
                     imgUrl: user.imgUrl || null
                 } : null,
                 vehicules,
-                villes
+                villes,
+                rating: averageRating > 0 ? averageRating : null,
+                reviewCount: evals.length,
+                Reviews: reviewsFormatted
             };
         });
 
@@ -141,6 +171,16 @@ exports.getAllLivreurs = async (req, res) => {
                     as: 'zonesService',
                     through: { attributes: [] },
                     attributes: ['id_ville', 'nom']
+                },
+                {
+                    model: db.Evaluation,
+                    as: 'evaluationsRecues', // Correct alias from Livreur model
+                    required: false,
+                    include: [{
+                        model: db.Client, // To show reviewer name if needed
+                        as: 'evaluateur',
+                        include: [{ model: db.User, attributes: ['nom', 'prenom'] }]
+                    }]
                 }
             ],
             attributes: ['id_livreur', 'cin', 'about']
@@ -160,6 +200,23 @@ exports.getAllLivreurs = async (req, res) => {
                 nom: v.nom || null
             }));
 
+            // Calculate Rating
+            const evals = l.evaluationsRecues || []; // Use correct alias
+            let averageRating = 0;
+            if (evals.length > 0) {
+                const sum = evals.reduce((acc, curr) => acc + (curr.rate || 0), 0);
+                averageRating = (sum / evals.length).toFixed(1);
+            }
+
+            // Format Reviews for frontend
+            const reviewsFormatted = evals.map(e => ({
+                id: e.id,
+                rating: e.rate,
+                comment: e.comment,
+                date: e.date, // Ensure format matches frontend expectations
+                clientName: e.evaluateur && e.evaluateur.User ? `${e.evaluateur.User.prenom} ${e.evaluateur.User.nom}` : 'Client'
+            }));
+
             return {
                 id: l.id_livreur,
                 cin: l.cin,
@@ -172,7 +229,10 @@ exports.getAllLivreurs = async (req, res) => {
                     imgUrl: user.imgUrl || null
                 } : null,
                 vehicules,
-                villes
+                villes,
+                rating: averageRating > 0 ? averageRating : null,
+                reviewCount: evals.length,
+                Reviews: reviewsFormatted // Pass reviews to frontend
             };
         });
 

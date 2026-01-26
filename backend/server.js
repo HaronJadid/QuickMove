@@ -1,9 +1,9 @@
 // server.js (Version adaptée à Sequelize et Neon)
 
-// Use the dotenv path from origin/main as it seems more specific, or fallback to root
+// Load environment variables
 require('dotenv').config({ path: './database/.env' });
-// If that file doesn't exist, it might fall back to standard .env or process env. 
-// Given the previous setup, let's keep it simple.
+require('dotenv').config(); // Load root .env
+
 
 const express = require('express');
 const cors = require('cors');

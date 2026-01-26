@@ -1,12 +1,14 @@
 import '../style/csdp.css'
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import { toast } from 'react-toastify';
 import { Mail, Phone, MapPin, CheckCircle, Aperture, Star, Truck, Calendar, X, ShieldCheck } from 'lucide-react';
 
 
 const DriverProfileClientSide = () => {
   const location = useLocation();
+  const navigate = useNavigate();
 
   let [villes, setVilles] = useState(null)
   let [driverVilles, setDriverVilles] = useState(null)
@@ -69,13 +71,13 @@ const DriverProfileClientSide = () => {
 
       // 1. Check if Departure is in the past
       if (dep < now) {
-        alert("Departure date cannot be in the past!");
+        toast.error("Departure date cannot be in the past!");
         return;
       }
 
       // 2. Check if Arrival is before Departure
       if (arr <= dep) {
-        alert("The expected date of arrival should be later than the departure date!");
+        toast.error("The expected date of arrival should be later than the departure date!");
         return;
       }
 
@@ -94,12 +96,12 @@ const DriverProfileClientSide = () => {
 
 
       setShowModal(false);
-      alert("Request sent to driver!");
+      toast.success("Request sent to driver!");
 
 
 
     } catch (err) {
-      alert('Error occured while making request!!')
+      toast.error('Error occured while making request!!')
       console.error('error:', err)
     }
 
@@ -145,9 +147,9 @@ const DriverProfileClientSide = () => {
                 </div>
                 <div className="header-substats">
                   <Star size={18} className="star-icon" fill="#f59e0b" />
-                  <strong>{driver.user.rating || '5.0'}</strong>
+                  <strong>{driver.rating || 'New'}</strong>
                   <span className="muted-text">
-                    ({driver.Reviews?.length || 0} reviews) •
+                    ({driver.reviewCount || driver.Reviews?.length || 0} reviews) •
                   </span>
                 </div>
               </div>
@@ -209,7 +211,7 @@ const DriverProfileClientSide = () => {
                           />
                         ))}
                       </div>
-                      <span className="review-date">{rev.date || 'Jan 1, 2026'}</span>
+                      <span className="review-date">{rev.date ? new Date(rev.date).toISOString().split('T')[0] : 'Jan 1, 2026'}</span>
                     </div>
                     <p className="review-comment">"{rev.comment || rev.text}"</p>
                   </div>
@@ -226,7 +228,14 @@ const DriverProfileClientSide = () => {
           <div className="detail-card sidebar-sticky">
             <h4 className="sidebar-heading">Book This Driver</h4>
 
-            <button className="book-now-large-btn" onClick={() => setShowModal(true)}>
+            <button className="book-now-large-btn" onClick={() => {
+              if (id) {
+                setShowModal(true);
+              } else {
+                toast.info('You must be logged in to book a driver. Please sign in to continue.');
+                navigate('/login');
+              }
+            }}>
               <Calendar className="calendar-icon" size={20} /> Book now
             </button>
 
@@ -248,7 +257,7 @@ const DriverProfileClientSide = () => {
                   <span className="stat-label">Trips</span>
                 </div>
                 <div className="stat-square">
-                  <span className="stat-num">{driver.rating || '5.0'}</span>
+                  <span className="stat-num">{driver.rating || 'New'}</span>
                   <span className="stat-label">Rating</span>
                 </div>
               </div>

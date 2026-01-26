@@ -1,3 +1,4 @@
+import { toast } from 'react-toastify';
 import { useEffect, useState } from "react";
 import '../style/auth.css';
 import { Link } from "react-router-dom";
@@ -23,8 +24,6 @@ export default function Signup() {
   let [file, setFile] = useState(null);
 
 
-  let [error, setError] = useState(false)
-  const [errmsg, setErrmsg] = useState('Error creating account !')
   const [isLoading, setIsLoading] = useState(false); // New state
 
   const emailInput = (event) => {
@@ -63,11 +62,9 @@ export default function Signup() {
 
   const trysignup = async (e) => {
     e.preventDefault();
-    setError(false)
     try {
       if (!email.trim() || !pwd.trim() || !prenom.trim() || !nom.trim() || !tel.trim()) {
-        setError(true)
-        setErrmsg(' You have to fill all fields !! ')
+        toast.error('You have to fill all fields !!')
         return
       }
 
@@ -97,6 +94,7 @@ export default function Signup() {
         const userdata = res.data
 
         login(userdata)
+        toast.success('Account created successfully!');
         isdriver ?
           navigate('/driverprofile') :
           navigate('/clientprofile')
@@ -106,9 +104,8 @@ export default function Signup() {
 
 
     } catch (err) {
-      setError(true)
       const specificMessage = err.response?.data?.message || err.response?.data?.error || 'Error creating account';
-      setErrmsg(specificMessage)
+      toast.error(specificMessage)
       console.log('Error creating account !!', err)
       setIsLoading(false); // Stop loading on error
     }
@@ -167,7 +164,6 @@ export default function Signup() {
               {isLoading ? 'Creating Account...' : 'Create account'}
             </button>
           </form>
-          {error && (<div className='errmessage'>{errmsg}</div>)}
 
           {(isdriver) ? (<div className="auth-footer">
             <span>Already have an account ?  </span>

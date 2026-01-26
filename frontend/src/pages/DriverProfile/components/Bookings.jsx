@@ -1,3 +1,4 @@
+import { toast } from 'react-toastify';
 import { useEffect, useState, useMemo } from "react";
 import axios from "axios";
 import BookingRequestCard from "./BookingRequestCard";
@@ -55,8 +56,17 @@ export default function Bookings() {
 
       refetch(); // On rafraîchit les données depuis le serveur
 
+      if (status === "CONFIRMED") {
+        toast.success("Booking accepted successfully!");
+      } else if (status === "COMPLETED") {
+        toast.success("Trip marked as completed!");
+      } else {
+        toast.success(`Status updated to ${status}`);
+      }
+
     } catch (err) {
-      alert("Erreur lors de la mise à jour");
+      toast.error("Error updating status");
+      console.error(err);
     }
 
 
@@ -73,10 +83,11 @@ export default function Bookings() {
 
       // Refetch requests to update the list (item will disappear from 'requests' tab)
       refetch();
+      toast.success("Booking rejected");
 
     } catch (err) {
       console.error(err);
-      alert("Erreur lors du rejet de la demande");
+      toast.error("Error rejecting booking");
     }
   };
 

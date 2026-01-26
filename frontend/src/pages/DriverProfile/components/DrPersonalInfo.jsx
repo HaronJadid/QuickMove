@@ -1,10 +1,11 @@
+import { toast } from 'react-toastify';
 import React, { useState, useEffect } from 'react';
 import '../style/DrPersonalInfo.css';
 import axios from 'axios';
 
 export default function DrPersonalInfo() {
     const API_URL = import.meta.env.VITE_API_URL;
-    
+
     // Store complete user object
     const [user, setUser] = useState(null);
     const [edit, setEdit] = useState(false);
@@ -14,20 +15,20 @@ export default function DrPersonalInfo() {
     // Form state for editing
     const [formData, setFormData] = useState({
         prenom: '',
-        nom:  '',
-        email:  '',
-        numero:  '',
+        nom: '',
+        email: '',
+        numero: '',
         role: "Driver Account ",
         about: '',
         cin: ''
-        });
+    });
 
     // Get user ID from localStorage
     const userRetrieved = localStorage.getItem('user');
     const userParsed = userRetrieved ? JSON.parse(userRetrieved) : null;
     const id = userParsed?.userId;
 
-    let fetchedData={}
+    let fetchedData = {}
 
     // Fetch user data
     useEffect(() => {
@@ -41,31 +42,31 @@ export default function DrPersonalInfo() {
             try {
                 setLoading(true);
                 const res = await axios.get(`${API_URL}api/user/${id}`);
-                
+
                 console.log('API Response:', res.data);
-                
+
                 // Fix: Access data correctly based on your API response structure
                 const userData = res.data.userInfo || res.data;
-                
-                 fetchedData = {
+
+                fetchedData = {
                     prenom: userData.prenom || '',
                     nom: userData.nom || '',
                     email: userData.email || '',
-                    numero: userData.numero|| '',
+                    numero: userData.numero || '',
                     role: "Driver Account ",
                     imgUrl: userData.imgUrl || '../../../../public/alt_img.webp',
-                    about:userData.livreurProfile.about|| '',
-                    cin:userData.livreurProfile.cin || '',
+                    about: userData.livreurProfile.about || '',
+                    cin: userData.livreurProfile.cin || '',
                 };
-                
+
                 setUser(fetchedData);
                 setFormData({
                     prenom: fetchedData.prenom,
                     nom: fetchedData.nom,
                     email: fetchedData.email,
                     numero: fetchedData.numero,
-                    about:fetchedData.about,
-                    cin:fetchedData.cin,
+                    about: fetchedData.about,
+                    cin: fetchedData.cin,
                 });
                 setError(null);
             } catch (err) {
@@ -75,7 +76,7 @@ export default function DrPersonalInfo() {
                 setLoading(false);
             }
         };
-        
+
         getinfo();
     }, [id, API_URL]);
 
@@ -86,24 +87,25 @@ export default function DrPersonalInfo() {
                 ...user,
                 ...formData
             };
-            
+
             // Send update to API
-             await axios.put(`${API_URL}api/profile/driver/${id}`, formData);
-             
+            await axios.put(`${API_URL}api/profile/driver/${id}`, formData);
+
             // Update local state
             setUser(updatedUser);
             setEdit(false);
-            
+
             // Update localStorage if needed
             const updatedUserStorage = {
                 ...userParsed,
                 ...formData
             };
             localStorage.setItem('user', JSON.stringify(updatedUserStorage));
-            
+            toast.success("Profile updated successfully!");
+
         } catch (err) {
             console.error('Error saving:', err);
-            alert('Failed to save changes');
+            toast.error('Failed to save changes');
         }
     };
 
@@ -122,24 +124,24 @@ export default function DrPersonalInfo() {
             nom: user.nom,
             email: user.email,
             numero: user.numero,
-            about:user.about
+            about: user.about
         });
         setEdit(false);
     };
 
     // Loading state
     if (loading) {
-        return <div style={{textAlign: 'center', marginTop: '50px'}}>... جاري التحميل</div>;
+        return <div style={{ textAlign: 'center', marginTop: '50px' }}>... جاري التحميل</div>;
     }
 
     // Error state
     if (error) {
-        return <div style={{textAlign: 'center', marginTop: '50px', color: 'red'}}>{error}</div>;
+        return <div style={{ textAlign: 'center', marginTop: '50px', color: 'red' }}>{error}</div>;
     }
 
     // No user data
     if (!user) {
-        return <div style={{textAlign: 'center', marginTop: '50px'}}>No user data found</div>;
+        return <div style={{ textAlign: 'center', marginTop: '50px' }}>No user data found</div>;
     }
 
     return (
@@ -226,17 +228,17 @@ export default function DrPersonalInfo() {
                             />
                         )}
                     </div>
-                     <div className="input-group">
+                    <div className="input-group">
                         <label>  about</label>
                         {!edit ? (
-                            <div style={{minHeight:'14vh'}} className="read-only-input" dir="ltr">{user.about || 'No description provided.'}</div>
+                            <div style={{ minHeight: '14vh' }} className="read-only-input" dir="ltr">{user.about || 'No description provided.'}</div>
                         ) : (
                             <textarea
                                 name="about"
                                 className="form-input"
                                 value={formData.about}
                                 onChange={handleInputChange}
-                                rows={4} 
+                                rows={4}
                                 placeholder=" Enter about..."
                             />
                         )}
@@ -246,7 +248,7 @@ export default function DrPersonalInfo() {
                 <div className="profile-footer">
                     {!edit ? (
                         <button className="edit-btn" onClick={() => setEdit(true)}>
-                             Edit profile
+                            Edit profile
                         </button>
                     ) : (
                         <div style={{ display: 'flex', gap: '10px' }}>

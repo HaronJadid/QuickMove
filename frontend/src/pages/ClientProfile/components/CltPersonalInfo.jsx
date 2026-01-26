@@ -1,3 +1,4 @@
+import { toast } from 'react-toastify';
 import React, { useState, useEffect } from 'react';
 import '../style/CltPersonalInfo.css';
 import axios from 'axios';
@@ -82,11 +83,11 @@ export default function CltPersonalInfo() {
             // Sync the display user state with the form data
             setUser(prev => ({ ...prev, ...formData }));
             setEdit(false);
-            alert('Profile updated successfully! ✅');
+            toast.success('Profile updated successfully! ✅');
 
         } catch (err) {
             console.error('Error saving changes:', err);
-            alert('Failed to save changes. Please check your connection.');
+            toast.error('Failed to save changes. Please check your connection.');
         }
     };
 

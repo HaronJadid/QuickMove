@@ -1,3 +1,4 @@
+import { toast } from 'react-toastify';
 import React, { useState } from 'react';
 import '../style/auth.css';
 import { Link, useNavigate } from 'react-router-dom';
@@ -14,9 +15,6 @@ export default function Login() {
   let [email, setEmail] = useState('')
   let [pwd, setPwd] = useState('')
 
-  let [error, setError] = useState(false)
-  let [errmsg, setErrmsg] = useState('')
-
   const emailInput = (event) => {
     setEmail(event.target.value)
   }
@@ -30,11 +28,10 @@ export default function Login() {
     try {
 
       if (!email.trim() || !pwd.trim()) {
-        setError(true)
-        setErrmsg('Both fields must be filled!')
+        toast.error('Both fields must be filled!')
         return
       }
-      setError(false)
+
       const res = await axios.post(`${API_URL}api/auth/login`, { email, password: pwd })
 
       if (res.status == 200) {
@@ -42,28 +39,22 @@ export default function Login() {
         const userdata = res.data
 
         login(userdata)
+        toast.success(`Welcome back ${userdata.prenom || ''}!`);
         if (userdata.role == 'client') {
           navigate('/clientprofile')
         } else {
           navigate('/driverprofile')
         }
 
-
-
         return
       }
 
-
-
     } catch (err) {
-      setError(true)
       // Extract specific error message from backend if available
       const specificMessage = err.response?.data?.message || err.response?.data?.error || 'Error logging in';
-      setErrmsg(specificMessage);
+      toast.error(specificMessage);
       console.log(' !! Error logging in ', err);
     }
-
-
 
   }
 
@@ -96,7 +87,6 @@ export default function Login() {
 
             <button className="auth-btn" >Login</button>
           </form>
-          {error && (<div className='errmessage'>{errmsg}</div>)}
 
           <div className="auth-footer">
             <span>Don't have an account? </span>

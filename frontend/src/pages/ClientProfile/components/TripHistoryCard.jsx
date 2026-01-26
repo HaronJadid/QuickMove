@@ -41,8 +41,8 @@ const TripHistoryCard = ({ booking }) => {
             <h3 className="driver-name">{driverName}</h3>
             <div className="rating-row">
               <Star size={14} fill="#f1c40f" color="#f1c40f" />
-              <span>4.6</span>
-              <span className="count">(0 reviews)</span>
+              <span>{(!booking?.driver?.rating || isNaN(booking?.driver?.rating)) ? '0.0' : booking?.driver?.rating}</span>
+              <span className="count">({booking?.driver?.reviewsCount || 0} reviews)</span>
               <span className="v-type">| {vehicle}</span>
             </div>
           </div>
