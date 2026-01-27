@@ -1,8 +1,10 @@
 import React from 'react';
 import '../style/description.css';
+import { useTranslation } from 'react-i18next';
 
 export default function Description() {
-  
+  const { t } = useTranslation();
+
   const steps = [
     {
       id: 1,
@@ -46,8 +48,8 @@ export default function Description() {
         <div className="center-line"></div>
 
         {steps.map((step, index) => (
-          <div 
-            key={step.id} 
+          <div
+            key={step.id}
             className={`timeline-item ${index % 2 === 0 ? 'left-side' : 'right-side'}`}
           >
             {/* The Red Number Circle */}
@@ -55,13 +57,13 @@ export default function Description() {
 
             {/* The Content Card */}
             <div className="timeline-content">
-{/*               <div className="card-icon">{step.icon}</div>
+              {/*               <div className="card-icon">{step.icon}</div>
  */}              <div className="text-content">
                 <h3>{step.title}</h3>
                 <p>{step.desc}</p>
               </div>
             </div>
-            
+
             {/* Empty div for spacing on the other side */}
             <div className="timeline-space"></div>
           </div>

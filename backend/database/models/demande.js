@@ -51,11 +51,11 @@ module.exports = (sequelize) => {
       allowNull: false,
     },
     status: {
-      type: DataTypes.ENUM('PENDING', 'CONFIRMED', 'COMPLETED'),
+      type: DataTypes.ENUM('PENDING', 'CONFIRMED', 'COMPLETED', 'REJECTED'),
       allowNull: false,
       defaultValue: 'PENDING',
       validate: {
-        isIn: [['PENDING', 'CONFIRMED', 'COMPLETED']]
+        isIn: [['PENDING', 'CONFIRMED', 'COMPLETED', 'REJECTED']]
       }
     },
     // Détails de l'heure et date exacte de la commande/livraison

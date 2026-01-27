@@ -39,8 +39,8 @@ exports.registerUser = async (req, res) => {
 
         // 6️⃣ Build image URL (if file exists)
         const imgUrl = file
-        ? `/uploads/avatars/${file.filename}`
-        : null;
+            ? `/uploads/avatars/${file.filename}`
+            : null;
 
 
         try {
@@ -65,11 +65,11 @@ exports.registerUser = async (req, res) => {
             return res.status(201).json({
                 message: "Inscription réussie.",
                 userId: newUser.id,
-                nom:newUser.nom,
-                prenom:newUser.prenom,
+                nom: newUser.nom,
+                prenom: newUser.prenom,
                 email: newUser.email,
                 role: newUser.role,
-                imgUrl:newUser.imgUrl
+                imgUrl: newUser.imgUrl
             });
 
         } catch (error) {
@@ -140,9 +140,9 @@ exports.login = async (req, res) => {
             message: "Connexion réussie.",
             userId: user.id,
             role: user.role,
-            imgUrl:user.imgUrl,
-            nom:user.nom,
-            prenom:user.prenom,
+            imgUrl: user.imgUrl,
+            nom: user.nom,
+            prenom: user.prenom,
             clientId: user.role === 'client' ? roleId : null,
             driverId: (user.role === 'driver' || user.role === 'livreur') ? roleId : null,
             accessToken,
@@ -155,30 +155,33 @@ exports.login = async (req, res) => {
     }
 };
 
-// Configuration Nodemailer (Pour le développement, on utilise souvent un service factice comme Ethereal ou simplement le logging console si pas de SMTP)
+// Configuration Nodemailer
 const nodemailer = require('nodemailer');
+const crypto = require('crypto');
 
-// Setup transporter (A REMPLACER par vos vrais identifiants SMTP en production)
+// Setup transporter using Gmail
+// We use a fallback 'dummy' password to prevent startup crashes if env var is missing
+// The actual sending will be skipped if the var is missing.
 const transporter = nodemailer.createTransport({
-    host: process.env.SMTP_HOST || 'smtp.ethereal.email',
-    port: process.env.SMTP_PORT || 587,
-    secure: false,
+    service: 'gmail',
     auth: {
-        user: process.env.SMTP_USER || 'ethereal_user',
-        pass: process.env.SMTP_PASS || 'ethereal_pass'
+        user: 'mohssinengu@gmail.com',
+        pass: process.env.GMAIL_APP_PASSWORD || 'dummy_password_for_init'
     }
 });
 
 /**
- * Forgot Password: Vérifie l'email et envoie un lien de réinitialisation
+ * Forgot Password: Generates a 6-digit code and sends it via email
  * POST /api/auth/forgot-password
  */
 exports.forgotPassword = async (req, res) => {
-    const { email } = req.body;
+    let { email } = req.body;
 
     if (!email) {
         return res.status(400).json({ message: "Veuillez fournir votre email." });
     }
+
+    email = email.toLowerCase();
 
     try {
         const user = await db.User.findOne({ where: { email } });
@@ -186,79 +189,119 @@ exports.forgotPassword = async (req, res) => {
             return res.status(404).json({ message: "Aucun utilisateur trouvé avec cet email." });
         }
 
-        // Générer un token de réinitialisation (valide 15 minutes)
-        // On utilise un secret différent ou concaténé avec le hash du pwd pour plus de sécurité (optionnel mais recommandé)
-        // Ici simple JWT pour la démo
-        const resetToken = jwt.sign(
-            { id: user.id },
-            process.env.JWT_RESET_SECRET || 'secret_reset_key',
-            { expiresIn: '15m' }
-        );
+        // Generate 6-digit code
+        const resetCode = Math.floor(100000 + Math.random() * 900000).toString();
+        const resetCodeExpires = new Date(Date.now() + 15 * 60000); // 15 mins
 
-        // Lien de réinitialisation (Frontend URL en réalité, mais pour l'API on renvoie le lien)
-        // Supposons que le frontend tourne sur localhost:3000 ou que c'est une route API directe
-        const resetLink = `http://localhost:3000/reset-password?token=${resetToken}`;
+        user.resetCode = resetCode;
+        user.resetCodeExpires = resetCodeExpires;
+        await user.save();
 
-        // Envoyer l'email
-        const mailOptions = {
-            from: '"QuickMove Support" <no-reply@quickmove.com>',
-            to: email,
-            subject: 'Réinitialisation de votre mot de passe',
-            text: `Bonjour ${user.prenom},\n\nVous avez demandé la réinitialisation de votre mot de passe. Cliquez sur le lien suivant :\n\n${resetLink}\n\nCe lien expire dans 15 minutes.\n\nSi vous n'avez pas demandé cela, ignorez cet email.`
-        };
+        // Log code for development/debugging
+        console.log(`[DEV] Reset Code for ${email}: ${resetCode}`);
 
-        // NOTE: En dev, si pas de SMTP configuré, ceci peut échouer. On loggue le lien pour tester.
-        console.log(`[DEV MODE] Password Reset Link for ${email}: ${resetLink}`);
+        // Only attempt to send email if password is configured
+        if (process.env.GMAIL_APP_PASSWORD) {
+            const mailOptions = {
+                from: '"QuickMove Support" <mohssinengu@gmail.com>',
+                to: email,
+                subject: 'Validation Code - MoveMorocco',
+                html: `
+                    <h3>Password Reset Request</h3>
+                    <p>Hello ${user.prenom},</p>
+                    <p>Your password reset code is:</p>
+                    <h2 style="background-color: #f3f4f6; padding: 10px; display: inline-block; border-radius: 5px; letter-spacing: 5px;">${resetCode}</h2>
+                    <p>This code expires in 15 minutes.</p>
+                    <p>If you did not request this, please ignore this email.</p>
+                `
+            };
 
-        // Tentative d'envoi réel (peut être commenté si pas d'internet/SMTP)
-        // await transporter.sendMail(mailOptions); 
+            await transporter.sendMail(mailOptions);
+        } else {
+            console.warn("⚠️ GMAIL_APP_PASSWORD is missing in .env. Email was NOT sent. Use the code from the console.");
+        }
 
         return res.status(200).json({
-            message: "Si l'email existe, un lien de réinitialisation a été envoyé.",
-            // Pour le débuggage/démo, on renvoie le lien (A RETIRER EN PROD)
-            debugLink: resetLink
+            message: "A verification code has been generated. Check your email (or console)."
         });
 
     } catch (error) {
         console.error("Erreur forgotPassword:", error);
-        return res.status(500).json({ message: "Erreur serveur.", details: error.message });
+        // We return 200 even if email fails in DEV mode if we want to proceed, but properly we should error.
+        // However, given the user is stuck, let's treat it as a soft failure if code generated.
+        return res.status(500).json({ message: "Error processing request.", details: error.message });
     }
 };
 
 /**
- * Reset Password: Met à jour le mot de passe avec le token
- * POST /api/auth/reset-password
+ * Verify Code: Checks if the code is correct
+ * POST /api/auth/verify-code
  */
-exports.resetPassword = async (req, res) => {
-    const { token, newPassword } = req.body;
+exports.verifyCode = async (req, res) => {
+    const { email, code } = req.body;
 
-    if (!token || !newPassword) {
-        return res.status(400).json({ message: "Token et nouveau mot de passe requis." });
+    if (!email || !code) {
+        return res.status(400).json({ message: "Email and code are required." });
     }
 
     try {
-        // Vérifier le token
-        const decoded = jwt.verify(token, process.env.JWT_RESET_SECRET || 'secret_reset_key');
-
-        const user = await db.User.findByPk(decoded.id);
+        const user = await db.User.findOne({ where: { email } });
         if (!user) {
-            return res.status(404).json({ message: "Utilisateur introuvable." });
+            return res.status(404).json({ message: "User not found." });
         }
 
-        // Hasher le nouveau mot de passe (IMPORTANT: le hook beforeUpdate le fera si on utilise user.save/update et changed('password'))
-        // Mais ici, on peut assigner directement et laisser le hook faire, ou hasher manuellement.
-        // Le hook `beforeUpdate` dans user.js gère le hashage si password est changé.
+        if (user.resetCode !== code) {
+            return res.status(400).json({ message: "Invalid code." });
+        }
 
+        if (new Date() > user.resetCodeExpires) {
+            return res.status(400).json({ message: "Code has expired." });
+        }
+
+        return res.status(200).json({ message: "Code verified successfully." });
+
+    } catch (error) {
+        console.error("Erreur verifyCode:", error);
+        return res.status(500).json({ message: "Server error.", details: error.message });
+    }
+};
+
+/**
+ * Reset Password: Updates password using the verified code
+ * POST /api/auth/reset-password
+ */
+exports.resetPassword = async (req, res) => {
+    const { email, code, newPassword } = req.body;
+
+    if (!email || !code || !newPassword) {
+        return res.status(400).json({ message: "Email, code and new password are required." });
+    }
+
+    try {
+        const user = await db.User.findOne({ where: { email } });
+        if (!user) {
+            return res.status(404).json({ message: "User not found." });
+        }
+
+        if (user.resetCode !== code) {
+            return res.status(400).json({ message: "Invalid code." });
+        }
+
+        if (new Date() > user.resetCodeExpires) {
+            return res.status(400).json({ message: "Code has expired." });
+        }
+
+        // Update password (hash hook will handle encryption)
         user.password = newPassword;
-        await user.save(); // Déclenche beforeUpdate
+        user.resetCode = null;
+        user.resetCodeExpires = null;
 
-        return res.status(200).json({ message: "Mot de passe mis à jour avec succès. Vous pouvez vous connecter." });
+        await user.save();
+
+        return res.status(200).json({ message: "Password updated successfully. You can now login." });
 
     } catch (error) {
         console.error("Erreur resetPassword:", error);
-        if (error.name === 'TokenExpiredError') {
-            return res.status(400).json({ message: "Le lien a expiré." });
-        }
-        return res.status(400).json({ message: "Lien invalide ou expiré.", details: error.message });
+        return res.status(500).json({ message: "Server error.", details: error.message });
     }
 };

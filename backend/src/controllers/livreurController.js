@@ -16,7 +16,7 @@ exports.findLivreursByCity = async (req, res) => {
             message: "Le paramètre 'ville' est obligatoire pour la recherche."
         });
     }
-    
+
     try {
         // 2. Recherche de l'ID de la Ville
         // Le modèle Ville définit le champ `nom`, pas `nom_ville`.
@@ -25,7 +25,7 @@ exports.findLivreursByCity = async (req, res) => {
                 nom: { [Op.iLike]: `%${cityName.trim()}%` }
             }
         });
-        console.log(' ville:',ville)
+        console.log(' ville:', ville)
 
         if (!ville) {
             return res.status(404).json({
@@ -55,14 +55,24 @@ exports.findLivreursByCity = async (req, res) => {
                 {
                     model: db.Vehicule,
                     as: 'vehicules',
-                    attributes: ['id_vehicule','nom', 'imgUrl', 'capacite']
+                    attributes: ['id_vehicule', 'nom', 'imgUrl', 'capacite']
+                },
+                {
+                    model: db.Evaluation,
+                    as: 'evaluationsRecues',
+                    required: false,
+                    include: [{
+                        model: db.Client,
+                        as: 'evaluateur',
+                        include: [{ model: db.User, attributes: ['nom', 'prenom'] }]
+                    }]
                 }
             ],
             // Attributs exposés du Livreur
             attributes: ['id_livreur', 'cin', 'about']
         });
-      
-        
+
+
 
         if (livreurs.length === 0) {
             return res.status(200).json({
@@ -70,9 +80,9 @@ exports.findLivreursByCity = async (req, res) => {
                 livreurs: []
             });
         }
-        
-        console.log('livreurs',livreurs)
-        
+
+        console.log('livreurs', livreurs)
+
 
         // 4. Formatage pour une réponse plus claire
         const formatted = livreurs.map(l => {
@@ -88,6 +98,23 @@ exports.findLivreursByCity = async (req, res) => {
                 nom: v.nom || null
             }));
 
+            // Calculate Rating
+            const evals = l.evaluationsRecues || [];
+            let averageRating = 0;
+            if (evals.length > 0) {
+                const sum = evals.reduce((acc, curr) => acc + (curr.rate || 0), 0);
+                averageRating = (sum / evals.length).toFixed(1);
+            }
+
+            // Format Reviews for frontend
+            const reviewsFormatted = evals.map(e => ({
+                id: e.id,
+                rating: e.rate,
+                comment: e.comment,
+                date: e.date,
+                clientName: e.evaluateur && e.evaluateur.User ? `${e.evaluateur.User.prenom} ${e.evaluateur.User.nom}` : 'Client'
+            }));
+
             return {
                 id: l.id_livreur,
                 cin: l.cin,
@@ -100,7 +127,10 @@ exports.findLivreursByCity = async (req, res) => {
                     imgUrl: user.imgUrl || null
                 } : null,
                 vehicules,
-                villes
+                villes,
+                rating: averageRating > 0 ? averageRating : null,
+                reviewCount: evals.length,
+                Reviews: reviewsFormatted
             };
         });
 
@@ -141,6 +171,16 @@ exports.getAllLivreurs = async (req, res) => {
                     as: 'zonesService',
                     through: { attributes: [] },
                     attributes: ['id_ville', 'nom']
+                },
+                {
+                    model: db.Evaluation,
+                    as: 'evaluationsRecues', // Correct alias from Livreur model
+                    required: false,
+                    include: [{
+                        model: db.Client, // To show reviewer name if needed
+                        as: 'evaluateur',
+                        include: [{ model: db.User, attributes: ['nom', 'prenom'] }]
+                    }]
                 }
             ],
             attributes: ['id_livreur', 'cin', 'about']
@@ -160,6 +200,23 @@ exports.getAllLivreurs = async (req, res) => {
                 nom: v.nom || null
             }));
 
+            // Calculate Rating
+            const evals = l.evaluationsRecues || []; // Use correct alias
+            let averageRating = 0;
+            if (evals.length > 0) {
+                const sum = evals.reduce((acc, curr) => acc + (curr.rate || 0), 0);
+                averageRating = (sum / evals.length).toFixed(1);
+            }
+
+            // Format Reviews for frontend
+            const reviewsFormatted = evals.map(e => ({
+                id: e.id,
+                rating: e.rate,
+                comment: e.comment,
+                date: e.date, // Ensure format matches frontend expectations
+                clientName: e.evaluateur && e.evaluateur.User ? `${e.evaluateur.User.prenom} ${e.evaluateur.User.nom}` : 'Client'
+            }));
+
             return {
                 id: l.id_livreur,
                 cin: l.cin,
@@ -172,7 +229,10 @@ exports.getAllLivreurs = async (req, res) => {
                     imgUrl: user.imgUrl || null
                 } : null,
                 vehicules,
-                villes
+                villes,
+                rating: averageRating > 0 ? averageRating : null,
+                reviewCount: evals.length,
+                Reviews: reviewsFormatted // Pass reviews to frontend
             };
         });
 
@@ -316,7 +376,7 @@ exports.updateDemandStatus = async (req, res) => {
     const demandeId = req.params.demandeId;
     const { status } = req.body;
 
-    const validStatuses = ['PENDING', 'CONFIRMED', 'COMPLETED'];
+    const validStatuses = ['PENDING', 'CONFIRMED', 'COMPLETED', 'REJECTED'];
     if (!validStatuses.includes(status)) {
         return res.status(400).json({ message: `Statut invalide. Valeurs permises: ${validStatuses.join(', ')}` });
     }
@@ -375,7 +435,7 @@ exports.getDriverStatistics = async (req, res) => {
 
         const totalCompletedTrips = demands.filter(d => d.status === 'COMPLETED').length;
         const totalPendingTrips = demands.filter(d => d.status === 'PENDING').length;
-        
+
         // Calculate Total Earnings (only form COMPLETED trips)
         const totalEarnings = demands
             .filter(d => d.status === 'COMPLETED')
@@ -408,3 +468,4 @@ exports.getDriverStatistics = async (req, res) => {
         return res.status(500).json({ message: 'Erreur serveur.', details: error.message });
     }
 };
+

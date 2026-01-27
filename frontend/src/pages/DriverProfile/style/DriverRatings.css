@@ -1,0 +1,199 @@
+/* DriverRatings.css */
+.driver-ratings-container {
+    padding: 30px;
+    max-width: 1200px;
+    /* Increased for grid */
+    margin: 0 auto;
+    font-family: 'Cairo', sans-serif;
+    animation: fadeIn 0.5s ease-out;
+}
+
+.glass-panel {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.6);
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+    padding: 24px;
+    margin-bottom: 20px;
+}
+
+/* Summary Section */
+.ratings-summary {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: linear-gradient(135deg, #ffffff 0%, #f1f5f9 100%);
+    border-left: 5px solid #6366f1;
+    /* Creative accent */
+    margin-bottom: 30px;
+}
+
+.average-score {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.score-value {
+    font-size: 3.5rem;
+    font-weight: 800;
+    background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    line-height: 1;
+}
+
+.stars-display {
+    display: flex;
+    gap: 4px;
+}
+
+.total-reviews {
+    font-size: 1.1rem;
+    color: #64748b;
+    font-weight: 600;
+    padding: 10px 20px;
+    background: #f8fafc;
+    border-radius: 50px;
+    border: 1px solid #e2e8f0;
+}
+
+/* Reviews List - Grid Layout */
+.reviews-list {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    /* Two per row */
+    gap: 25px;
+    /* Space between cards */
+}
+
+/* Review Card Styling */
+.review-card {
+    transition: all 0.3s ease;
+    border-top: 4px solid transparent;
+    /* Prepare for hover */
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    /* Equal height */
+}
+
+.review-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
+    border-top-color: #6366f1;
+    /* Accent on hover */
+}
+
+.review-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 15px;
+}
+
+.reviewer-info {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.avatar-placeholder {
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+    /* Smoother rounding */
+    background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 12px rgba(99, 102, 241, 0.25);
+    color: white;
+}
+
+.client-name {
+    margin: 0;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #0f172a;
+}
+
+.review-date {
+    font-size: 0.85rem;
+    color: #94a3b8;
+    display: flex;
+    align-items: center;
+    margin-top: 4px;
+}
+
+.review-rating {
+    display: flex;
+    gap: 2px;
+}
+
+.review-body {
+    background: #f8fafc;
+    padding: 18px;
+    border-radius: 16px;
+    border: 1px solid #f1f5f9;
+    flex-grow: 1;
+    /* Pushes content to fill */
+    position: relative;
+}
+
+/* Add a quote icon for style */
+.review-body::before {
+    content: '"';
+    font-size: 4rem;
+    color: #e2e8f0;
+    position: absolute;
+    top: -10px;
+    left: 10px;
+    font-family: serif;
+    opacity: 0.5;
+}
+
+.review-body p {
+    margin: 0;
+    color: #475569;
+    font-style: italic;
+    line-height: 1.6;
+    position: relative;
+    z-index: 1;
+}
+
+/* Loading/Error States */
+.loading-state,
+.error-container,
+.empty-state {
+    text-align: center;
+    padding: 80px;
+    color: #64748b;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    grid-column: span 2;
+    /* Fill grid on empty */
+}
+
+/* Responsive */
+@media screen and (max-width: 768px) {
+    .reviews-list {
+        grid-template-columns: 1fr;
+        /* Stack on mobile */
+    }
+
+    .ratings-summary {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 20px;
+    }
+
+    .loading-state,
+    .error-container,
+    .empty-state {
+        grid-column: span 1;
+    }
+}

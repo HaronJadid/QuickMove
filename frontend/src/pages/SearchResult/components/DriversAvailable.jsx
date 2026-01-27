@@ -93,7 +93,14 @@ const DriverCard = ({ driver }) => {
           <img src={driver.imgUrl || '../../../../public/alt_img.webp'} alt="profile" className="mini-profile-pic" />
           <div className="driver-info">
             <div className="rating-stars">
-              {'★'.repeat(Math.floor(driver.rating || 5))}<span className="rating-num">{driver.rating || 5}</span>
+              {driver.rating ? (
+                <>
+                  {'★'.repeat(Math.floor(driver.rating))}
+                  <span className="rating-num">{driver.rating}</span>
+                </>
+              ) : (
+                <span className="rating-num" style={{ fontSize: '0.9rem', color: '#888' }}>New Driver</span>
+              )}
             </div>
             <h3 className="driver-username">{driver.user.prenom + ' ' + driver.user.nom}</h3>
             <div className="available-tags">
@@ -105,10 +112,7 @@ const DriverCard = ({ driver }) => {
         </div>
 
         <div className="card-right-section">
-          <div className="price-tag">
-            <span className="price-label">Starts from  </span>
-            <span className="price-value">{driver.prix_base || 350} DH</span>
-          </div>
+
           <button className="book-now-btn" onClick={() => setShowModal(true)}>
             Book now ←
           </button>

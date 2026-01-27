@@ -1,13 +1,284 @@
-
-.container {
+/* --- ABOUT PAGE CONTAINER --- */
+.about-page {
   font-family: 'Cairo', sans-serif;
-  background-color: #fff;
-  border: 1px solid #f0f0f0;
+  color: #333;
+  overflow-x: hidden;
+}
+
+/* --- HERO SECTION --- */
+.about-hero {
+  background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+  padding: 80px 20px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.about-hero::before {
+  content: '';
+  position: absolute;
+  top: -50px;
+  left: -50px;
+  width: 300px;
+  height: 300px;
+  background: rgba(99, 102, 241, 0.1);
+  border-radius: 50%;
+  filter: blur(50px);
+}
+
+.about-hero-content {
+  max-width: 800px;
+  margin: 0 auto;
+  position: relative;
+  z-index: 2;
+}
+
+.about-hero h1 {
+  font-size: 3rem;
+  font-weight: 800;
+  margin-bottom: 20px;
+  color: #1e293b;
+}
+
+.highlight-text {
+  background: linear-gradient(to right, #6366f1, #a855f7);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.about-hero p {
+  font-size: 1.2rem;
+  color: #64748b;
+  line-height: 1.6;
+}
+
+/* --- MISSION SECTION --- */
+.mission-section {
+  padding: 60px 20px;
+  background: white;
+}
+
+.mission-container {
+  max-width: 1000px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 50px;
+  align-items: center;
+}
+
+.mission-text h2 {
+  font-size: 2rem;
+  margin-bottom: 15px;
+  color: #1e293b;
+}
+
+.mission-text p {
+  font-size: 1.1rem;
+  color: #64748b;
+  line-height: 1.6;
+}
+
+.mission-stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+
+.stat-item {
+  text-align: center;
+  padding: 20px;
+  background: #f8fafc;
   border-radius: 12px;
-  padding: 24px;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03);
-  max-width: 400px; /* Adjust based on your grid needs */
-  width: 100%;
-  margin: 10px;
-  transition: transform 0.2s ease;
+  border: 1px solid #e2e8f0;
+}
+
+.stat-number {
+  display: block;
+  font-size: 1.8rem;
+  font-weight: 800;
+  color: #6366f1;
+}
+
+.stat-label {
+  font-size: 0.9rem;
+  color: #64748b;
+}
+
+/* --- WHY CHOOSE US --- */
+.why-us-section {
+  padding: 80px 20px;
+  background: #fdfdfd;
+}
+
+.section-header {
+  text-align: center;
+  margin-bottom: 50px;
+}
+
+.section-header h2 {
+  font-size: 2.2rem;
+  color: #1e293b;
+  margin-bottom: 10px;
+}
+
+.underline {
+  width: 60px;
+  height: 4px;
+  background: #6366f1;
+  margin: 0 auto;
+  border-radius: 2px;
+}
+
+.features-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 30px;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+.feature-card {
+  background: white;
+  padding: 30px;
+  border-radius: 16px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  border: 1px solid #f1f5f9;
+}
+
+.feature-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+  border-color: #e2e8f0;
+}
+
+.f-icon {
+  width: 60px;
+  height: 60px;
+  background: #e0e7ff;
+  color: #6366f1;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.feature-card h3 {
+  font-size: 1.25rem;
+  margin-bottom: 10px;
+  color: #1e293b;
+}
+
+.feature-card p {
+  color: #64748b;
+  line-height: 1.5;
+}
+
+/* --- DRIVER CTA --- */
+.driver-cta-section {
+  padding: 60px 20px;
+  background: white;
+  margin-bottom: 40px;
+}
+
+.driver-cta-content {
+  background: #1e293b;
+  color: white;
+  border-radius: 24px;
+  padding: 50px;
+  max-width: 1100px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1.5fr 1fr;
+  align-items: center;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+}
+
+.driver-cta-content::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 50%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.05));
+}
+
+.driver-text h2 {
+  font-size: 2rem;
+  margin-bottom: 15px;
+}
+
+.driver-text p {
+  color: #94a3b8;
+  margin-bottom: 25px;
+  font-size: 1.1rem;
+}
+
+.driver-benefits {
+  list-style: none;
+  padding: 0;
+  margin-bottom: 30px;
+}
+
+.driver-benefits li {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+  color: #e2e8f0;
+}
+
+.btn-driver-join {
+  display: inline-block;
+  background: #6366f1;
+  color: white;
+  padding: 12px 28px;
+  border-radius: 10px;
+  text-decoration: none;
+  font-weight: 700;
+  transition: all 0.3s ease;
+}
+
+.btn-driver-join:hover {
+  background: #4f46e5;
+  transform: translateY(-2px);
+}
+
+.driver-image-placeholder {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* --- RESPONSIVE --- */
+@media (max-width: 768px) {
+  .about-hero h1 {
+    font-size: 2.2rem;
+  }
+
+  .mission-container {
+    grid-template-columns: 1fr;
+    text-align: center;
+  }
+
+  .driver-cta-content {
+    grid-template-columns: 1fr;
+    text-align: center;
+    padding: 30px;
+  }
+
+  .driver-image-placeholder {
+    display: none;
+  }
+
+  .driver-benefits {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
 }

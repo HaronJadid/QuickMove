@@ -1,29 +1,42 @@
 @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap');
 
-/* --- PAGE WRAPPER --- */
+/* --- COMPONENT CONTAINER --- */
+/* Replaces profile-page-wrapper to fit in dashboard main content */
 .profile-page-wrapper {
+  width: 100%;
   display: flex;
   justify-content: center;
-  padding-top: 50px;
-  padding-bottom: 50px;
-  background-color: #f9f9f9;
+  align-items: flex-start;
+  padding: 0;
+  background: transparent;
   font-family: 'Cairo', sans-serif;
+  animation: fadeIn 0.5s ease-out;
 }
 
-/* --- THE CARD (60% WIDTH) --- */
+/* --- THE CARD --- */
 .profile-card {
-  width: 60%; /* <--- HERE IS THE 60% LIMIT */
-  min-width: 350px; /* Prevents it from being too squished on mobile */
-  max-width: 900px;
-  
-  background: white;
-  border-radius: 12px;
-  box-shadow: 0 4px 20px rgba(0,0,0,0.05);
-  overflow: hidden;
-  
-  /* Red Top Border */
-  border-top: 10px solid #e04f5f; 
+  width: 100%;
+  max-width: 800px;
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(12px);
+  border-radius: 24px;
+  box-shadow:
+    0 10px 30px -5px rgba(0, 0, 0, 0.05),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.6);
   padding: 40px;
+  border: 2px solid #e2e8f0;
+  /* More visible border as requested */
+  position: relative;
+  overflow: visible;
+  /* Allow hover lift */
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.profile-card:hover {
+  transform: translateY(-5px);
+  box-shadow:
+    0 20px 40px -5px rgba(99, 102, 241, 0.1),
+    0 8px 16px -4px rgba(0, 0, 0, 0.05);
 }
 
 /* --- HEADER --- */
@@ -32,144 +45,111 @@
   flex-direction: column;
   align-items: center;
   margin-bottom: 40px;
+  position: relative;
 }
 
 .profile-avatar {
-  width: 100px;
-  height: 100px;
+  width: 120px;
+  height: 120px;
   border-radius: 50%;
   object-fit: cover;
   border: 4px solid white;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-  margin-bottom: 15px;
+  box-shadow: 0 8px 20px rgba(99, 102, 241, 0.2);
+  margin-bottom: 20px;
+  transition: transform 0.3s ease;
+}
+
+.profile-avatar:hover {
+  transform: scale(1.05) rotate(2deg);
 }
 
 .role-badge {
-  background-color: #dcdcdc; /* Light Grey Badge */
-  color: #333;
+  background: linear-gradient(135deg, #6366f1 0%, #ec4899 100%);
+  color: white;
   font-weight: 700;
-  padding: 8px 30px;
-  border-radius: 20px;
-  font-size: 1rem;
+  padding: 8px 24px;
+  border-radius: 50px;
+  font-size: 0.9rem;
+  letter-spacing: 0.5px;
+  box-shadow: 0 4px 10px rgba(236, 72, 153, 0.3);
 }
 
 /* --- FORM --- */
 .input-group {
   margin-bottom: 25px;
-  text-align: right; /* Ensure Right Alignment for Arabic */
+  text-align: left;
 }
 
 .input-group label {
   display: block;
   font-weight: 700;
-  color: #000;
+  color: #64748b;
   margin-bottom: 8px;
-  font-size: 1rem;
+  font-size: 0.95rem;
+  padding-left: 5px;
 }
 
 .read-only-input {
   width: 100%;
-  background-color: #e0e0e0; /* Gray input background */
-  padding: 15px;
-  border-radius: 20px; /* Pill Shape */
+  background-color: white;
+  padding: 14px 20px;
+  border-radius: 16px;
+  border: 1px solid #e2e8f0;
   font-weight: 600;
-  color: #333;
+  color: #1e293b;
   font-size: 1rem;
   box-sizing: border-box;
+  transition: all 0.2s ease;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.02);
+}
+
+.read-only-input:focus {
+  outline: none;
+  border-color: #6366f1;
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
 }
 
 /* --- BUTTON --- */
 .profile-footer {
   display: flex;
-  justify-content: flex-end; /* Move button to left (in RTL context end is left) */
-  margin-top: 20px;
+  justify-content: flex-end;
+  margin-top: 30px;
+  border-top: 1px solid rgba(0, 0, 0, 0.05);
+  padding-top: 20px;
 }
 
 .edit-btn {
-  background-color: #dc3545; /* Red */
+  background: linear-gradient(135deg, #6366f1 0%, #818cf8 100%);
   color: white;
   border: none;
   padding: 12px 30px;
-  border-radius: 8px;
+  border-radius: 12px;
   font-weight: 700;
   font-size: 1rem;
   cursor: pointer;
   font-family: 'Cairo', sans-serif;
-  transition: background 0.2s;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
 }
 
 .edit-btn:hover {
-  background-color: #bb2d3b;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 16px rgba(99, 102, 241, 0.4);
 }
 
-/* --- RESPONSIVE --- */
+/* --- CAROUSEL / MEDIA RESPONSIVENESS (If Applicable) --- */
 @media (max-width: 768px) {
   .profile-card {
-    width: 90%; /* On small phones, let it be 90% */
+    width: 100%;
+    padding: 25px;
   }
 }
 
-
-.logout{
-   background-color: #e8e5e5; /* Red */
-  color: white;
-  margin: 30px;
-  margin-right: 100px;
-  border: none;
-  padding: 12px 30px;
-  border-radius: 8px;
-  font-weight: 700;
-  font-size: 1rem;
-  cursor: pointer;
-  font-family: 'Cairo', sans-serif;
-  transition: background 0.2s;
-
-}
-.logout:hover{
-  background-color: #e3c2c5;
-
-}
-.logout-ctn{
-   flex: 1;
-  display: flex;
-  justify-content: flex-end;
-  align-items: center;
-
-}
-
-.tabs-wrapper {
-  display: flex;
-  justify-content: flex-start; /* Aligns tabs to left */
-}
-
-.tabs-container {
-  background-color: rgba(255, 255, 255, 0.35); /* Semi-transparent grey/white */
-  backdrop-filter: blur(5px);
-  padding: 6px;
-  border-radius: 50px; /* Pill shape */
-  display: inline-flex;
-  gap: 5px;
-}
-
-.tab-item {
-  background: transparent;
-  border: none;
-  padding: 10px 25px;
-  border-radius: 30px;
-  font-family: 'Cairo', sans-serif;
-  font-size: 0.9rem;
-  font-weight: 700;
-  color: #222;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-/* Active State (White Bubble) */
-.tab-item.active {
-  background-color: white;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-}
-
-.tab-item:hover:not(.active) {
-  background-color: rgba(255,255,255,0.2);
+/* --- REMOVED LEGACY TABS & LOGOUT STYLE --- */
+/* These are now handled by the Sidebar and Header */
+.tabs-wrapper,
+.tabs-container,
+.tab-item,
+.logout-ctn {
+  display: none;
 }

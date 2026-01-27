@@ -1,6 +1,7 @@
 import SearchForm from "./SearchForm";
 import '../style/SearchForm.css';
-import React,{forwardRef} from "react";
+import React, { forwardRef } from "react";
+import { useTranslation } from 'react-i18next';
 
 
  const SearchFormContainer=forwardRef((props,ref)=>{
