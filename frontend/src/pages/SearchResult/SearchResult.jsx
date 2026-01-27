@@ -29,8 +29,8 @@ export default function SearchResult() {
                 const commoncities = v_dep.filter(v_dep_city =>
                     v_arr.some(v_arr_city => v_arr_city.id === v_dep_city.id));
 
-                console.log(commoncities)
-                setLivreurs(commoncities)
+                console.log(v_dep)
+                setLivreurs(v_dep)
 
             } catch (err) {
                 console.error('Error fetching drivers', err)
