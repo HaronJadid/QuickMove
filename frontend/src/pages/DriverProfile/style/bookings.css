@@ -8,6 +8,14 @@
     max-width: 300px;
 }
 
+.bookings-list {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    max-width: 900px;
+    margin: 0 auto;
+}
+
 .request-filter-dropdown {
     width: 100%;
     padding: 12px 16px;
@@ -178,10 +186,7 @@ option {
 }
 
 /* Completed Card Specifics */
-.booking-card {
-    /* Styles are mostly in BookingRequestCard.css, but this class is used for layout */
-    margin-bottom: 25px;
-}
+
 
 .done-badge {
     position: absolute;

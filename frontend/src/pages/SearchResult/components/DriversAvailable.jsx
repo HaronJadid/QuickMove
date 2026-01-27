@@ -7,7 +7,14 @@ const DriverCard = ({ driver }) => {
   console.log(driver)
   const navigation = useNavigate()
 
-  const API_URL = import.meta.env.VITE_API_URL;
+  const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000/';
+
+  const getImageUrl = (img) => {
+    if (!img) return '/alt_img.webp';
+    if (img.startsWith('http') || img.startsWith('data:')) return img;
+    const baseUrl = API_URL.endsWith('/') ? API_URL.slice(0, -1) : API_URL;
+    return `${baseUrl}${img}`;
+  }
 
   const userRetrieved = localStorage.getItem('user');
   const userParsed = userRetrieved ? JSON.parse(userRetrieved) : null;
@@ -90,7 +97,7 @@ const DriverCard = ({ driver }) => {
       {/* --- HORIZONTAL CARD --- */}
       <div className="driver-horizontal-card">
         <div className="card-left-section" style={{ cursor: 'pointer' }} onClick={lookupdriver}>
-          <img src={driver.imgUrl || '../../../../public/alt_img.webp'} alt="profile" className="mini-profile-pic" />
+          <img src={getImageUrl(driver.user.imgUrl)} alt="profile" className="mini-profile-pic" />
           <div className="driver-info">
             <div className="rating-stars">
               {driver.rating ? (

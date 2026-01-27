@@ -92,7 +92,7 @@ export default function Header({ scrollToSearchForm }) {
         <div className="header">
             <div className="header-left">
                 <Link to='/' className="logo-container">
-                    <img src="/logo_new.png" alt="Logo" className="logo-img" />
+                    <img src="/logo2.png" alt="Logo" className="logo-img" />
                     <span className="logo-text">QuickMove</span>
                 </Link>
             </div>

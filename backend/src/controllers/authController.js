@@ -165,7 +165,7 @@ const crypto = require('crypto');
 const transporter = nodemailer.createTransport({
     service: 'gmail',
     auth: {
-        user: 'mohssinengu@gmail.com',
+        user: 'quickmovesup@gmail.com',
         pass: process.env.GMAIL_APP_PASSWORD || 'dummy_password_for_init'
     }
 });
@@ -203,7 +203,7 @@ exports.forgotPassword = async (req, res) => {
         // Only attempt to send email if password is configured
         if (process.env.GMAIL_APP_PASSWORD) {
             const mailOptions = {
-                from: '"QuickMove Support" <mohssinengu@gmail.com>',
+                from: '"QuickMove Support" <quickmovesup@gmail.com>',
                 to: email,
                 subject: 'Validation Code - MoveMorocco',
                 html: `

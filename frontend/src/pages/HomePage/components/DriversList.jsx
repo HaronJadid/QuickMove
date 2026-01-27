@@ -12,7 +12,7 @@ export default function DriversList() {
     useEffect(() => {
         const fetchDrivers = async () => {
             try {
-                const response = await api.get('/livreur/all');
+                const response = await api.get('/livreur/top-rated');
                 // The controller returns { livreurs: [...] }
                 if (response.data && response.data.livreurs) {
                     setDrivers(response.data.livreurs);

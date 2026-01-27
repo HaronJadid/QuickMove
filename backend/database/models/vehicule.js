@@ -9,10 +9,16 @@ module.exports = (sequelize) => {
      */
     static associate(models) {
       // Relation 1,N (Un Vehicule appartient à un seul Livreur)
-      models.Vehicule.belongsTo(models.Livreur, { 
-          foreignKey: 'livreur_id', // Clé étrangère dans cette table
-          as: 'proprietaire',
-          onDelete: 'SET NULL' // Si le livreur est supprimé, on garde le véhicule mais sans propriétaire
+      models.Vehicule.belongsTo(models.Livreur, {
+        foreignKey: 'livreur_id', // Clé étrangère dans cette table
+        as: 'proprietaire',
+        onDelete: 'SET NULL' // Si le livreur est supprimé, on garde le véhicule mais sans propriétaire
+      });
+
+      models.Vehicule.hasMany(models.VehiculeImage, {
+        foreignKey: 'vehicule_id',
+        as: 'images',
+        onDelete: 'CASCADE'
       });
     }
   }
@@ -37,19 +43,19 @@ module.exports = (sequelize) => {
     },
     // Clé étrangère ajoutée pour la relation avec Livreur
     livreur_id: {
-        type: DataTypes.INTEGER,
-        allowNull: true, // Peut être NULL si le véhicule n'est pas encore attribué
-        references: {
-            model: 'livreurs',
-            key: 'id_livreur', // Fait référence à la PK de la table livreurs
-        },
-        onUpdate: 'CASCADE',
-        onDelete: 'SET NULL', 
+      type: DataTypes.INTEGER,
+      allowNull: true, // Peut être NULL si le véhicule n'est pas encore attribué
+      references: {
+        model: 'livreurs',
+        key: 'id_livreur', // Fait référence à la PK de la table livreurs
+      },
+      onUpdate: 'CASCADE',
+      onDelete: 'SET NULL',
     }
   }, {
     sequelize,
     modelName: 'Vehicule',
-    tableName: 'vehicules', 
+    tableName: 'vehicules',
     timestamps: true,
   });
 
