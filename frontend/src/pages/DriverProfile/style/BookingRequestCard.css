@@ -1,5 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap');
 
+/* Original styles for Upcoming/Completed cards */
 .booking-card {
     background: rgba(255, 255, 255, 0.8);
     backdrop-filter: blur(12px);
@@ -25,6 +26,28 @@
         0 8px 10px -5px rgba(0, 0, 0, 0.02);
 }
 
+/* New compact style for Request Request Card */
+
+.driver-booking-req-card {
+    background: #f8fafc;
+    border-radius: 16px;
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    font-family: 'Cairo', sans-serif;
+    border: 1px solid #e2e8f0;
+    width: 100%;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.driver-booking-req-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
 .card-main-row {
     display: flex;
     justify-content: space-between;
@@ -42,12 +65,12 @@
 }
 
 .client-avatar {
-    width: 65px;
-    height: 65px;
+    width: 50px;
+    height: 50px;
     border-radius: 50%;
     object-fit: cover;
-    border: 3px solid white;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    border: 2px solid white;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
 }
 
 .client-name {
@@ -115,8 +138,8 @@
     background: linear-gradient(135deg, #6366f1 0%, #ec4899 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
-    font-size: 1.8rem;
-    font-weight: 900;
+    font-size: 1.4rem;
+    font-weight: 800;
     margin: 0;
 }
 
@@ -154,6 +177,9 @@
     cursor: pointer;
     transition: all 0.2s;
     font-family: inherit;
+    display: flex;
+    align-items: center;
+    gap: 8px;
 }
 
 .btn-accept:hover {

@@ -1,22 +1,31 @@
 import React from 'react';
-import { MapPin, Clock, Check, Mail, Phone,Calendar } from 'lucide-react';
+import { MapPin, Clock, Check, Mail, Phone, Calendar } from 'lucide-react';
 import '../style/bookings.css';
 
 const UpcomingTripCard = ({ req, onFinish }) => {
-    const data =  {
-    client_name: (req.client.prenom + ' '+ req.client.nom) ||"",
-    client_img: req.client.imgUrl || '../../../../public/alt_img.webp',
-    vehicle_name: req.vehicule.nom ||"",
-    price:req.prix || "",
-    from_city:req.villeDepart || "",
+  const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000/';
+
+  const getImageUrl = (img) => {
+    if (!img) return '/alt_img.webp';
+    if (img.startsWith('http') || img.startsWith('data:')) return img;
+    const baseUrl = API_URL.endsWith('/') ? API_URL.slice(0, -1) : API_URL;
+    return `${baseUrl}${img}`;
+  }
+
+  const data = {
+    client_name: (req.client.prenom + ' ' + req.client.nom) || "",
+    client_img: getImageUrl(req.client.imgUrl),
+    vehicle_name: req.vehicule.nom || "",
+    price: req.prix || "",
+    from_city: req.villeDepart || "",
     to_city: req.villeArrivee || "",
-    comment:req.comment||'',
-    time:req.dateDepartExacte.split('T')[1].split('.')[0].split(':').slice(0,-1).join(':') || "",
-    date:req.dateDepartExacte.split('T')[0] || "",
-    email:req.client.email,
-    numero:req.client.numero,
-    status:req.status,
-    arrivaldate:req.dateArriveeExacte.split('T')[0]|| ''
+    comment: req.comment || '',
+    time: req.dateDepartExacte.split('T')[1].split('.')[0].split(':').slice(0, -1).join(':') || "",
+    date: req.dateDepartExacte.split('T')[0] || "",
+    email: req.client.email,
+    numero: req.client.numero,
+    status: req.status,
+    arrivaldate: req.dateArriveeExacte.split('T')[0] || ''
   };
 
 
@@ -25,17 +34,17 @@ const UpcomingTripCard = ({ req, onFinish }) => {
       <div className="card-main-row">
         {/* Left: Client Info */}
         <div className="client-section">
-          <img 
-            src={req.client.imgUrl || 'https://placehold.co/100x100?text=User'} 
-            className="client-avatar" 
-            alt="client" 
+          <img
+            src={data.client_img}
+            className="client-avatar"
+            alt="client"
           />
           <div className="client-details">
             <h3 className="client-name">{req.client.prenom} {req.client.nom}</h3>
             <div className="info-grid">
               <div className="info-item"><MapPin size={14} className="icon-red" /> {req.villeDepart}</div>
               <div className="info-item"><MapPin size={14} className="icon-green" /> {req.villeArrivee}</div>
-               
+
               <div className="info-item">
                 <Calendar size={14} />
                 <span>{data.date}</span>
@@ -45,7 +54,7 @@ const UpcomingTripCard = ({ req, onFinish }) => {
                 <span>{data.time}</span>
               </div>
               <div className="info-item" >
-                <Calendar size={14} />Expected arrival date : 
+                <Calendar size={14} />Expected arrival date :
                 <span>{data.arrivaldate}</span>
               </div>
             </div>
@@ -54,8 +63,8 @@ const UpcomingTripCard = ({ req, onFinish }) => {
 
         {/* Middle: Contact Info */}
         <div className="contact-details-box">
-           <div className="contact-item"><Mail size={12} color="#6366f1"/> {req.client.email}</div>
-           <div className="contact-item"><Phone size={12} color="#db2777"/> {req.client.numero}</div>
+          <div className="contact-item"><Mail size={12} color="#6366f1" /> {req.client.email}</div>
+          <div className="contact-item"><Phone size={12} color="#db2777" /> {req.client.numero}</div>
         </div>
 
         {/* Right: Badge and Price (Combined to fix overlap) */}

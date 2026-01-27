@@ -2,22 +2,31 @@ import React from 'react';
 import '../style/comment.css'
 import { useTranslation } from 'react-i18next';
 
-export default function ReviewCard({ 
-  name = "Sara Benali ", 
-  location = "Fes", 
-  date = "2025/11/20", 
-  text = " I used it twice, and the service was excellent everytime. The drivers are professional and the prices are reasonable. ", 
+export default function ReviewCard({
+  name = "Sara Benali ",
+  location = "Fes",
+  date = "2025/11/20",
+  text = " I used it twice, and the service was excellent everytime. The drivers are professional and the prices are reasonable. ",
   rating = 5,
   image = "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80"
 }) {
   const { t } = useTranslation();
+
+  const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000/';
+
+  const getImageUrl = (img) => {
+    if (!img) return "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80";
+    if (img.startsWith('http') || img.startsWith('data:')) return img;
+    const baseUrl = API_URL.endsWith('/') ? API_URL.slice(0, -1) : API_URL;
+    return `${baseUrl}${img}`;
+  }
 
   // Use prop text if provided, otherwise use default translation
   const displayText = text || t('home.comments.sample.text');
 
   return (
     <div className="review-card" >
-      
+
       {/* 1. STAR RATING */}
       <div className="review-stars">
         {[...Array(5)].map((_, i) => (
@@ -37,7 +46,7 @@ export default function ReviewCard({
 
         {/* User Info */}
         <div className="user-info">
-          <img src={image} alt={name} className="user-avatar" />
+          <img src={getImageUrl(image)} alt={name} className="user-avatar" />
           <div className="user-details">
             <h4 className="user-name">{name}</h4>
             <span className="user-location">

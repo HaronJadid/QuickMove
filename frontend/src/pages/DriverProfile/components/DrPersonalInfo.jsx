@@ -23,6 +23,13 @@ export default function DrPersonalInfo() {
         cin: ''
     });
 
+    const getImageUrl = (img) => {
+        if (!img) return '/alt_img.webp';
+        if (img.startsWith('http') || img.startsWith('data:')) return img;
+        const baseUrl = API_URL.endsWith('/') ? API_URL.slice(0, -1) : API_URL;
+        return `${baseUrl}${img}`;
+    }
+
     // Get user ID from localStorage
     const userRetrieved = localStorage.getItem('user');
     const userParsed = userRetrieved ? JSON.parse(userRetrieved) : null;
@@ -54,7 +61,7 @@ export default function DrPersonalInfo() {
                     email: userData.email || '',
                     numero: userData.numero || '',
                     role: "Driver Account ",
-                    imgUrl: userData.imgUrl || '../../../../public/alt_img.webp',
+                    imgUrl: getImageUrl(userData.imgUrl),
                     about: userData.livreurProfile.about || '',
                     cin: userData.livreurProfile.cin || '',
                 };
