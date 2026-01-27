@@ -35,9 +35,10 @@
 }
 
 .logo-img {
-  width: 45px;
-  height: 45px;
+  width: 75px;
+  height: 75px;
   object-fit: contain;
+  margin-right: -12px;
 }
 
 .logo-text {

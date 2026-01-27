@@ -19,6 +19,15 @@ export default function DriverComponent({ driver }) {
 
   if (!driver) return null;
 
+  const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000/';
+
+  const getImageUrl = (img) => {
+    if (!img) return "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80";
+    if (img.startsWith('http') || img.startsWith('data:')) return img;
+    const baseUrl = API_URL.endsWith('/') ? API_URL.slice(0, -1) : API_URL;
+    return `${baseUrl}${img}`;
+  }
+
   const { user, villes, vehicules } = driver;
   const displayName = user ? `${user.prenom || ''} ${user.nom || ''} `.trim() : 'Unknown Driver';
   // If we have locations, show distinct city names. If too many, truncate.
@@ -29,7 +38,7 @@ export default function DriverComponent({ driver }) {
     : 'Morocco';
 
   const vehicleTags = vehicules ? vehicules.slice(0, 3) : [];
-  const imageUrl = user?.imgUrl || "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80";
+  const imageUrl = getImageUrl(user?.imgUrl);
 
   // Use fetching rating or default to 'New' if 0/null
   const ratingDisplay = driver.rating ? driver.rating : 'New';
@@ -108,7 +117,7 @@ export default function DriverComponent({ driver }) {
           </div>
         </div>
         */}
-        
+
 
         {/* Info List (Availability & Reviews) */}
         <div className="info-list">

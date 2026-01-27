@@ -65,11 +65,12 @@ module.exports = {
         }
     },
 
-    // Get latest evaluations for home page
+    // Get latest evaluations for home page (Unique authors, max 6, random pick per author)
     async getLatestEvaluations(req, res) {
         try {
+            // Fetch more than 6 to ensure we have enough unique authors if possible
             const evaluations = await Evaluation.findAll({
-                limit: 6,
+                limit: 50, // Reasonable buffer
                 order: [['createdAt', 'DESC']],
                 include: [
                     {
@@ -77,7 +78,7 @@ module.exports = {
                         as: 'evaluateur',
                         include: [
                             {
-                                model: require('../../database/models').User, // Lazy require to avoid circular dependency if needed, or use existing imports if safer
+                                model: require('../../database/models').User,
                                 attributes: ['nom', 'prenom', 'imgUrl']
                             }
                         ]
@@ -85,15 +86,39 @@ module.exports = {
                 ]
             });
 
-            const formatted = evaluations.map(ev => {
+            // Group by Client ID
+            const reviewsByClient = {};
+            evaluations.forEach(ev => {
+                const clientId = ev.client_id;
+                if (!reviewsByClient[clientId]) {
+                    reviewsByClient[clientId] = [];
+                }
+                reviewsByClient[clientId].push(ev);
+            });
+
+            // Pick one random review per client
+            const uniqueReviews = [];
+            Object.keys(reviewsByClient).forEach(clientId => {
+                const clientReviews = reviewsByClient[clientId];
+                const randomReview = clientReviews[Math.floor(Math.random() * clientReviews.length)];
+                uniqueReviews.push(randomReview);
+            });
+
+            // If we have more than 6, slice the first 6 (or random 6 if preferred, but existing list is "latest" based so maybe latest unique is better, but user asked for random choice if client has multiple, which is done. user also said "display always six from difrent auther").
+            // To ensure "always six", we need at least 6 unique clients. If not, we just return what we have.
+            // Let's shuffle the unique list to make it look dynamic if that's desired, or just take the latest ones.
+            // User: "display always six from difrent auther".
+            const finalSelection = uniqueReviews.slice(0, 6);
+
+            const formatted = finalSelection.map(ev => {
                 const user = ev.evaluateur?.User;
                 return {
                     id: ev.id,
                     rating: ev.rate,
                     text: ev.comment,
-                    date: ev.createdAt, // Or format it here 'YYYY/MM/DD'
+                    date: ev.createdAt,
                     name: user ? `${user.prenom} ${user.nom}` : 'Anonymous',
-                    location: 'Morocco', // Default for now as Client doesn't have city directly usually
+                    location: 'Morocco',
                     image: user?.imgUrl
                 };
             });

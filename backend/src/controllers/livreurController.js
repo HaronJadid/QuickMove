@@ -55,7 +55,8 @@ exports.findLivreursByCity = async (req, res) => {
                 {
                     model: db.Vehicule,
                     as: 'vehicules',
-                    attributes: ['id_vehicule', 'nom', 'imgUrl', 'capacite']
+                    attributes: ['id_vehicule', 'nom', 'imgUrl', 'capacite'],
+                    include: [{ model: db.VehiculeImage, as: 'images', attributes: ['url'] }]
                 },
                 {
                     model: db.Evaluation,
@@ -91,7 +92,8 @@ exports.findLivreursByCity = async (req, res) => {
                 id: v.id_vehicule || null,
                 nom: v.nom || null,
                 imgUrl: v.imgUrl || null,
-                capacite: v.capacite || null
+                capacite: v.capacite || null,
+                images: (v.images || []).map(img => img.url)
             }));
             const villes = (l.zonesService || l.villesDesservant || []).map(v => ({
                 id: v.id_ville || null,
@@ -164,7 +166,8 @@ exports.getAllLivreurs = async (req, res) => {
                 {
                     model: db.Vehicule,
                     as: 'vehicules',
-                    attributes: ['id_vehicule', 'nom', 'imgUrl', 'capacite']
+                    attributes: ['id_vehicule', 'nom', 'imgUrl', 'capacite'],
+                    include: [{ model: db.VehiculeImage, as: 'images', attributes: ['url'] }]
                 },
                 {
                     model: db.Ville,
@@ -193,7 +196,8 @@ exports.getAllLivreurs = async (req, res) => {
                 id: v.id_vehicule || null,
                 nom: v.nom || null,
                 imgUrl: v.imgUrl || null,
-                capacite: v.capacite || null
+                capacite: v.capacite || null,
+                images: (v.images || []).map(img => img.url)
             }));
             const villes = (l.zonesService || l.villesDesservant || []).map(v => ({
                 id: v.id_ville || null,
@@ -468,4 +472,210 @@ exports.getDriverStatistics = async (req, res) => {
         return res.status(500).json({ message: 'Erreur serveur.', details: error.message });
     }
 };
+/**
+ * Get top 6 rated drivers
+ * GET /api/livreur/top-rated
+ */
+exports.getTopRatedLivreurs = async (req, res) => {
+    try {
+        const livreurs = await db.Livreur.findAll({
+            include: [
+                {
+                    model: db.User,
+                    attributes: ['nom', 'prenom', 'email', 'numero', 'imgUrl']
+                },
+                {
+                    model: db.Vehicule,
+                    as: 'vehicules',
+                    attributes: ['id_vehicule', 'nom', 'imgUrl', 'capacite'],
+                    include: [{ model: db.VehiculeImage, as: 'images', attributes: ['url'] }]
+                },
+                {
+                    model: db.Ville,
+                    as: 'zonesService',
+                    through: { attributes: [] },
+                    attributes: ['id_ville', 'nom']
+                },
+                {
+                    model: db.Evaluation,
+                    as: 'evaluationsRecues', // Correct alias from Livreur model
+                    required: false,
+                    include: [{
+                        model: db.Client, // To show reviewer name if needed
+                        as: 'evaluateur',
+                        include: [{ model: db.User, attributes: ['nom', 'prenom'] }]
+                    }]
+                }
+            ],
+            attributes: ['id_livreur', 'cin', 'about']
+        });
 
+        // Format and Calculate Average Rating
+        const formatted = livreurs.map(l => {
+            const user = l.User || l.utilisateur || null;
+            const vehicules = (l.vehicules || []).map(v => ({
+                id: v.id_vehicule || null,
+                nom: v.nom || null,
+                imgUrl: v.imgUrl || null,
+                capacite: v.capacite || null,
+                images: (v.images || []).map(img => img.url)
+            }));
+            const villes = (l.zonesService || l.villesDesservant || []).map(v => ({
+                id: v.id_ville || null,
+                nom: v.nom || null
+            }));
+
+            // Calculate Rating
+            const evals = l.evaluationsRecues || [];
+            let averageRating = 0;
+            if (evals.length > 0) {
+                const sum = evals.reduce((acc, curr) => acc + (curr.rate || 0), 0);
+                averageRating = (sum / evals.length);
+            }
+
+            // Format Reviews for frontend
+            const reviewsFormatted = evals.map(e => ({
+                id: e.id,
+                rating: e.rate,
+                comment: e.comment,
+                date: e.date,
+                clientName: e.evaluateur && e.evaluateur.User ? `${e.evaluateur.User.prenom} ${e.evaluateur.User.nom}` : 'Client'
+            }));
+
+            return {
+                id: l.id_livreur,
+                cin: l.cin,
+                about: l.about,
+                user: user ? {
+                    nom: user.nom || null,
+                    prenom: user.prenom || null,
+                    email: user.email || null,
+                    numero: user.numero || null,
+                    imgUrl: user.imgUrl || null
+                } : null,
+                vehicules,
+                villes,
+                rating: averageRating > 0 ? parseFloat(averageRating.toFixed(1)) : 0, // Ensure number for sorting
+                reviewCount: evals.length,
+                Reviews: reviewsFormatted
+            };
+        });
+
+        // Sort by Rating DESC and take top 6
+        const topRated = formatted
+            .sort((a, b) => b.rating - a.rating)
+            .slice(0, 6);
+
+        return res.status(200).json({
+            message: 'Top rated livreurs',
+            count: topRated.length,
+            livreurs: topRated
+        });
+    } catch (error) {
+        console.error('Erreur récupération top rated livreurs:', error);
+        return res.status(500).json({ message: 'Erreur serveur.', details: error.message });
+    }
+};
+
+/**
+ * Get details for a specific driver
+ * GET /api/livreur/:id
+ */
+exports.getLivreurDetails = async (req, res) => {
+    const livreurId = req.params.id;
+    try {
+        const l = await db.Livreur.findByPk(livreurId, {
+            include: [
+                {
+                    model: db.User,
+                    attributes: ['nom', 'prenom', 'email', 'numero', 'imgUrl']
+                },
+                {
+                    model: db.Vehicule,
+                    as: 'vehicules',
+                    attributes: ['id_vehicule', 'nom', 'imgUrl', 'capacite'],
+                    include: [{ model: db.VehiculeImage, as: 'images', attributes: ['url'] }]
+                },
+                {
+                    model: db.Ville,
+                    as: 'zonesService',
+                    through: { attributes: [] },
+                    attributes: ['id_ville', 'nom']
+                },
+                {
+                    model: db.Evaluation,
+                    as: 'evaluationsRecues',
+                    required: false,
+                    include: [{
+                        model: db.Client, // To show reviewer name if needed
+                        as: 'evaluateur',
+                        include: [{ model: db.User, attributes: ['nom', 'prenom'] }]
+                    }]
+                }
+            ],
+            attributes: ['id_livreur', 'cin', 'about']
+        });
+
+        if (!l) {
+            return res.status(404).json({ message: 'Livreur non trouvé.' });
+        }
+
+        // Format
+        const user = l.User || l.utilisateur || null;
+        const vehicules = (l.vehicules || []).map(v => ({
+            id: v.id_vehicule || null,
+            nom: v.nom || null,
+            imgUrl: v.imgUrl || null,
+            capacite: v.capacite || null,
+            images: (v.images || []).map(img => img.url)
+        }));
+        const villes = (l.zonesService || l.villesDesservant || []).map(v => ({
+            id: v.id_ville || null,
+            nom: v.nom || null
+        }));
+
+        // Calculate Rating
+        const evals = l.evaluationsRecues || [];
+        let averageRating = 0;
+        if (evals.length > 0) {
+            const sum = evals.reduce((acc, curr) => acc + (curr.rate || 0), 0);
+            averageRating = (sum / evals.length).toFixed(1);
+        }
+
+        // Format Reviews
+        const reviewsFormatted = evals.map(e => ({
+            id: e.id,
+            rating: e.rate,
+            comment: e.comment,
+            date: e.date,
+            clientName: e.evaluateur && e.evaluateur.User ? `${e.evaluateur.User.prenom} ${e.evaluateur.User.nom}` : 'Client'
+        }));
+
+        const formatted = {
+            id: l.id_livreur,
+            cin: l.cin,
+            about: l.about,
+            user: user ? {
+                nom: user.nom || null,
+                prenom: user.prenom || null,
+                email: user.email || null,
+                numero: user.numero || null,
+                imgUrl: user.imgUrl || null
+            } : null,
+            vehicules,
+            villes,
+            rating: averageRating > 0 ? averageRating : null,
+            reviewCount: evals.length,
+            Reviews: reviewsFormatted
+        };
+
+        return res.status(200).json({
+            message: 'Détails du livreur',
+            livreur: formatted
+        });
+
+    } catch (error) {
+        console.error('Erreur récupération détails livreur:', error);
+        return res.status(500).json({ message: 'Erreur serveur.', details: error.message });
+    }
+};

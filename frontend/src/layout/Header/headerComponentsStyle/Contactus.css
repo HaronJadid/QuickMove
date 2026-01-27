@@ -60,7 +60,7 @@
     line-height: 1.5;
 }
 
-.info-item {
+.contact-info-item {
     display: flex;
     align-items: flex-start;
     gap: 20px;
@@ -78,7 +78,7 @@
     flex-shrink: 0;
 }
 
-.info-item span {
+.contact-info-item span {
     display: block;
     font-size: 0.9rem;
     color: #e0e7ff;
@@ -86,7 +86,7 @@
     font-weight: 600;
 }
 
-.info-item p {
+.contact-info-item p {
     font-size: 1.1rem;
     font-weight: 500;
 }

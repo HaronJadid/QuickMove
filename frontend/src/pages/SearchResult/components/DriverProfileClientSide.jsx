@@ -13,8 +13,9 @@ const DriverProfileClientSide = () => {
   let [villes, setVilles] = useState(null)
   let [driverVilles, setDriverVilles] = useState(null)
 
-  const driver = location.state?.driverData;
-  console.log(driver)
+  // Initial state from navigation, but we will fetch fresh data
+  const initialDriver = location.state?.driverData;
+  const [driver, setDriver] = useState(initialDriver);
   const userRetrieved = localStorage.getItem('user');
   const userParsed = userRetrieved ? JSON.parse(userRetrieved) : null;
   const id = userParsed?.userId;
@@ -32,17 +33,37 @@ const DriverProfileClientSide = () => {
   });
 
 
-  const API_URL = import.meta.env.VITE_API_URL;
+  const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000/';
+
+  const getImageUrl = (img) => {
+    if (!img) return '/alt_img.webp';
+    if (img.startsWith('http') || img.startsWith('data:')) return img;
+    const baseUrl = API_URL.endsWith('/') ? API_URL.slice(0, -1) : API_URL;
+    return `${baseUrl}${img}`;
+  }
 
   let [nbrTotalTrips, setNbrTotalTrips] = useState(null)
   useEffect(() => {
+    // Fetch fresh driver details to get vehicle images etc.
+    const fetchFreshDriver = async () => {
+      if (!initialDriver?.id) return;
+      try {
+        const res = await axios.get(`${API_URL}api/livreur/${initialDriver.id}`);
+        if (res.data && res.data.livreur) {
+          setDriver(res.data.livreur);
+        }
+      } catch (err) {
+        console.error("Error fetching fresh driver details:", err);
+      }
+    };
+    fetchFreshDriver();
 
     const getstats = async () => {
       try {
-        const response = await axios.get(`${API_URL}api/livreur/${driver.id}/statistics`);
+        const response = await axios.get(`${API_URL}api/livreur/${initialDriver.id}/statistics`);
         setNbrTotalTrips(response.data.statistics.totalCompletedTrips)
 
-        const res = await axios.get(`${API_URL}api/ville/driver/${driver.id}`)
+        const res = await axios.get(`${API_URL}api/ville/driver/${initialDriver.id}`)
         setDriverVilles(res.data.villes)
       } catch (err) {
         console.error('Error while fetching stats:', err)
@@ -59,7 +80,7 @@ const DriverProfileClientSide = () => {
 
     fetchvilles()
     getstats()
-  }, [driver.id])
+  }, [initialDriver?.id])
 
   const handleBooking = async (e) => {
     e.preventDefault();
@@ -118,9 +139,26 @@ const DriverProfileClientSide = () => {
 
 
 
+  /* --- GALLERY STATE --- */
+  const [showGallery, setShowGallery] = useState(false);
+  const [filterVehicleId, setFilterVehicleId] = useState('all');
 
-  // Safety check to handle missing data
-  if (!driver) return <div className="loading-state">Loading driver profile...</div>;
+  // Collect all images for gallery
+  const allVehicleImages = driver.vehicules?.flatMap(v => {
+    // Determine source of images: v.images array or v.imgUrl
+    let imgs = [];
+    if (v.images && v.images.length > 0) {
+      imgs = v.images.map(img => ({ url: img, type: 'multi' })); // img is url string from backend mapping
+    } else if (v.imgUrl) {
+      imgs = [{ url: v.imgUrl, type: 'single' }];
+    }
+    return imgs.map(i => ({ ...i, vehicleName: v.nom, vehicleId: v.id })); // v.id is mapped from id_vehicule in controller
+  }) || [];
+
+  const filteredImages = filterVehicleId === 'all'
+    ? allVehicleImages
+    : allVehicleImages.filter(img => img.vehicleId == filterVehicleId);
+
 
   return (
     <div className="profile-detail-page">
@@ -134,7 +172,7 @@ const DriverProfileClientSide = () => {
             <div className="cover-bg"></div>
             <div className="header-content">
               <img
-                src={driver.user.imgUrl || '../../../../public/alt_img.webp'}
+                src={getImageUrl(driver.user.imgUrl)}
                 alt={driver.user.nom}
                 className="profile-big-avatar"
               />
@@ -166,9 +204,18 @@ const DriverProfileClientSide = () => {
 
           {/* Available Vehicles */}
           <div className="detail-card">
-            <div className="heading-with-icon">
-              <Truck className="icon" size={24} />
-              <h4 className="section-heading">Available Vehicles</h4>
+            <div className="heading-with-icon" style={{ justifyContent: 'space-between' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                <Truck className="icon" size={24} />
+                <h4 className="section-heading">Available Vehicles</h4>
+              </div>
+              <button
+                className="yellow-tag"
+                style={{ cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '5px' }}
+                onClick={() => setShowGallery(true)}
+              >
+                📷 Show Images
+              </button>
             </div>
             <div className="tags-flex">
               {driver.vehicules?.map((v, index) => (
@@ -296,10 +343,6 @@ const DriverProfileClientSide = () => {
                   </select>
                 </div>
 
-
-
-
-
                 <div className="form-group">
                   <label> Date and time of departure <span className="required">*</span></label>
                   <input type="datetime-local" required
@@ -325,6 +368,46 @@ const DriverProfileClientSide = () => {
 
               <button type="submit" className="confirm-booking-btn"> Send request</button>
             </form>
+          </div>
+        </div>
+      )}
+
+      {/* --- GALLERY MODAL --- */}
+      {showGallery && (
+        <div className="modal-overlay" onClick={() => setShowGallery(false)}>
+          <div className="gallery-modal-content" onClick={e => e.stopPropagation()}>
+            <div className="gallery-header">
+              <h3>Vehicle Gallery</h3>
+              <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
+                <select
+                  value={filterVehicleId}
+                  onChange={(e) => setFilterVehicleId(e.target.value)}
+                  className="auth-input"
+                  style={{ padding: '8px', width: 'auto', marginBottom: 0 }}
+                >
+                  <option value="all">All Vehicles</option>
+                  {driver.vehicules?.map(v => (
+                    <option key={v.id} value={v.id}>{v.nom}</option>
+                  ))}
+                </select>
+                <button className="close-x" onClick={() => setShowGallery(false)}><X size={20} /></button>
+              </div>
+            </div>
+
+            <div className="gallery-grid">
+              {filteredImages.length > 0 ? (
+                filteredImages.map((img, idx) => (
+                  <div key={idx} className="gallery-item">
+                    <img src={getImageUrl(img.url)} alt={img.vehicleName} className="gallery-img" />
+                    <div className="gallery-item-name">{img.vehicleName}</div>
+                  </div>
+                ))
+              ) : (
+                <div style={{ gridColumn: '1/-1', textAlign: 'center', padding: '40px', color: '#888' }}>
+                  No images available for filtering.
+                </div>
+              )}
+            </div>
           </div>
         </div>
       )}

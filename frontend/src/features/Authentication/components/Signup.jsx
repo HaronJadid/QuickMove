@@ -121,7 +121,10 @@ export default function Signup() {
 
       <div className="auth-card">
 
-        <Link to='/' className="brand-logo">🚚 MoveMorocco</Link>
+        <Link to='/' className="brand-logo">
+          <img src="/logo2.png" alt="Logo" className="auth-logo-img" />
+          QuickMove
+        </Link>
         {(!isdriver) ?
           <h3 className="auth-title">  Create a new account</h3>
           :

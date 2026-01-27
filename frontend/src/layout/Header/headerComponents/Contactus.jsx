@@ -39,7 +39,7 @@ export default function Contactus() {
                         <h3>Contact Information</h3>
                         <p className="info-subtitle">Fill up the form and our Team will get back to you within 24 hours.</p>
 
-                        <div className="info-item">
+                        <div className="contact-info-item">
                             <div className="icon-box"><Phone size={20} /></div>
                             <div>
                                 <span>Phone</span>
@@ -47,15 +47,15 @@ export default function Contactus() {
                             </div>
                         </div>
 
-                        <div className="info-item">
+                        <div className="contact-info-item">
                             <div className="icon-box"><Mail size={20} /></div>
                             <div>
                                 <span>Email</span>
-                                <p>mohssinengu@gmail.com</p>
+                                <p>quickmovesup@gmail.com</p>
                             </div>
                         </div>
 
-                        <div className="info-item">
+                        <div className="contact-info-item">
                             <div className="icon-box"><MapPin size={20} /></div>
                             <div>
                                 <span>Address</span>
@@ -63,7 +63,7 @@ export default function Contactus() {
                             </div>
                         </div>
 
-                        <div className="info-item">
+                        <div className="contact-info-item">
                             <div className="icon-box"><Clock size={20} /></div>
                             <div>
                                 <span>Working Hours</span>

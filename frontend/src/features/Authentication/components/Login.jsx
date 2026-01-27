@@ -64,7 +64,10 @@ export default function Login() {
 
       <div className="auth-card">
 
-        <Link to='/' className="brand-logo">🚚 MoveMorocco</Link>
+        <Link to='/' className="brand-logo">
+          <img src="/logo2.png" alt="Logo" className="auth-logo-img" />
+          QuickMove
+        </Link>
         <h3 className="auth-title">Login</h3>
 
         <div className="form-content fade-in">

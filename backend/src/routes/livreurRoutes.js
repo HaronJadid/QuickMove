@@ -6,7 +6,9 @@ const livreurController = require('../controllers/livreurController');
 
 // Route pour rechercher les livreurs par ville (via query parameter)
 // GET /api/livreurs?ville=NomDeLaVille
+// GET /api/livreurs?ville=NomDeLaVille
 router.get('/', livreurController.findLivreursByCity);
+router.get('/top-rated', livreurController.getTopRatedLivreurs);
 router.get('/all', livreurController.getAllLivreurs);
 router.get('/:id/evaluations', livreurController.getEvaluationsByLivreur);
 
@@ -17,6 +19,6 @@ router.put('/:id/demands/:demandeId/status', livreurController.updateDemandStatu
 // Statistics
 router.get('/:id/statistics', livreurController.getDriverStatistics);
 
-// router.get('/:id', livreurController.getLivreurDetails); // Future route
+router.get('/:id', livreurController.getLivreurDetails);
 
 module.exports = router;
