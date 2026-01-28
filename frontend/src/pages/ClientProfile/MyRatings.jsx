@@ -232,43 +232,58 @@ const MyRatings = () => {
                             <p>You haven't rated anyone yet.</p>
                         </div>
                     ) : (
-                        ratings.map(rating => (
-                            <div key={rating.id} className="history-card glass-panel">
-                                <div className="history-header">
-                                    <div className="driver-meta">
-                                        <User size={18} />
-                                        <span className="driver-name">
-                                            {rating.evalue?.User?.nom} {rating.evalue?.User?.prenom}
+                        ratings.map(rating => {
+                            console.log("Rating Item:", rating);
+                            console.log("Driver User Data:", rating?.evalue?.User);
+                            console.log("Image URL:", rating?.evalue?.User?.imgUrl);
+                            const rawImgUrl = rating?.evalue?.User?.imgUrl;
+                            const computedImgUrl = rawImgUrl
+                                ? (rawImgUrl.startsWith('http') ? rawImgUrl : `${API_URL.replace(/\/$/, '')}${rawImgUrl.startsWith('/') ? '' : '/'}${rawImgUrl}`)
+                                : "/alt_img.webp";
+
+                            return (
+                                <div key={rating.id} className="history-card glass-panel">
+                                    <div className="history-header">
+                                        <div className="driver-meta">
+                                            <img
+                                                src={computedImgUrl}
+                                                alt="db"
+                                                className="driver-mini-avatar"
+                                                onError={(e) => { e.target.onerror = null; e.target.src = "/alt_img.webp" }}
+                                            />
+                                            <span className="driver-name">
+                                                {rating.evalue?.User?.nom} {rating.evalue?.User?.prenom}
+                                            </span>
+                                        </div>
+                                        <span className="rating-date">
+                                            {new Date(rating.date).toLocaleDateString()}
                                         </span>
                                     </div>
-                                    <span className="rating-date">
-                                        {new Date(rating.date).toLocaleDateString()}
-                                    </span>
-                                </div>
 
-                                <div className="history-stars">
-                                    {[...Array(5)].map((_, i) => (
-                                        <Star key={i} size={16}
-                                            className={i < rating.rate ? "star-filled" : "star-empty"}
-                                            fill={i < rating.rate ? "currentColor" : "none"}
-                                        />
-                                    ))}
-                                </div>
+                                    <div className="history-stars">
+                                        {[...Array(5)].map((_, i) => (
+                                            <Star key={i} size={16}
+                                                className={i < rating.rate ? "star-filled" : "star-empty"}
+                                                fill={i < rating.rate ? "currentColor" : "none"}
+                                            />
+                                        ))}
+                                    </div>
 
-                                {rating.comment && (
-                                    <p className="history-comment">"{rating.comment}"</p>
-                                )}
+                                    {rating.comment && (
+                                        <p className="history-comment">"{rating.comment}"</p>
+                                    )}
 
-                                <div className="history-actions">
-                                    <button onClick={() => startEdit(rating)} className="action-btn edit" title="Edit">
-                                        <Edit2 size={16} />
-                                    </button>
-                                    <button onClick={() => handleDelete(rating.id)} className="action-btn delete" title="Delete">
-                                        <Trash2 size={16} />
-                                    </button>
+                                    <div className="history-actions">
+                                        <button onClick={() => startEdit(rating)} className="action-btn edit" title="Edit">
+                                            <Edit2 size={16} />
+                                        </button>
+                                        <button onClick={() => handleDelete(rating.id)} className="action-btn delete" title="Delete">
+                                            <Trash2 size={16} />
+                                        </button>
+                                    </div>
                                 </div>
-                            </div>
-                        ))
+                            );
+                        })
                     )}
                 </div>
             </div>

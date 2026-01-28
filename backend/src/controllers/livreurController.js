@@ -269,7 +269,7 @@ exports.getEvaluationsByLivreur = async (req, res) => {
                 {
                     model: db.Client,
                     as: 'evaluateur',
-                    include: [{ model: db.User, attributes: ['nom', 'prenom', 'email'] }]
+                    include: [{ model: db.User, attributes: ['nom', 'prenom', 'email', 'imgUrl'] }]
                 }
             ],
             order: [['date', 'DESC']]
@@ -284,7 +284,8 @@ exports.getEvaluationsByLivreur = async (req, res) => {
                 id: ev.evaluateur.id_client || null,
                 nom: ev.evaluateur.User.nom || null,
                 prenom: ev.evaluateur.User.prenom || null,
-                email: ev.evaluateur.User.email || null
+                email: ev.evaluateur.User.email || null,
+                imgUrl: ev.evaluateur.User.imgUrl || null
             } : null
         }));
 
@@ -357,6 +358,8 @@ exports.getDemandsByDriver = async (req, res) => {
             } : null,
             createdAt: d.createdAt
         }));
+
+
 
         return res.status(200).json({
             message: `Demandes pour le livreur id=${livreurId}`,
@@ -642,6 +645,19 @@ exports.getLivreurDetails = async (req, res) => {
             averageRating = (sum / evals.length).toFixed(1);
         }
 
+        // Count Pending Requests
+        // Note: l.vehicules includes 'images', but we need to fetch demands to count pending ones.
+        // It's better to do a separate count query or include it if not too heavy.
+        // For efficiency, let's do a quick separate count.
+        const pendingCount = await db.Demande.count({
+            where: { status: 'PENDING' },
+            include: [{
+                model: db.Vehicule,
+                as: 'VehiculeUtilise',
+                where: { livreur_id: livreurId }
+            }]
+        });
+
         // Format Reviews
         const reviewsFormatted = evals.map(e => ({
             id: e.id,
@@ -666,6 +682,7 @@ exports.getLivreurDetails = async (req, res) => {
             villes,
             rating: averageRating > 0 ? averageRating : null,
             reviewCount: evals.length,
+            pendingRequests: pendingCount,
             Reviews: reviewsFormatted
         };
 
