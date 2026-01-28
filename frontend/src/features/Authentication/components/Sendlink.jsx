@@ -40,38 +40,57 @@ export default function Sendlink() {
   };
 
   return (
+    <div className="auth-container">
+      <div className="auth-wrapper">
 
-    <div className="auth-container" >
+        {/* LEFT SIDE: VISUAL */}
+        <div className="auth-visual-side">
+          <div className="visual-content">
+            <h1 className="visual-title">Recovery</h1>
+            <p className="visual-text">
+              Don't worry, it happens. We'll help you get back into your account.
+            </p>
+          </div>
+        </div>
 
-      <div className="auth-card">
+        {/* RIGHT SIDE: FORM */}
+        <div className="auth-form-side">
 
-        <Link to='/' className="brand-logo">🚚 MoveMorocco</Link>
-        <h3 className="auth-title">Send Verification Code</h3>
+          <div className="auth-header">
+            <Link to='/' className="logo-big">
+              <img src="/logo2.png" alt="Logo" className="logo-icon" />
+              QuickMove
+            </Link>
+          </div>
 
-        <div className="form-content fade-in">
+          <h2 className="form-title">Forgot Password?</h2>
+          <p className="form-subtitle">Enter your email to receive a recovery code</p>
+
           <form onSubmit={handleSubmit}>
-
-            <div className="input-group">
-              <label>Email </label>
-              <input type="email" placeholder="example@mail.com" className="auth-input" value={email} onChange={emailInput} />
+            <div className="input-container">
+              <label>Email Address</label>
+              <input
+                type="email"
+                placeholder="example@mail.com"
+                className="modern-input"
+                value={email}
+                onChange={emailInput}
+              />
             </div>
 
-
-
-
-            <button type="submit" className="auth-btn">
+            <button type="submit" className="primary-btn">
               Send Code
             </button>
           </form>
 
-          <div className="auth-footer">
-            <span> Remembered your password ?   </span>
-            <Link to='/login' className="link-btn">
-              Login
-            </Link>
+          <div className="form-footer-links">
+            <div>
+              Remembered your password?
+              <Link to='/login' className="form-link">Login here</Link>
+            </div>
           </div>
-        </div>
 
+        </div>
       </div>
     </div>
   );

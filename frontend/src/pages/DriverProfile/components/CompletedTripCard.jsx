@@ -8,8 +8,9 @@ const CompletedTripCard = ({ req }) => {
   const getImageUrl = (img) => {
     if (!img) return '/alt_img.webp';
     if (img.startsWith('http') || img.startsWith('data:')) return img;
-    const baseUrl = API_URL.endsWith('/') ? API_URL.slice(0, -1) : API_URL;
-    return `${baseUrl}${img}`;
+    const base = API_URL.replace(/\/$/, '');
+    const path = img.startsWith('/') ? '' : '/';
+    return `${base}${path}${img}`;
   }
 
   return (
@@ -23,6 +24,7 @@ const CompletedTripCard = ({ req }) => {
             src={getImageUrl(req.client.imgUrl)}
             className="client-avatar grayscale-img"
             alt="client"
+            onError={(e) => { e.target.onerror = null; e.target.src = "/alt_img.webp"; }}
           />
           <div className="client-details">
             <h3 className="client-name">{req.client.prenom} {req.client.nom}</h3>

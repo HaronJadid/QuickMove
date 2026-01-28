@@ -86,9 +86,21 @@ const DriverRatings = () => {
                         <div key={review.id} className="review-card glass-panel">
                             <div className="review-header">
                                 <div className="reviewer-info">
-                                    <div className="avatar-placeholder">
-                                        <User size={20} color="white" />
-                                    </div>
+                                    {(() => {
+                                        const rawImgUrl = review.client?.imgUrl;
+                                        const computedImgUrl = rawImgUrl
+                                            ? (rawImgUrl.startsWith('http') ? rawImgUrl : `${API_URL.replace(/\/$/, '')}${rawImgUrl.startsWith('/') ? '' : '/'}${rawImgUrl}`)
+                                            : "/alt_img.webp";
+
+                                        return (
+                                            <img
+                                                src={computedImgUrl}
+                                                alt="Reviewer"
+                                                className="reviewer-avatar-img"
+                                                onError={(e) => { e.target.onerror = null; e.target.src = "/alt_img.webp" }}
+                                            />
+                                        );
+                                    })()}
                                     <div>
                                         <h4 className="client-name">
                                             {review.client?.prenom} {review.client?.nom || 'Client'}
