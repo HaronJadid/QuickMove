@@ -4,34 +4,44 @@ import '../style/BookingRequestCard.css';
 import axios from 'axios';
 import { useState } from 'react';
 
-const BookingRequestCard = ({ req,onAccept,onReject }) => {
+const BookingRequestCard = ({ req, onAccept, onReject }) => {
+  const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000/';
 
-  let status=useState('')
-  console.log(req)
+  let status = useState('')
 
-  const data =  {
-    client_name: (req.client.prenom + ' '+ req.client.nom) ||"",
-    client_img: req.client.imgUrl || '../../../../public/alt_img.webp',
-    vehicle_name: req.vehicule.nom ||"",
-    price:req.prix || "",
-    from_city:req.villeDepart || "",
+  const rawImgUrl = req.client?.imgUrl;
+  const computedImgUrl = rawImgUrl
+    ? (rawImgUrl.startsWith('http') ? rawImgUrl : `${API_URL.replace(/\/$/, '')}${rawImgUrl.startsWith('/') ? '' : '/'}${rawImgUrl}`)
+    : "/alt_img.webp";
+
+  const data = {
+    client_name: (req.client.prenom + ' ' + req.client.nom) || "Unknown Client",
+    client_img: computedImgUrl,
+    vehicle_name: req.vehicule.nom || "",
+    price: req.prix || "",
+    from_city: req.villeDepart || "",
     to_city: req.villeArrivee || "",
-    comment:req.comment||'',
-    time:req.dateDepartExacte.split('T')[1].split('.')[0].split(':').slice(0,-1).join(':') || "",
-    date:req.dateDepartExacte.split('T')[0] || "",
-    email:req.client.email,
-    numero:req.client.numero,
-    status:req.status,
-    arrivaldate:req.dateArriveeExacte.split('T')[0]|| ''
+    comment: req.comment || '',
+    time: req.dateDepartExacte.split('T')[1].split('.')[0].split(':').slice(0, -1).join(':') || "",
+    date: req.dateDepartExacte.split('T')[0] || "",
+    email: req.client.email,
+    numero: req.client.numero,
+    status: req.status,
+    arrivaldate: req.dateArriveeExacte.split('T')[0] || ''
   };
 
   return (
-    <div className="booking-card">
+    <div className="driver-booking-req-card">
       <div className="card-main-row">
-        
+
         {/* Left Section: Client Info */}
         <div className="client-section">
-          <img src={data.client_img} alt="client" className="client-avatar" />
+          <img
+            src={data.client_img}
+            alt="client"
+            className="client-avatar"
+            onError={(e) => { e.target.onerror = null; e.target.src = "/alt_img.webp"; }}
+          />
           <div className="client-details">
             <h3 className="client-name">{data.client_name}</h3>
             <div className="info-grid">
@@ -43,22 +53,22 @@ const BookingRequestCard = ({ req,onAccept,onReject }) => {
                 <MapPin size={14} className="icon-green" />
                 <span>To: {data.to_city}</span>
               </div>
-             
+
               <div className="info-item">
                 <Calendar size={14} />
                 <span>{data.date}</span>
               </div>
-               <div className="info-item">
+              <div className="info-item">
                 <Clock size={14} />
                 <span>{data.time}</span>
               </div>
-              
+
             </div>
-           
+
             <div className="info-item">
-                <Calendar size={14} />Expected arrival date : 
-                <span>{data.arrivaldate}</span>
-              </div>
+              <Calendar size={14} />Expected arrival date :
+              <span>{data.arrivaldate}</span>
+            </div>
           </div>
         </div>
 
@@ -74,9 +84,9 @@ const BookingRequestCard = ({ req,onAccept,onReject }) => {
       </div>
 
       {data.comment && <div className="comment-box">
-          <h2 className="comment">Client comment : </h2>
-          <p>{data.comment}</p>
-        </div>}
+        <h2 className="comment">Client comment : </h2>
+        <p>{data.comment}</p>
+      </div>}
 
       {/* Action Buttons Row */}
       <div className="card-actions">
@@ -84,7 +94,7 @@ const BookingRequestCard = ({ req,onAccept,onReject }) => {
           <Check size={18} /> Accept booking
         </button>
         <button className="btn-reject" onClick={onReject}>
-           Reject booking
+          <X size={18} /> Reject booking
         </button>
       </div>
     </div>

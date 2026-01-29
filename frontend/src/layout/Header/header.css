@@ -35,17 +35,20 @@
 }
 
 .logo-img {
-  width: 45px;
-  height: 45px;
+  width: 75px;
+  height: 75px;
   object-fit: contain;
+  margin-right: -12px;
 }
 
 .logo-text {
   font-family: 'Cairo', sans-serif;
   font-size: 1.4rem;
   font-weight: 800;
-  color: #1e293b;
   letter-spacing: -0.5px;
+  background: linear-gradient(135deg, #6366f1 0%, #ec4899 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 
 /* --- NAV --- */

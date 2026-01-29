@@ -60,42 +60,63 @@ export default function Login() {
 
 
   return (
-    <div className="auth-container" dir="ltr">
+    <div className="auth-container">
+      <div className="auth-wrapper">
 
-      <div className="auth-card">
-
-        <Link to='/' className="brand-logo">🚚 MoveMorocco</Link>
-        <h3 className="auth-title">Login</h3>
-
-        <div className="form-content fade-in">
-          <form onSubmit={trylogin}>
-            <div className="input-group">
-              <label>Email Address</label>
-              <input type="email" placeholder="example@mail.com" className="auth-input" value={email} onChange={emailInput} />
-            </div>
-
-            <div className="input-group">
-              <label>Password</label>
-              <input type="password" placeholder="••••••••" className="auth-input" value={pwd} onChange={pwdInput} pattern="(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}"
-                title="Password must contain at least 8 characters, one uppercase, one lowercase, one number, and one special character"
-              />
-            </div>
-
-            <div className="forgot-password">
-              <Link to='/sendlink'>Forgot your password?</Link>
-            </div>
-
-            <button className="auth-btn" >Login</button>
-          </form>
-
-          <div className="auth-footer">
-            <span>Don't have an account? </span>
-            <Link to='/signup' className="link-btn">
-              Create account now
-            </Link>
+        {/* LEFT SIDE: VISUAL */}
+        <div className="auth-visual-side">
+          <div className="visual-content">
+            <h1 className="visual-title">Welcome Back!</h1>
+            <p className="visual-text">
+              Log in to access your dashboard and manage your deliveries.
+            </p>
           </div>
         </div>
 
+        {/* RIGHT SIDE: FORM */}
+        <div className="auth-form-side">
+
+          <div className="auth-header">
+            <Link to='/' className="logo-big">
+              <img src="/logo2.png" alt="Logo" className="logo-icon" />
+              QuickMove
+            </Link>
+          </div>
+
+          {/* TABS REMOVED */}
+
+          <h2 className="form-title">Login to Account</h2>
+          <p className="form-subtitle">Enter your credentials to continue</p>
+
+          <form onSubmit={trylogin}>
+            <div className="input-container">
+              <label>Email Address</label>
+              <input type="email" placeholder="example@mail.com" className="modern-input" value={email} onChange={emailInput} />
+            </div>
+
+            <div className="input-container">
+              <label>Password</label>
+              <input type="password" placeholder="••••••••" className="modern-input" value={pwd} onChange={pwdInput} />
+            </div>
+
+            <div className="forgot-password">
+              <Link to='/sendlink'>Forgot password?</Link>
+            </div>
+
+            <button className="primary-btn">Login</button>
+          </form>
+
+          <div className="form-footer-links">
+            <div>
+              Don't have an account?
+              <Link to='/signup' className="form-link">Create one now</Link>
+            </div>
+            <Link to='/' className="back-home">
+              &larr; Back to Home
+            </Link>
+          </div>
+
+        </div>
       </div>
     </div>
   );

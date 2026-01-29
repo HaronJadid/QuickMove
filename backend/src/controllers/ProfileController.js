@@ -35,9 +35,15 @@ exports.updateClientProfile = async (req, res) => {
         }
 
         // Update other fields if provided
+        // Update other fields if provided
         if (nom) user.nom = nom;
         if (prenom) user.prenom = prenom;
         if (numero) user.numero = numero;
+
+        // Handle Image Upload
+        if (req.file) {
+            user.imgUrl = `/uploads/avatars/${req.file.filename}`;
+        }
 
         await user.save();
 
