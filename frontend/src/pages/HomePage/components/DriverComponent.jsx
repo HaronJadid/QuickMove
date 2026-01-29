@@ -61,7 +61,7 @@ export default function DriverComponent({ driver,ville_dep,ville_arr }) {
                 const res = await axios.post(`${API_URL}api/ai/prix_estimee`, {
                     ville_dep: ville_dep,
                     ville_darr: ville_arr,
-                    rating: driver.rating,
+                    rating: driver.rating || 2,
                     // On prend le premier véhicule du livreur
                     vehicule: driver.vehicules?.[0]?.nom 
                 });
