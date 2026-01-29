@@ -8,19 +8,15 @@ const BookingRequestCard = ({ req, onAccept, onReject }) => {
   const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000/';
 
   let status = useState('')
-  console.log(req)
 
-  const getImageUrl = (img) => {
-    if (!img) return '/alt_img.webp';
-    if (img.startsWith('http') || img.startsWith('data:')) return img;
-    // Remove trailing slash from API_URL to avoid double slashes with img which starts with /
-    const baseUrl = API_URL.endsWith('/') ? API_URL.slice(0, -1) : API_URL;
-    return `${baseUrl}${img}`;
-  }
+  const rawImgUrl = req.client?.imgUrl;
+  const computedImgUrl = rawImgUrl
+    ? (rawImgUrl.startsWith('http') ? rawImgUrl : `${API_URL.replace(/\/$/, '')}${rawImgUrl.startsWith('/') ? '' : '/'}${rawImgUrl}`)
+    : "/alt_img.webp";
 
   const data = {
-    client_name: (req.client.prenom + ' ' + req.client.nom) || "",
-    client_img: getImageUrl(req.client.imgUrl),
+    client_name: (req.client.prenom + ' ' + req.client.nom) || "Unknown Client",
+    client_img: computedImgUrl,
     vehicle_name: req.vehicule.nom || "",
     price: req.prix || "",
     from_city: req.villeDepart || "",
@@ -40,7 +36,12 @@ const BookingRequestCard = ({ req, onAccept, onReject }) => {
 
         {/* Left Section: Client Info */}
         <div className="client-section">
-          <img src={data.client_img} alt="client" className="client-avatar" />
+          <img
+            src={data.client_img}
+            alt="client"
+            className="client-avatar"
+            onError={(e) => { e.target.onerror = null; e.target.src = "/alt_img.webp"; }}
+          />
           <div className="client-details">
             <h3 className="client-name">{data.client_name}</h3>
             <div className="info-grid">

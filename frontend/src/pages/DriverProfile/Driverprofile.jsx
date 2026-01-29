@@ -1,5 +1,6 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
+import axios from 'axios'
 import { useAuth } from '../../features/Authentication/components/Authprovider'
 // Components
 import DrPersonalInfo from './components/DrPersonalInfo'
@@ -19,6 +20,32 @@ export default function Driverprofile() {
     const { logout } = useAuth()
     const [selectedTab, setSelectedTab] = useState('overview')
     const [isSidebarOpen, setIsSidebarOpen] = useState(true)
+    const [pendingRequests, setPendingRequests] = useState(0)
+
+    const userRetrieved = localStorage.getItem('user');
+    const userParsed = userRetrieved ? JSON.parse(userRetrieved) : null;
+    const livreurId = userParsed?.userId; // Assuming userId maps to livreurId
+
+    const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000/';
+
+    useEffect(() => {
+        const fetchNotifications = async () => {
+            if (!livreurId) return;
+            try {
+                const res = await axios.get(`${API_URL}api/livreur/${livreurId}`);
+                if (res.data && res.data.livreur) {
+                    setPendingRequests(res.data.livreur.pendingRequests || 0);
+                }
+            } catch (err) {
+                console.error("Error fetching notifications:", err);
+            }
+        };
+
+        fetchNotifications();
+        // Optional: Poll every minute
+        const interval = setInterval(fetchNotifications, 60000);
+        return () => clearInterval(interval);
+    }, [livreurId]);
 
     // Sidebar Items Config
     const sidebarItems = [
@@ -61,6 +88,11 @@ export default function Driverprofile() {
                             >
                                 <div className="icon-wrapper"><Icon size={20} /></div>
                                 {isSidebarOpen && <span>{item.label}</span>}
+                                {item.id === 'myrequests' && pendingRequests > 0 && (
+                                    <span className={`notification-badge ${!isSidebarOpen ? 'collapsed-badge' : ''}`}>
+                                        {pendingRequests}
+                                    </span>
+                                )}
                             </button>
                         )
                     })}

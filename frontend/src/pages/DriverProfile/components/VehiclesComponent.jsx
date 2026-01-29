@@ -1,4 +1,5 @@
 import { toast } from 'react-toastify';
+import { AlertTriangle } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
 import '../style/VehiclesComponent.css';
 import axios from 'axios';
@@ -20,6 +21,10 @@ const VehiclesComponent = () => {
   const [vehicles, setVehicles] = useState([]);
   const [showForm, setShowForm] = useState(false);
   const [editingId, setEditingId] = useState(null);
+
+  // Modal State
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [vehicleToDelete, setVehicleToDelete] = useState(null);
 
   const [formData, setFormData] = useState({
     nom: '',
@@ -78,17 +83,28 @@ const VehiclesComponent = () => {
     }
   };
 
-  const handleDelete = async (id) => {
-    if (window.confirm("Delete this vehicle?")) {
-      try {
-        await axios.delete(`${API_URL}api/vehicule/${id}`, { data: { livreur_id: livreur_id } });
-        toast.success("Vehicle deleted successfully");
-        fetchVehicles();
-      } catch (err) {
-        toast.error("Failed to delete vehicle");
-        console.error(err);
-      }
+  const initiateDelete = (id) => {
+    setVehicleToDelete(id);
+    setShowDeleteModal(true);
+  };
+
+  const confirmDelete = async () => {
+    if (!vehicleToDelete) return;
+    try {
+      await axios.delete(`${API_URL}api/vehicule/${vehicleToDelete}`, { data: { livreur_id: livreur_id } });
+      toast.success("Vehicle deleted successfully");
+      fetchVehicles();
+      setShowDeleteModal(false);
+      setVehicleToDelete(null);
+    } catch (err) {
+      toast.error("Failed to delete vehicle");
+      console.error(err);
     }
+  };
+
+  const cancelDelete = () => {
+    setShowDeleteModal(false);
+    setVehicleToDelete(null);
   };
 
   const resetForm = () => {
@@ -174,7 +190,7 @@ const VehiclesComponent = () => {
                     // We don't populate files for edit currently
                     setShowForm(true);
                   }}>Modify</button>
-                  <button className="delete-btn" onClick={() => handleDelete(v.id_vehicule)}>Delete</button>
+                  <button className="delete-btn" onClick={() => initiateDelete(v.id_vehicule)}>Delete</button>
                 </div>
               </div>
             ))
@@ -182,6 +198,27 @@ const VehiclesComponent = () => {
         </div>
 
       </div>
+      {/* Delete Confirmation Modal */}
+      {showDeleteModal && (
+        <div className="delete-modal-overlay">
+          <div className="delete-modal-content">
+            <div className="delete-modal-icon">
+              <AlertTriangle size={32} />
+            </div>
+            <h3 className="delete-modal-title">Delete Vehicle?</h3>
+            <p className="delete-modal-text">
+              Are you sure you want to delete this vehicle?
+              <br />
+              <span style={{ fontWeight: 600, color: '#ef4444' }}>You can't undo this action after it's done.</span>
+            </p>
+            <div className="delete-modal-actions">
+              <button className="btn-cancel" onClick={cancelDelete}>Cancel</button>
+              <button className="btn-confirm-delete" onClick={confirmDelete}>Yes, Delete</button>
+            </div>
+          </div>
+        </div>
+      )}
+
     </div>
   );
 };

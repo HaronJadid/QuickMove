@@ -77,88 +77,113 @@ export default function ResetPassword() {
   };
 
   return (
-    <div className="auth-container" dir="ltr">
-      <div className="auth-card">
+    <div className="auth-container">
+      <div className="auth-wrapper">
 
-        <Link to='/' className="brand-logo">🚚 MoveMorocco</Link>
-        <h3 className="auth-title">
-          {step === 1 ? "Verify Code" : "Reset Password"}
-        </h3>
-
-        <div className="form-content fade-in">
-          {step === 1 ? (
-            <form onSubmit={handleVerifyCode}>
-              <div className="input-group">
-                <label>Email Address</label>
-                <input
-                  type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  className="auth-input"
-                  placeholder="Enter your email"
-                  required
-                />
-              </div>
-
-              <div className="input-group">
-                <label>Verification Code</label>
-                <input
-                  type="text"
-                  value={code}
-                  onChange={(e) => setCode(e.target.value)}
-                  className="auth-input"
-                  placeholder="Enter 6-digit code"
-                  required
-                  style={{ letterSpacing: '2px', fontWeight: 'bold' }}
-                />
-              </div>
-
-              <button type="submit" className="auth-btn" disabled={loading}>
-                {loading ? "Verifying..." : "Verify Code"}
-              </button>
-            </form>
-          ) : (
-            <form onSubmit={handleResetPassword}>
-              <div className="input-group">
-                <label>New Password</label>
-                <input
-                  type="password"
-                  placeholder="••••••••"
-                  className="auth-input"
-                  value={pwd}
-                  onChange={(e) => setPwd(e.target.value)}
-                  pattern="(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}"
-                  title="Password must contain at least 8 characters, one uppercase, one lowercase, one number, and one special character"
-                  required
-                />
-              </div>
-
-              <div className="input-group">
-                <label>Confirm Password</label>
-                <input
-                  type="password"
-                  placeholder="••••••••"
-                  className="auth-input"
-                  value={confirmpwd}
-                  onChange={(e) => setConfirmpwd(e.target.value)}
-                  required
-                />
-              </div>
-
-              <button type="submit" className="auth-btn" disabled={loading}>
-                {loading ? "Updating..." : "Update Password"}
-              </button>
-            </form>
-          )}
-
-          <div className="auth-footer">
-            <span>Remembered your password? </span>
-            <Link to='/login' className="link-btn">
-              Login
-            </Link>
+        {/* LEFT SIDE: VISUAL */}
+        <div className="auth-visual-side">
+          <div className="visual-content">
+            <h1 className="visual-title">Reset Password</h1>
+            <p className="visual-text">
+              Secure your account with a new, strong password.
+            </p>
           </div>
         </div>
 
+        {/* RIGHT SIDE: FORM */}
+        <div className="auth-form-side">
+
+          <div className="auth-header">
+            <Link to='/' className="logo-big">
+              <img src="/logo2.png" alt="Logo" className="logo-icon" />
+              QuickMove
+            </Link>
+          </div>
+
+          <h2 className="form-title">
+            {step === 1 ? "Verify Code" : "New Password"}
+          </h2>
+          <p className="form-subtitle">
+            {step === 1
+              ? "We sent a code to your email"
+              : "Create a new password for your account"}
+          </p>
+
+          <div className="form-content">
+            {step === 1 ? (
+              <form onSubmit={handleVerifyCode}>
+                <div className="input-container">
+                  <label>Email Address</label>
+                  <input
+                    type="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    className="modern-input"
+                    placeholder="Enter your email"
+                    required
+                  />
+                </div>
+
+                <div className="input-container">
+                  <label>Verification Code</label>
+                  <input
+                    type="text"
+                    value={code}
+                    onChange={(e) => setCode(e.target.value)}
+                    className="modern-input"
+                    placeholder="Enter 6-digit code"
+                    required
+                    style={{ letterSpacing: '2px', fontWeight: 'bold' }}
+                  />
+                </div>
+
+                <button type="submit" className="primary-btn" disabled={loading}>
+                  {loading ? "Verifying..." : "Verify Code"}
+                </button>
+              </form>
+            ) : (
+              <form onSubmit={handleResetPassword}>
+                <div className="input-container">
+                  <label>New Password</label>
+                  <input
+                    type="password"
+                    placeholder="••••••••"
+                    className="modern-input"
+                    value={pwd}
+                    onChange={(e) => setPwd(e.target.value)}
+                    pattern="(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}"
+                    title="Password must contain at least 8 characters, one uppercase, one lowercase, one number, and one special character"
+                    required
+                  />
+                </div>
+
+                <div className="input-container">
+                  <label>Confirm Password</label>
+                  <input
+                    type="password"
+                    placeholder="••••••••"
+                    className="modern-input"
+                    value={confirmpwd}
+                    onChange={(e) => setConfirmpwd(e.target.value)}
+                    required
+                  />
+                </div>
+
+                <button type="submit" className="primary-btn" disabled={loading}>
+                  {loading ? "Updating..." : "Update Password"}
+                </button>
+              </form>
+            )}
+
+            <div className="form-footer-links">
+              <div>
+                Remembered your password?
+                <Link to='/login' className="form-link">Login here</Link>
+              </div>
+            </div>
+          </div>
+
+        </div>
       </div>
     </div>
   );

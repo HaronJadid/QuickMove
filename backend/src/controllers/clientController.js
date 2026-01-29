@@ -106,7 +106,7 @@ exports.getBookingsByClient = async (req, res) => {
                   include: [
                     {
                       model: db.User,
-                      attributes: ['nom', 'prenom']
+                      attributes: ['nom', 'prenom', 'imgUrl']
                     },
                     {
                       model: db.Evaluation,
@@ -134,7 +134,7 @@ exports.getBookingsByClient = async (req, res) => {
         const sum = evals.reduce((acc, e) => acc + Number(e.rate), 0);
         const avg = count > 0 ? (sum / count).toFixed(1) : "0.0";
 
-        console.log(`[DEBUG] Driver ${u.nom}: ${count} reviews, Sum: ${sum}, Avg: ${avg}`);
+        console.log(`[DEBUG] Driver ${u.nom}: ${count} reviews, Sum: ${sum}, Avg: ${avg}, Img: ${u.imgUrl}`);
 
         driverInfo = {
           id: d.VehiculeUtilise.proprietaire.id_livreur,
@@ -142,7 +142,8 @@ exports.getBookingsByClient = async (req, res) => {
           prenom: u.prenom,
           fullName: `${u.prenom} ${u.nom}`,
           rating: avg,
-          reviewsCount: count
+          reviewsCount: count,
+          imgUrl: u.imgUrl
         };
       }
 

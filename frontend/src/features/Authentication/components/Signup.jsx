@@ -117,75 +117,100 @@ export default function Signup() {
 
 
   return (
-    <div className="auth-container" >
+    <div className="auth-container">
+      <div className="auth-wrapper reverse">
 
-      <div className="auth-card">
+        {/* LEFT SIDE: VISUAL (Now Right side due to reverse) */}
+        <div className="auth-visual-side">
+          <div className="visual-content">
+            <h1 className="visual-title">Join QuickMove</h1>
+            <p className="visual-text">
+              {isdriver
+                ? "Start earning by delivering packages with your vehicle."
+                : "The fastest way to move your items anywhere, anytime."}
+            </p>
+          </div>
+        </div>
 
-        <Link to='/' className="brand-logo">
-          <img src="/logo2.png" alt="Logo" className="auth-logo-img" />
-          QuickMove
-        </Link>
-        {(!isdriver) ?
-          <h3 className="auth-title">  Create a new account</h3>
-          :
-          <h3 className="auth-title"> Sign up now as a driver and start receiving requests ! </h3>
-        }
+        {/* RIGHT SIDE: FORM (Now Left side due to reverse) */}
+        <div className="auth-form-side">
 
-        <div className="form-content fade-in">
+          <div className="auth-header">
+            <Link to='/' className="logo-big">
+              <img src="/logo2.png" alt="Logo" className="logo-icon" />
+              QuickMove
+            </Link>
+          </div>
+
+          {/* TABS REMOVED */}
+
+          <h2 className="form-title">Create Account</h2>
+          <p className="form-subtitle">
+            {isdriver ? "Partner with us today" : "Get started for free"}
+          </p>
+
+          <div className="role-toggle-container">
+            <button
+              className={`role-btn ${!isdriver ? 'active' : ''}`}
+              onClick={() => { setIsdriver(false); navigate('/signup'); }}
+            >
+              Client
+            </button>
+            <button
+              className={`role-btn ${isdriver ? 'active' : ''}`}
+              onClick={() => { setIsdriver(true); navigate('/driversignup'); }}
+            >
+              Driver
+            </button>
+          </div>
+
           <form onSubmit={trysignup}>
-            <div className="input-group">
-              <label>First name</label>
-              <input type="text" placeholder="First name " className="auth-input" value={prenom} onChange={prenomInput} />
-            </div>
-            <div className="input-group">
-              <label>Last name</label>
-              <input type="text" placeholder="Last name" className="auth-input" value={nom} onChange={nomInput} />
+            <div className="input-container">
+              <label>First Name</label>
+              <input type="text" placeholder="John" className="modern-input" value={prenom} onChange={prenomInput} />
             </div>
 
-            <div className="input-group">
-              <label> Email</label>
-              <input type="email" placeholder="example@mail.com" className="auth-input" value={email} onChange={emailInput} />
+            <div className="input-container">
+              <label>Last Name</label>
+              <input type="text" placeholder="Doe" className="modern-input" value={nom} onChange={nomInput} />
             </div>
 
-            <div className="input-group">
-              <label>Phone number </label>
-              <input type="tel" placeholder="06XXXXXXXX" className="auth-input" value={tel} onChange={telInput} />
+            <div className="input-container">
+              <label>Email Address</label>
+              <input type="email" placeholder="john@example.com" className="modern-input" value={email} onChange={emailInput} />
             </div>
 
-            <div className="input-group">
-              <label>Password </label>
-              <input type="password" placeholder="••••••••" className="auth-input" value={pwd} onChange={pwdInput} pattern="(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}"
-                title="Password must contain at least 8 characters, 1 majuscule, 1 minuscule, a number and a special character"
-              />
-            </div>
-            <div className="input-group">
-              <label> Insert your profile picture </label>
-              <input type="file" className="auth-input" accept="image/*" onChange={fileInput} />
+            <div className="input-container">
+              <label>Phone Number</label>
+              <input type="tel" placeholder="06XXXXXXXX" className="modern-input" value={tel} onChange={telInput} />
             </div>
 
-            <button className="auth-btn" disabled={isLoading}>
-              {isLoading ? 'Creating Account...' : 'Create account'}
+            <div className="input-container">
+              <label>Password</label>
+              <input type="password" placeholder="••••••••" className="modern-input" value={pwd} onChange={pwdInput} />
+            </div>
+
+            <div className="input-container">
+              <label>Profile Picture</label>
+              <input type="file" className="modern-input" accept="image/*" onChange={fileInput} style={{ padding: '8px' }} />
+            </div>
+
+            <button className="primary-btn" disabled={isLoading}>
+              {isLoading ? 'Creating Account...' : 'Sign Up'}
             </button>
           </form>
 
-          {(isdriver) ? (<div className="auth-footer">
-            <span>Already have an account ?  </span>
-            <Link to='/login' className="link-btn">
-              Login
+          <div className="form-footer-links">
+            <div>
+              Already have an account?
+              <Link to='/login' className="form-link">Login here</Link>
+            </div>
+            <Link to='/' className="back-home">
+              &larr; Back to Home
             </Link>
+          </div>
 
-          </div>)
-            :
-            (<div className="auth-footer">
-              <span>Do you want to sign up as a driver ? </span>
-              <button onClick={() => setIsdriver(true)} className="link-btn">
-                Click here
-              </button>
-
-            </div>)
-          }
         </div>
-
       </div>
     </div>
   );

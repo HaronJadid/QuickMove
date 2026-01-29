@@ -247,3 +247,11 @@
     color: #f59e0b;
     margin-top: 5px;
 }
+
+.driver-mini-avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 1px solid #e2e8f0;
+}

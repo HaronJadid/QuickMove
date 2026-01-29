@@ -3,7 +3,17 @@ import { MapPin, Calendar, Star, RotateCcw, CheckCircle } from 'lucide-react';
 import '../style/TripHistoryCard.css';
 
 const TripHistoryCard = ({ booking }) => {
-  console.log(booking)
+  console.log("Booking Data:", booking);
+  console.log("Driver Data:", booking?.driver);
+  console.log("Driver Image URL from DB:", booking?.driver?.imgUrl);
+
+  const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000/';
+  const rawImgUrl = booking?.driver?.imgUrl;
+  const computedImgUrl = rawImgUrl
+    ? (rawImgUrl.startsWith('http') ? rawImgUrl : `${apiUrl.replace(/\/$/, '')}${rawImgUrl.startsWith('/') ? '' : '/'}${rawImgUrl}`)
+    : "/alt_img.webp";
+
+  console.log("Computed Image URL:", computedImgUrl);
   const price = parseFloat(booking?.prix || 0).toFixed(0);
   const date = booking?.dateDepartExacte ? booking.dateDepartExacte.split('T')[0] : '2024-01-01';
   const status = booking?.status || 'COMPLETED';
@@ -31,7 +41,15 @@ const TripHistoryCard = ({ booking }) => {
 
         {/* 1. Image Section (Left) */}
         <div className="driver-avatar-box">
-          <img src={booking?.livreur?.imgUrl || "/alt_img.webp"} alt="driver" />
+          <img
+            src={computedImgUrl}
+            alt="driver"
+            onError={(e) => {
+              e.target.onerror = null;
+              e.target.src = "/alt_img.webp";
+              console.log("Image failed to load, fallback applied");
+            }}
+          />
           <div className="v-check"><CheckCircle size={14} fill="#2ecc71" color="white" /></div>
         </div>
 
