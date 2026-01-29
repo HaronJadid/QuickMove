@@ -1,4 +1,4 @@
-import React, {useEffect,useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import axios from 'axios'; // Ajout de axios
 import '../style/DriverComponent.css';
 import { useTranslation } from 'react-i18next';
@@ -14,8 +14,8 @@ import {
   Truck
 } from 'lucide-react';
 
-export default function DriverComponent({ driver,ville_dep,ville_arr }) {
-  console.log(driver.vehicules?.[0]?.nom );
+export default function DriverComponent({ driver, ville_dep, ville_arr }) {
+  console.log(driver.vehicules?.[0]?.nom);
   const { t } = useTranslation();
   const navigate = useNavigate();
 
@@ -48,36 +48,48 @@ export default function DriverComponent({ driver,ville_dep,ville_arr }) {
 
   const handleViewProfile = () => {
     localStorage.setItem('driverID', driver.id);
-    navigate('/lookupdriverprofile', { state: { driverData: driver } });
+    navigate('/lookupdriverprofile', {
+      state: {
+        driverData: driver,
+        // On ajoute un objet de contexte pour passer les infos à la page suivante
+        bookingContext: {
+          ville_dep: ville_dep,
+          ville_arr: ville_arr,
+          rating: driver.rating || 2,
+          vehicule: driver.vehicules?.[0]?.nom
+          
+        }
+      }
+    });
   };
 
 
-  const [prix, setPrix] = useState(null);
-  const [loading, setLoading] = useState(false);
-  useEffect(() => {
-        const fetchEstimation = async () => {
-            try {
-                setLoading(true);
-                const res = await axios.post(`${API_URL}api/ai/prix_estimee`, {
-                    ville_dep: ville_dep,
-                    ville_darr: ville_arr,
-                    rating: driver.rating || 2,
-                    // On prend le premier véhicule du livreur
-                    vehicule: driver.vehicules?.[0]?.nom 
-                });
-                setLoading(false)
-                console.log(res);
-                setPrix(res.data.estimation);
-                
-            } catch (err) {
-                console.error("Erreur estimation pour livreur", driver.id);
-            } 
-        };
+  // const [prix, setPrix] = useState(null);
+  // const [loading, setLoading] = useState(false);
+  // useEffect(() => {
+  //   const fetchEstimation = async () => {
+  //     try {
+  //       setLoading(true);
+  //       const res = await axios.post(`${API_URL}api/ai/prix_estimee`, {
+  //         ville_dep: ville_dep,
+  //         ville_darr: ville_arr,
+  //         rating: driver.rating || 2,
+  //         // On prend le premier véhicule du livreur
+  //         vehicule: driver.vehicules?.[0]?.nom
+  //       });
+  //       setLoading(false)
+  //       console.log(res);
+  //       setPrix(res.data.estimation);
 
-        if (ville_dep && ville_arr) {
-            fetchEstimation();
-        }
-    }, [driver.id, ville_dep, ville_arr]);
+  //     } catch (err) {
+  //       console.error("Erreur estimation pour livreur", driver.id);
+  //     }
+  //   };
+
+  //   if (ville_dep && ville_arr) {
+  //     fetchEstimation();
+  //   }
+  // }, [driver.id, ville_dep, ville_arr]);
 
   return (
     <div className="driver-card">
@@ -160,16 +172,16 @@ export default function DriverComponent({ driver,ville_dep,ville_arr }) {
             <span>{reviewCount} Reviews</span>
           </div>
         </div>
-        <div className="price-estimation-box">
-            <span className="label-small">Prix estimé par IA</span>
-            <div className="price-value" style={{ color: '#2ecc71', fontWeight: 'bold', fontSize: '1.2rem' }}>
-                {loading ? (
-                    <span className="loading-text">Calcul...</span>
-                ) : (
-                    prix ? `${prix} MAD` : "-- MAD"
-                )}
-            </div>
-        </div>
+        {/* <div className="price-estimation-box">
+          <span className="label-small">Prix estimé par IA</span>
+          <div className="price-value" style={{ color: '#2ecc71', fontWeight: 'bold', fontSize: '1.2rem' }}>
+            {loading ? (
+              <span className="loading-text">Calcul...</span>
+            ) : (
+              prix ? `${prix} MAD` : "-- MAD"
+            )}
+          </div>
+        </div> */}
 
         {/* Action Button */}
         <button className="view-profile-btn" onClick={handleViewProfile}>

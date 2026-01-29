@@ -90,6 +90,19 @@ const BookingRequestCard = ({ req, onAccept, onReject }) => {
 
       {/* Action Buttons Row */}
       <div className="card-actions">
+        <button className="btn-accept" >
+          <a
+            href={`https://wa.me/+212${data.numero}?text=${encodeURIComponent(`Bonjour, je vous contacte via QuickMove, concernant le prix ${data.prix}DH, ca me convient pas!`)}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="btn-accept"
+            style={{ textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: '8px' }}
+          >
+            <Check size={18} /> Envoyer sur WhatsApp
+          </a>
+          
+        </button>
+
         <button className="btn-accept" onClick={onAccept}>
           <Check size={18} /> Accept booking
         </button>
