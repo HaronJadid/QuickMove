@@ -3,8 +3,77 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { toast } from 'react-toastify';
-import { Mail, Phone, MapPin, CheckCircle, Aperture, Star, Truck, Calendar, X, ShieldCheck,
-  Sparkles, Calculator, RefreshCw  } from 'lucide-react';
+import { Mail, Phone, MapPin, Star, Truck, Calendar, X, ShieldCheck } from 'lucide-react';
+
+/* ─────────────────────────────────────────────
+   AI Price Popup Component
+───────────────────────────────────────────── */
+function AiPricePopup({ result, loading, error, onAccept, onReject, villeDepNom, villeArrNom }) {
+  return (
+    <div className="ai-popup-overlay" onClick={onReject}>
+      <div className="ai-popup-card" onClick={e => e.stopPropagation()}>
+        {loading && (
+          <div className="ai-popup-loading">
+            <div className="ai-spinner" />
+            <p>Calculating AI price estimate…</p>
+          </div>
+        )}
+        {error && !loading && (
+          <div className="ai-popup-error">
+            <p>⚠️ {error}</p>
+            <button className="btn-ai-reject" onClick={onReject}>Close</button>
+          </div>
+        )}
+        {result && !loading && (
+          <>
+            <div className="ai-popup-header">
+              <span className="ai-sparkle">✨</span>
+              <div>
+                <h4>AI Price Estimation</h4>
+                <p className="ai-route-label">{villeDepNom} → {villeArrNom}</p>
+              </div>
+            </div>
+            <div className="ai-range">
+              <span className="ai-range-min">{result.estimation.min} DH</span>
+              <span className="ai-range-sep">—</span>
+              <span className="ai-range-max">{result.estimation.max} DH</span>
+            </div>
+            <p className="ai-range-hint">Suggested range based on distance &amp; vehicle</p>
+            <div className="ai-details">
+              <div className="ai-detail-row">
+                <span>📍 Road distance</span>
+                <strong>{result.details.distance_km} km</strong>
+              </div>
+              <div className="ai-detail-row">
+                <span>⛽ Fuel ref. price</span>
+                <strong>{result.details.gas_price} DH/L</strong>
+              </div>
+              <div className="ai-detail-row">
+                <span>🧮 Base price</span>
+                <strong>{result.details.base_price_calc} DH</strong>
+              </div>
+              {result.details.ai_analysis?.difficulty_surcharge !== '+0%' && (
+                <div className="ai-detail-row surcharge">
+                  <span>⚡ Difficulty surcharge</span>
+                  <strong>{result.details.ai_analysis.difficulty_surcharge}</strong>
+                </div>
+              )}
+            </div>
+            <div className="ai-popup-actions">
+              <button className="btn-ai-reject" onClick={onReject}>✗ Reject</button>
+              <button
+                className="btn-ai-accept"
+                onClick={() => onAccept(Math.round((result.estimation.min + result.estimation.max) / 2))}
+              >
+                ✓ Accept – use {Math.round((result.estimation.min + result.estimation.max) / 2)} DH
+              </button>
+            </div>
+          </>
+        )}
+      </div>
+    </div>
+  );
+}
 
 
 
@@ -162,52 +231,49 @@ const DriverProfileClientSide = () => {
     ? allVehicleImages
     : allVehicleImages.filter(img => img.vehicleId == filterVehicleId);
 
-// --- AJOUT IA : ETATS ET FONCTION ---
-  const [userComment, setUserComment] = useState("");
-  const [predictionResult, setPredictionResult] = useState(null);
-  const [isPredicting, setIsPredicting] = useState(false);
+  // --- AI POPUP STATE ---
+  const [showAiPopup, setShowAiPopup] = useState(false);
+  const [aiResult, setAiResult] = useState(null);
+  const [aiLoading, setAiLoading] = useState(false);
+  const [aiError, setAiError] = useState(null);
 
-  const handleAiPrediction = async () => {
-    // Vérification : on doit avoir les villes du contexte (recherche précédente)
-    if (!bookingContext?.ville_dep || !bookingContext?.ville_arr) {
-        toast.error("Veuillez d'abord effectuer une recherche (Départ/Arrivée) pour utiliser l'IA.");
-        return;
+  const getVilleNom = (id) =>
+    villes?.find(v => String(v.id_ville ?? v.id) === String(id))?.nom || id;
+
+  const handleAiEstimate = async () => {
+    if (!ville_depart || !ville_arrivee) {
+      toast.error('No departure / arrival city found. Please search again.');
+      return;
     }
-
-    setIsPredicting(true);
+    const depNom = getVilleNom(ville_depart);
+    const arrNom = getVilleNom(ville_arrivee);
+    setAiResult(null);
+    setAiError(null);
+    setAiLoading(true);
+    setShowAiPopup(true);
     try {
-        const res = await axios.post(`${API_URL}api/ai/prix_estimee`, {
-            ville_dep: bookingContext.ville_dep,
-            ville_darr: bookingContext.ville_arr,
-            vehicule: driver.vehicules?.[0]?.nom || 'Fourgon', 
-            rating: driver.rating || 5,
-            commentaire: userComment // On envoie le commentaire à l'IA
-        });
-
-        if (res.data.success) {
-            setPredictionResult(res.data);
-            
-            // OPTIONNEL : Pré-remplir le formulaire de réservation avec le nouveau prix
-            // Si tu veux que le prix IA devienne le prix par défaut lors du booking :
-            setBookingData(prev => ({
-                ...prev,
-                prix: res.data.estimation.min, // ou la moyenne
-                comment: userComment // On garde le commentaire pour la réservation finale
-            }));
-            
-            toast.success("Analyse IA terminée !");
-        }
-    } catch (error) {
-        console.error(error);
-        toast.error("Erreur lors de l'analyse IA");
+      const res = await axios.post(`${API_URL}api/ai/prix_estimee`, {
+        ville_dep: depNom,
+        ville_darr: arrNom,
+        vehicule: driver.vehicules?.[0]?.nom || 'Fourgon',
+        rating: driver.rating || 5,
+        commentaire: bookingData.comment || ''
+      });
+      if (res.data.success) {
+        setAiResult(res.data);
+      } else {
+        setAiError('AI estimation failed. Try again.');
+      }
+    } catch (err) {
+      setAiError('Could not reach the AI service.');
     } finally {
-        setIsPredicting(false);
+      setAiLoading(false);
     }
   };
 
-  const resetPrediction = () => {
-    setPredictionResult(null);
-    setUserComment("");
+  const handleAiAccept = (price) => {
+    setBookingData(prev => ({ ...prev, prix: price }));
+    setShowAiPopup(false);
   };
   // -------------------------------------
   return (
@@ -360,94 +426,9 @@ const DriverProfileClientSide = () => {
               </div>
             </div>
             <hr className="sidebar-divider" />
-
-            {/* AI PREDICTION SECTION */}
-            <div className="ai-prediction-box" style={{ marginTop: '20px' }}>
-              <h5 className="sub-title" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                <Sparkles size={18} color="#8e44ad" /> 
-                AI Price Adjuster
-              </h5>
-              
-              {!predictionResult ? (
-                /* ÉTAT 1 : Formulaire de commentaire */
-                <div className="prediction-input-area">
-                  <p className="sidebar-hint">
-                    Difficulté spéciale ? (Ex: 4ème étage sans ascenseur, Piano...)
-                  </p>
-                  <textarea 
-                    className="ai-comment-input"
-                    rows="3"
-                    placeholder="Décrivez votre chargement ici..."
-                    value={userComment}
-                    onChange={(e) => setUserComment(e.target.value)}
-                  />
-                  <button 
-                    className="btn-predict" 
-                    onClick={handleAiPrediction} 
-                    disabled={isPredicting || !userComment.trim()}
-                  >
-                    {isPredicting ? (
-                        <>Calculating...</>
-                    ) : (
-                        <><Calculator size={16} /> Check Price</>
-                    )}
-                  </button>
-                </div>
-              ) : (
-                
-                /* ÉTAT 2 : Résultat Détaillé (Transparence) */
-                <div className="prediction-result-area fade-in">
-                  
-                  {/* En-tête du résultat */}
-                  <div className="result-header">
-                    <span className="label">Estimation Totale</span>
-                    <span className="price-big">
-                        {predictionResult.estimation.min} - {predictionResult.estimation.max} <small>DH</small>
-                    </span>
-                  </div>
-
-                  <hr className="dashed-divider" />
-
-                  {/* Détails Techniques (Le calcul mathématique) */}
-                  <div className="details-breakdown">
-                    <div className="detail-row">
-                        <span className="d-label"><MapPin size={12}/> Distance route</span>
-                        <span className="d-value">{predictionResult.details.distance_km} km</span>
-                    </div>
-                    <div className="detail-row">
-                        <span className="d-label"><Truck size={12}/> Carburant (Réf)</span>
-                        <span className="d-value">{predictionResult.details.gas_price} DH/L</span>
-                    </div>
-                    <div className="detail-row">
-                        <span className="d-label">Prix de base (Trajet)</span>
-                        <span className="d-value">{predictionResult.details.base_price_calc} DH</span>
-                    </div>
-                  </div>
-
-                  {/* Détails IA (L'analyse intelligente) */}
-                  <div className="ai-analysis-block">
-                    <div className="detail-row">
-                        <span className="d-label ai-text"><Sparkles size={12}/> Analyse Difficulté</span>
-                        <span className={`surcharge-tag ${predictionResult.details.ai_analysis.difficulty_surcharge === "+0%" ? 'green' : 'red'}`}>
-                            {predictionResult.details.ai_analysis.difficulty_surcharge}
-                        </span>
-                    </div>
-                    {/* On affiche la raison seulement si l'IA a détecté quelque chose */}
-                    {predictionResult.details.ai_analysis.difficulty_surcharge !== "+0%" && (
-                        <p className="ai-reason-text">
-                            "{predictionResult.details.ai_analysis.reason}"
-                        </p>
-                    )}
-                  </div>
-
-                  {/* Bouton Reset */}
-                  <button className="btn-reset-ai" onClick={resetPrediction}>
-                    <RefreshCw size={14} /> Recalculer
-                  </button>
-                </div>
-              )}
-              
-            </div>
+            <p className="sidebar-hint" style={{ textAlign: 'center', color: '#aaa', fontSize: '0.82rem', marginTop: '8px' }}>
+              ✨ Use the AI price button inside the booking form
+            </p>
           </div>
         </div>
 
@@ -465,9 +446,24 @@ const DriverProfileClientSide = () => {
             <form onSubmit={handleBooking} className="booking-form">
               <div className="form-grid">
                 <div className="form-group">
-                  <label> The suggested price (DH) <span className="required">*</span></label>
-                  <input type="number" required value={bookingData.prix}
-                    onChange={(e) => setBookingData({ ...bookingData, prix: e.target.value })} />
+                  <label>The suggested price (DH) <span className="required">*</span></label>
+                  <div className="price-field-row">
+                    <input
+                      type="number"
+                      required
+                      value={bookingData.prix}
+                      onChange={(e) => setBookingData({ ...bookingData, prix: e.target.value })}
+                      placeholder="Enter price…"
+                    />
+                    <button
+                      type="button"
+                      className="btn-ai-estimate"
+                      onClick={handleAiEstimate}
+                      title="Estimate price with AI"
+                    >
+                      ✨ AI
+                    </button>
+                  </div>
                 </div>
 
                 <div className="form-group">
@@ -505,8 +501,21 @@ const DriverProfileClientSide = () => {
                 </div>
               </div>
 
-              <button type="submit" className="confirm-booking-btn"> Send request</button>
+              <button type="submit" className="confirm-booking-btn">Send request</button>
             </form>
+
+            {/* AI Popup */}
+            {showAiPopup && (
+              <AiPricePopup
+                result={aiResult}
+                loading={aiLoading}
+                error={aiError}
+                villeDepNom={getVilleNom(ville_depart)}
+                villeArrNom={getVilleNom(ville_arrivee)}
+                onAccept={handleAiAccept}
+                onReject={() => setShowAiPopup(false)}
+              />
+            )}
           </div>
         </div>
       )}
