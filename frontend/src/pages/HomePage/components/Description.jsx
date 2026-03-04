@@ -34,7 +34,7 @@ export default function Description() {
 
   return (
     <div className="timeline-section" >
-      
+
       {/* SECTION HEADER */}
       <div className="section-header">
         <span className="subtitle">How It works💡</span>
